@@ -1,15 +1,49 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Bibliotheca Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+<div class="form-container">
+    <h2>Ajouter un livre</h2>
 
-    <h1>Bibliotheca Dashboard</h1>
-    <p>Projet Front-End – Développement Web</p>
+    <form id="book-form">
 
-    <script src="js/app.js"></script>
-</body>
-</html>
+        <!-- Titre -->
+        <label for="title">Titre du livre</label>
+        <input type="text" id="title" placeholder="Ex : L'Étranger" required>
+
+        <!-- Auteur -->
+        <label for="author">Auteur</label>
+        <input type="text" id="author" placeholder="Ex : Albert Camus" required>
+
+        <!-- Type -->
+        <label for="type">Type de livre</label>
+        <select id="type" required>
+            <option value="">-- Choisir un type --</option>
+            <option value="Roman">Roman</option>
+            <option value="Science">Science</option>
+            <option value="Histoire">Histoire</option>
+            <option value="Informatique">Informatique</option>
+            <option value="Autre">Autre</option>
+        </select>
+
+        <!-- Nombre de pages -->
+        <label for="pages">Nombre de pages</label>
+        <input type="number" id="pages" placeholder="Ex : 250">
+
+        <!-- Image -->
+        <label for="image">Image du livre (URL)</label>
+        <input type="text" id="image" placeholder="https://...">
+
+        <!-- Résumé -->
+        <label for="description">Résumé du livre</label>
+        <textarea id="description" rows="4"
+            placeholder="Résumé court du livre..."></textarea>
+
+        <!-- Favori -->
+        <div class="favorite">
+            <input type="checkbox" id="favorite">
+            <label for="favorite">Ajouter aux favoris ❤️</label>
+        </div>
+
+        <!-- Bouton -->
+        <button type="submit">Ajouter le livre</button>
+
+    </form>
+</div>
+

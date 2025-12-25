@@ -1,41 +1,98 @@
-<div class="form-container">
-    <h2>Ajouter un livre</h2>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Bibliotheca Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
-    <form id="book-form">
+    <aside class="sidebar">
+        <h2>Bibliotheca</h2>
+        <nav>
+            <ul>
+                <li>Dashboard</li>
+                <li>Livres</li>
+                <li>Auteurs</li>
+                <li>Catégories</li>
+            </ul>
+        </nav>
+    </aside>
 
-        <label for="title">Titre du livre</label>
-        <input type="text" id="title" placeholder="Ex : L'Étranger" required>
+    <main class="content">
+<section id="dashboard">
+    <h1>Dashboard</h1>
 
-        <label for="author">Auteur</label>
-        <input type="text" id="author" placeholder="Ex : Albert Camus" required>
-
-        <label for="type">Type de livre</label>
-        <select id="type" required>
-            <option value="">-- Choisir un type --</option>
-            <option value="Roman">Roman</option>
-            <option value="Science">Science</option>
-            <option value="Histoire">Histoire</option>
-            <option value="Informatique">Informatique</option>
-            <option value="Autre">Autre</option>
-        </select>
-
-        <label for="pages">Nombre de pages</label>
-        <input type="number" id="pages" placeholder="Ex : 250">
-
-        <label for="image">Image du livre (URL)</label>
-        <input type="text" id="image" placeholder="https://...">
-
-        <label for="description">Résumé du livre</label>
-        <textarea id="description" rows="4"
-            placeholder="Résumé court du livre..."></textarea>
-
-        <div class="favorite">
-            <input type="checkbox" id="favorite">
-            <label for="favorite">Ajouter aux favoris ❤️</label>
+    <div class="stats">
+        <div>
+            <h3>Total des livres</h3>
+            <p id="total-books">0</p>
         </div>
 
+        <div>
+            <h3>Livres favoris</h3>
+            <p id="favorite-books">0</p>
+        </div>
+
+        <div>
+            <h3>Nombre d’auteurs</h3>
+            <p id="total-authors">0</p>
+        </div>
+    </div>
+</section>
+<section id="livres">
+    <h1>Gestion des Livres</h1>
+
+    <form id="book-form">
+        <label>Titre</label>
+        <input type="text" id="title" required>
+
+        <label>Auteur</label>
+        <input type="text" id="author" required>
+
+        <label>Type</label>
+        <select id="type">
+            <option>Roman</option>
+            <option>Science</option>
+            <option>Histoire</option>
+        </select>
+
+        <label>Nombre de pages</label>
+        <input type="number" id="pages">
+
+        <label>Résumé</label>
+        <textarea id="description"></textarea>
+
+        <label>Image (URL)</label>
+        <input type="text" id="image">
+
         <button type="submit">Ajouter le livre</button>
-
     </form>
-</div>
 
+    <table>
+        <thead>
+            <tr>
+                <th>❤️</th>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Type</th>
+                <th>Pages</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="book-list">
+        </tbody>
+    </table>
+</section>
+<section id="auteurs">
+    <h1>Auteurs</h1>
+
+    <ul id="author-list">
+    </ul>
+</section>
+<section id="categories">
+    <h1>Types de livres</h1>
+
+    <div id="category-list">
+    </div>
+</section>

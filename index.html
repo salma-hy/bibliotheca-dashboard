@@ -1,99 +1,80 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Bibliotheca Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    
-    <aside class="sidebar">
-        <h2>Bibliotheca</h2>
-        <nav>
-            <ul>
-                <li>Dashboard</li>
-                <li>Livres</li>
-                <li>Auteurs</li>
-                <li>Catégories</li>
-            </ul>
-        </nav>
-    </aside>
+  <meta charset="UTF-8">
+  <title>Bibliotheca Dashboard</title>
 
-    <main class="content">
-<section id="dashboard">
-    <h1>Dashboard</h1>
+  <!-- Chart.js autorisé -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <div class="stats">
-        <div>
-            <h3>Total des livres</h3>
-            <p id="total-books">0</p>
-        </div>
-
-        <div>
-            <h3>Livres favoris</h3>
-            <p id="favorite-books">0</p>
-        </div>
-
-        <div>
-            <h3>Nombre d’auteurs</h3>
-            <p id="total-authors">0</p>
-        </div>
-    </div>
-</section>
-<section id="livres">
-    <h1>Gestion des Livres</h1>
-
-    <form id="book-form">
-        <label>Titre</label>
-        <input type="text" id="title" required>
-
-        <label>Auteur</label>
-        <input type="text" id="author" required>
-
-        <label>Type</label>
-        <select id="type">
-            <option>Roman</option>
-            <option>Science</option>
-            <option>Histoire</option>
-        </select>
-
-        <label>Nombre de pages</label>
-        <input type="number" id="pages">
-
-        <label>Résumé</label>
-        <textarea id="description"></textarea>
-
-        <label>Image (URL)</label>
-        <input type="text" id="image">
-
-        <button type="submit">Ajouter le livre</button>
-    </form>
-
-    <table>
-        <thead>
-            <tr>
-                <th>❤️</th>
-                <th>Titre</th>
-                <th>Auteur</th>
-                <th>Type</th>
-                <th>Pages</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="book-list">
-        </tbody>
-    </table>
-</section>
-<section id="auteurs">
-    <h1>Auteurs</h1>
-
-    <ul id="author-list">
-    </ul>
-</section>
-<section id="categories">
-    <h1>Types de livres</h1>
-
-    <div id="category-list">
-    </div>
-</section>
-<script src="script.js"></script>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+<!-- NAVBAR -->
+<header class="navbar">📚 Bibliotheca Dashboard</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <button onclick="showSection('dashboard')">Dashboard</button>
+  <button onclick="showSection('books')">Livres</button>
+  <button onclick="showSection('authors')">Auteurs</button>
+  <button onclick="showSection('api')">API</button>
+</aside>
+
+<!-- CONTENT -->
+<main>
+
+<section id="dashboard" class="section active">
+  <h2>Dashboard</h2>
+
+  <div class="kpi">
+    <div class="card">📘 Livres: <span id="kpiBooks">0</span></div>
+    <div class="card">✍️ Auteurs: <span id="kpiAuthors">0</span></div>
+  </div>
+
+  <canvas id="booksChart"></canvas>
+</section>
+
+<section id="books" class="section">
+  <h2>Gestion des Livres</h2>
+
+  <form id="bookForm">
+    <input type="text" id="title" placeholder="Titre" required>
+    <input type="number" id="year" placeholder="Année" required>
+    <button>Ajouter</button>
+  </form>
+
+  <input type="text" id="searchBook" placeholder="Rechercher...">
+
+  <ul id="bookList"></ul>
+</section>
+
+<section id="authors" class="section">
+  <h2>Auteurs</h2>
+
+  <form id="authorForm">
+    <input type="text" id="authorName" placeholder="Nom auteur" required>
+    <button>Ajouter</button>
+  </form>
+
+  <ul id="authorList"></ul>
+</section>
+
+<section id="api" class="section">
+  <h2>OpenLibrary API</h2>
+  <button onclick="fetchBooks()">Charger livres API</button>
+  <ul id="apiBooks"></ul>
+</section>
+
+</main>
+
+<script src="js/app.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/module1.js"></script>
+<script src="js/module2.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/api.js"></script>
+
+</body>
+</html>

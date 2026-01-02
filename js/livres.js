@@ -1,6 +1,12 @@
+const bookForm = document.getElementById("bookForm");
+const bookList = document.getElementById("bookList");
+const title = document.getElementById("title");
+const year = document.getElementById("year");
+const searchBook = document.getElementById("searchBook");
+
 let books = JSON.parse(localStorage.getItem("books")) || [];
 
-document.getElementById("bookForm").addEventListener("submit", e => {
+bookForm.addEventListener("submit", e => {
   e.preventDefault();
 
   books.push({
@@ -12,6 +18,7 @@ document.getElementById("bookForm").addEventListener("submit", e => {
   saveBooks();
   displayBooks();
   updateDashboard();
+  bookForm.reset();
 });
 
 function displayBooks(list = books) {
@@ -26,12 +33,10 @@ function displayBooks(list = books) {
 }
 
 function deleteBook(id) {
-  if (confirm("Supprimer ce livre ?")) {
-    books = books.filter(b => b.id !== id);
-    saveBooks();
-    displayBooks();
-    updateDashboard();
-  }
+  books = books.filter(b => b.id !== id);
+  saveBooks();
+  displayBooks();
+  updateDashboard();
 }
 
 function saveBooks() {
@@ -40,7 +45,9 @@ function saveBooks() {
 
 searchBook.addEventListener("input", e => {
   displayBooks(
-    books.filter(b => b.title.toLowerCase().includes(e.target.value.toLowerCase()))
+    books.filter(b =>
+      b.title.toLowerCase().includes(e.target.value.toLowerCase())
+    )
   );
 });
 

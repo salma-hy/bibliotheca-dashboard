@@ -1,3 +1,5 @@
+const apiBooks = document.getElementById("apiBooks");
+
 function fetchBooks() {
   fetch("https://openlibrary.org/search.json?q=javascript")
     .then(res => res.json())

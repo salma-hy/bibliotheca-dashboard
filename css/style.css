@@ -1,3 +1,12 @@
+:root {
+  --bg: #f3f4f6;
+  --text: #111827;
+  --card: #ffffff;
+  --primary: #2563eb;
+  --secondary: #1f2937;
+  --danger: #dc2626;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -23,7 +32,6 @@ body {
   align-items: center;
   padding: 0 20px;
   font-weight: bold;
-  z-index: 10;
 }
 
 .sidebar {
@@ -45,7 +53,6 @@ body {
   text-align: left;
   cursor: pointer;
   border-radius: 6px;
-  transition: 0.3s;
 }
 
 .sidebar button:hover {
@@ -59,13 +66,8 @@ main {
   width: 100%;
 }
 
-.section {
-  display: none;
-}
-
-.section.active {
-  display: block;
-}
+.section { display: none; }
+.section.active { display: block; }
 
 .kpi {
   display: grid;
@@ -79,7 +81,6 @@ main {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  font-size: 18px;
 }
 
 .card span {
@@ -88,33 +89,7 @@ main {
   font-weight: bold;
 }
 
-form {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-form input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-}
-
-form button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-ul {
-  list-style: none;
-}
+ul { list-style: none; }
 
 li {
   background: var(--card);
@@ -123,31 +98,4 @@ li {
   border-radius: 6px;
   display: flex;
   justify-content: space-between;
-}
-
-li button {
-  background: var(--danger);
-  border: none;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-input[type="text"] {
-  max-width: 300px;
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 180px;
-  }
-
-  .navbar {
-    left: 180px;
-  }
-
-  main {
-    margin-left: 180px;
-  }
 }

@@ -5,22 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bibliotheca - Administration</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <a href="#" class="logo" data-page="dashboard">📚 Bibliotheca</a>
+            <a href="#" class="logo" data-page="dashboard">
+                <div class="logo-icon">📚</div>
+                <div class="logo-text">Bibliotheca</div>
+            </a>
         </div>
         <nav class="sidebar-nav">
             <ul class="nav-menu">
-                <li><a href="#" class="nav-link active" data-page="dashboard">📊 Tableau de bord</a></li>
-                <li><a href="#" class="nav-link" data-page="collection">📚 Collection</a></li>
-                <li><a href="#" class="nav-link" data-page="auteurs">✍️ Auteurs</a></li>
-                <li><a href="#" class="nav-link" data-page="favoris">❤️ Favoris</a></li>
-                <li><a href="#" class="nav-link" data-page="emprunts">📖 Emprunts</a></li>
-                <li><a href="#" class="nav-link" data-page="contact">📧 Contact</a></li>
-                <li><a href="#" class="nav-link" data-page="horaires">🕐 Horaires</a></li>
+                <li><a href="#" class="nav-link active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a></li>
+                <li><a href="#" class="nav-link" data-page="collection"><i class="fas fa-book"></i> Collection</a></li>
+                <li><a href="#" class="nav-link" data-page="auteurs"><i class="fas fa-user-edit"></i> Auteurs</a></li>
+                <li><a href="#" class="nav-link" data-page="favoris"><i class="fas fa-heart"></i> Favoris</a></li>
+                <li><a href="#" class="nav-link" data-page="emprunts"><i class="fas fa-exchange-alt"></i> Emprunts</a></li>
+                <li><a href="#" class="nav-link" data-page="evenements"><i class="fas fa-calendar-alt"></i> Événements</a></li>
+                <li><a href="#" class="nav-link" data-page="contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="#" class="nav-link logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
             </ul>
         </nav>
     </aside>
@@ -30,30 +35,30 @@
         <div class="header-content">
             <div class="header-search">
                 <input type="text" id="global-search" placeholder="Rechercher un livre, un auteur...">
-                <button class="search-btn">🔍</button>
+                <button class="search-btn"><i class="fas fa-search"></i></button>
             </div>
             <div class="header-right">
                 <div class="notifications">
-                    <button class="notification-btn">🔔</button>
+                    <button class="notification-btn"><i class="fas fa-bell"></i></button>
                     <span class="notification-badge">3</span>
                     <div class="notifications-dropdown" id="notifications-dropdown">
                         <div class="notification-header">Notifications</div>
                         <div class="notification-item">
-                            <div class="notification-icon">📚</div>
+                            <div class="notification-icon"><i class="fas fa-book"></i></div>
                             <div class="notification-content">
                                 <div class="notification-title">Nouveau livre ajouté</div>
                                 <div class="notification-time">Il y a 2 heures</div>
                             </div>
                         </div>
                         <div class="notification-item">
-                            <div class="notification-icon">📖</div>
+                            <div class="notification-icon"><i class="fas fa-exchange-alt"></i></div>
                             <div class="notification-content">
                                 <div class="notification-title">Livre retourné</div>
                                 <div class="notification-time">Il y a 5 heures</div>
                             </div>
                         </div>
                         <div class="notification-item">
-                            <div class="notification-icon">⚠️</div>
+                            <div class="notification-icon"><i class="fas fa-exclamation-triangle"></i></div>
                             <div class="notification-content">
                                 <div class="notification-title">Retour en retard</div>
                                 <div class="notification-time">Il y a 1 jour</div>
@@ -64,9 +69,11 @@
                 <div class="user-profile">
                     <div class="user-info">
                         <div class="user-name">Administrateur</div>
-                        <div class="user-role">Bibliothécaire</div>
+                        <div class="user-role">Bibliothécaire en chef</div>
                     </div>
-                    <div class="user-avatar">👤</div>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -78,96 +85,162 @@
         <!-- Page Tableau de bord -->
         <div id="dashboard" class="page active">
             <div class="container">
-                <h1 class="page-title">Tableau de bord</h1>
+                <h1 class="page-title">Vue d'ensemble des statistiques et performances de la bibliothèque</h1>
 
-                <div class="stats-grid">
+                <!-- Stats en une ligne -->
+                <div class="stats-grid-single">
                     <div class="stat-card">
-                        <div class="stat-icon">📚</div>
+                        <div class="stat-icon"><i class="fas fa-book"></i></div>
                         <div class="stat-info">
                             <h3>Total livres</h3>
-                            <p class="stat-number">5</p>
-                            <p class="stat-change positive">+2 depuis la semaine dernière</p>
+                            <p class="stat-number">127</p>
+                            <p class="stat-change positive">+12 depuis le mois dernier</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">✍️</div>
+                        <div class="stat-icon"><i class="fas fa-user-edit"></i></div>
                         <div class="stat-info">
                             <h3>Auteurs</h3>
-                            <p class="stat-number">5</p>
+                            <p class="stat-number">68</p>
                             <p class="stat-change">Contributeurs actifs</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">✅</div>
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
                         <div class="stat-info">
                             <h3>Disponibles</h3>
-                            <p class="stat-number">3</p>
+                            <p class="stat-number">89</p>
                             <p class="stat-change">Prêts à l'emprunt</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">📖</div>
+                        <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
                         <div class="stat-info">
                             <h3>Empruntés</h3>
-                            <p class="stat-number">1</p>
+                            <p class="stat-number">38</p>
                             <p class="stat-change">Actuellement sortis</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="books-by-genre">
-                    <div class="genre-section">
-                        <h2>Fantaisie <span class="book-count">(3 livres)</span></h2>
-                        <div class="genre-books">
-                            <div class="genre-book-item">
-                                <span class="book-initial">H</span>
-                                <div class="book-details">
-                                    <span class="book-title">Harry Potter à l'école des sorciers</span>
-                                </div>
-                                <button class="favorite-btn active" data-book="Harry Potter à l'école des sorciers">❤️</button>
-                            </div>
-                            <div class="genre-book-item">
-                                <span class="book-initial">L</span>
-                                <div class="book-details">
-                                    <span class="book-title">Le Hobbit</span>
-                                </div>
-                                <button class="favorite-btn" data-book="Le Hobbit">🤍</button>
-                            </div>
-                            <div class="genre-book-item">
-                                <span class="book-initial">T</span>
-                                <div class="book-details">
-                                    <span class="book-title">Le Trône de fer</span>
-                                </div>
-                                <button class="favorite-btn active" data-book="Le Trône de fer">❤️</button>
+                <!-- Livres par genres - 6 genres en 2 lignes -->
+                <div class="section-title">
+                    <h2>Livres par Genres</h2>
+                </div>
+                
+                <div class="genres-grid">
+                    <!-- Première ligne -->
+                    <div class="genre-card">
+                        <div class="genre-header">
+                            <h3>Fantaisie</h3>
+                            <span class="genre-count">24 livres</span>
+                        </div>
+                        <div class="genre-books-preview">
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-1.2.1&auto=format&fit=crop&w-200&q=80');"></div>
+                        </div>
+                        <div class="genre-footer">
+                            <div class="top-books">
+                                <span class="book-title">Harry Potter</span>
+                                <span class="book-title">Le Seigneur des Anneaux</span>
                             </div>
                         </div>
                     </div>
-                    <div class="genre-section">
-                        <h2>Fiction <span class="book-count">(1 livre)</span></h2>
-                        <div class="genre-books">
-                            <div class="genre-book-item">
-                                <span class="book-initial">B</span>
-                                <div class="book-details">
-                                    <span class="book-title">La Ballade de l'impossible</span>
-                                </div>
-                                <button class="favorite-btn" data-book="La Ballade de l'impossible">🤍</button>
+                    
+                    <div class="genre-card">
+                        <div class="genre-header">
+                            <h3>Science-Fiction</h3>
+                            <span class="genre-count">18 livres</span>
+                        </div>
+                        <div class="genre-books-preview">
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                        </div>
+                        <div class="genre-footer">
+                            <div class="top-books">
+                                <span class="book-title">Dune</span>
+                                <span class="book-title">Fondation</span>
                             </div>
                         </div>
                     </div>
-                    <div class="genre-section">
-                        <h2>Fiction Historique <span class="book-count">(1 livre)</span></h2>
-                        <div class="genre-books">
-                            <div class="genre-book-item">
-                                <span class="book-initial">M</span>
-                                <div class="book-details">
-                                    <span class="book-title">Les Misérables</span>
-                                </div>
-                                <button class="favorite-btn" data-book="Les Misérables">🤍</button>
+                    
+                    <div class="genre-card">
+                        <div class="genre-header">
+                            <h3>Roman Historique</h3>
+                            <span class="genre-count">15 livres</span>
+                        </div>
+                        <div class="genre-books-preview">
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1497636577773-f1231844b336?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                        </div>
+                        <div class="genre-footer">
+                            <div class="top-books">
+                                <span class="book-title">Les Misérables</span>
+                                <span class="book-title">Guerre et Paix</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Deuxième ligne -->
+                    <div class="genre-card">
+                        <div class="genre-header">
+                            <h3>Policier/Thriller</h3>
+                            <span class="genre-count">22 livres</span>
+                        </div>
+                        <div class="genre-books-preview">
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                        </div>
+                        <div class="genre-footer">
+                            <div class="top-books">
+                                <span class="book-title">Le Crime de l'Orient-Express</span>
+                                <span class="book-title">Millénium</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="genre-card">
+                        <div class="genre-header">
+                            <h3>Biographie</h3>
+                            <span class="genre-count">12 livres</span>
+                        </div>
+                        <div class="genre-books-preview">
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1531346688376-ab6275c4725e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                        </div>
+                        <div class="genre-footer">
+                            <div class="top-books">
+                                <span class="book-title">Steve Jobs</span>
+                                <span class="book-title">De Gaulle</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="genre-card">
+                        <div class="genre-header">
+                            <h3>Poésie</h3>
+                            <span class="genre-count">9 livres</span>
+                        </div>
+                        <div class="genre-books-preview">
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
+                        </div>
+                        <div class="genre-footer">
+                            <div class="top-books">
+                                <span class="book-title">Les Fleurs du Mal</span>
+                                <span class="book-title">Alcools</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Statistiques et suggestions -->
                 <div class="dashboard-bottom">
                     <div class="chart-section">
                         <h2>Répartition par Genre</h2>
@@ -181,14 +254,11 @@
                             <canvas id="visitorsChart"></canvas>
                         </div>
                     </div>
-                    <div class="chart-section">
-                        <h2>Livres Lus / Empruntés</h2>
-                        <div class="chart-container">
-                            <canvas id="booksChart"></canvas>
-                        </div>
-                    </div>
                     <div class="suggestions-section">
-                        <h2>Suggestions</h2>
+                        <div class="suggestions-header">
+                            <h2>Suggestions de Lecture</h2>
+                            <button class="refresh-btn" id="refresh-suggestions"><i class="fas fa-sync-alt"></i> Actualiser</button>
+                        </div>
                         <div class="suggestions-list" id="suggestions-list"></div>
                     </div>
                 </div>
@@ -199,12 +269,19 @@
         <div id="collection" class="page">
             <div class="container">
                 <div class="page-header">
-                    <h1 class="page-title">Collection de la Bibliothèque</h1>
-                    <button class="btn btn-primary" id="add-book-btn">➕ Ajouter un livre</button>
+                    <div class="page-header-left">
+                        <h1 class="page-title">Collection de la Bibliothèque</h1>
+                        <div class="total-books-badge">
+                            <i class="fas fa-book"></i>
+                            <span>127 livres au total</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="add-book-btn"><i class="fas fa-plus"></i> Ajouter un livre</button>
                 </div>
+                
                 <div class="collection-filters">
                     <div class="search-filter">
-                        <input type="text" id="collection-search" placeholder="Rechercher par titre ou genre...">
+                        <input type="text" id="collection-search" placeholder="Rechercher par titre, auteur ou genre...">
                     </div>
                     <div class="status-filter">
                         <select id="status-filter">
@@ -214,7 +291,19 @@
                             <option value="lost">Perdu</option>
                         </select>
                     </div>
+                    <div class="genre-filter">
+                        <select id="genre-filter">
+                            <option value="all">Tous les genres</option>
+                            <option value="fantaisie">Fantaisie</option>
+                            <option value="science-fiction">Science-Fiction</option>
+                            <option value="roman-historique">Roman Historique</option>
+                            <option value="policier">Policier/Thriller</option>
+                            <option value="biographie">Biographie</option>
+                            <option value="poesie">Poésie</option>
+                        </select>
+                    </div>
                 </div>
+                
                 <div class="collection-grid" id="collection-grid"></div>
             </div>
         </div>
@@ -224,23 +313,48 @@
             <div class="container">
                 <div class="page-header">
                     <h1 class="page-title">Auteurs</h1>
-                    <button class="btn btn-primary" id="add-author-btn">➕ Ajouter un auteur</button>
+                    <button class="btn btn-primary" id="add-author-btn"><i class="fas fa-plus"></i> Ajouter un auteur</button>
                 </div>
+                
                 <div class="authors-search">
-                    <input type="text" id="authors-search" placeholder="Rechercher un auteur...">
+                    <input type="text" id="authors-search" placeholder="Rechercher un auteur par nom, nationalité...">
                 </div>
-                <div class="authors-grid" id="authors-grid"></div>
+                
+                <div class="authors-grid" id="authors-grid">
+                    <!-- Les auteurs seront ajoutés ici dynamiquement -->
+                </div>
+                
+                <!-- Case pour ajouter un nouvel auteur -->
+                <div class="add-author-card" id="add-author-card">
+                    <div class="add-author-content">
+                        <div class="add-author-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <h3>Ajouter un nouvel auteur</h3>
+                        <p>Cliquez ici pour enregistrer un nouvel auteur dans la bibliothèque</p>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Page Favoris -->
         <div id="favoris" class="page">
             <div class="container">
-                <h1 class="page-title">Mes Favoris</h1>
+                <div class="page-header">
+                    <h1 class="page-title">Mes Favoris</h1>
+                    <div class="favorites-count">
+                        <i class="fas fa-heart"></i>
+                        <span>8 livres favoris</span>
+                    </div>
+                </div>
+                
                 <div class="favorites-search">
                     <input type="text" id="favorites-search" placeholder="Rechercher dans mes favoris...">
                 </div>
-                <div class="favorites-grid" id="favorites-grid"></div>
+                
+                <div class="favorites-horizontal" id="favorites-horizontal">
+                    <!-- Les favoris en cartes horizontales -->
+                </div>
             </div>
         </div>
 
@@ -263,6 +377,84 @@
                         </thead>
                         <tbody id="emprunts-body"></tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Événements (remplace Horaires) -->
+        <div id="evenements" class="page">
+            <div class="container">
+                <h1 class="page-title">Événements de la Bibliothèque</h1>
+                
+                <div class="events-grid">
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="event-day">15</span>
+                            <span class="event-month">Jan</span>
+                        </div>
+                        <div class="event-content">
+                            <h3>Club de Lecture</h3>
+                            <p>Discussion autour du livre "Les Misérables" de Victor Hugo</p>
+                            <div class="event-info">
+                                <span><i class="fas fa-clock"></i> 18h30 - 20h30</span>
+                                <span><i class="fas fa-users"></i> 25 participants</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">S'inscrire</button>
+                    </div>
+                    
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="event-day">22</span>
+                            <span class="event-month">Jan</span>
+                        </div>
+                        <div class="event-content">
+                            <h3>Atelier Écriture</h3>
+                            <p>Atelier d'écriture créative animé par l'auteur Jean Dupont</p>
+                            <div class="event-info">
+                                <span><i class="fas fa-clock"></i> 14h00 - 17h00</span>
+                                <span><i class="fas fa-users"></i> 15 places</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">S'inscrire</button>
+                    </div>
+                    
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="event-day">05</span>
+                            <span class="event-month">Fév</span>
+                        </div>
+                        <div class="event-content">
+                            <h3>Rencontre avec un Auteur</h3>
+                            <p>Rencontre avec Marie Martin, auteure de "Les Ombres du Passé"</p>
+                            <div class="event-info">
+                                <span><i class="fas fa-clock"></i> 19h00 - 21h00</span>
+                                <span><i class="fas fa-users"></i> 50 places</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">S'inscrire</button>
+                    </div>
+                    
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="event-day">12</span>
+                            <span class="event-month">Fév</span>
+                        </div>
+                        <div class="event-content">
+                            <h3>Heure du Conte</h3>
+                            <p>Lecture de contes pour enfants de 3 à 8 ans</p>
+                            <div class="event-info">
+                                <span><i class="fas fa-clock"></i> 10h30 - 11h30</span>
+                                <span><i class="fas fa-users"></i> 30 enfants</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">S'inscrire</button>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Proposer un événement</h3>
+                    <p>Vous souhaitez organiser un événement à la bibliothèque ? Contactez-nous à <strong>evenements@bibliotheca.fr</strong> avec votre proposition.</p>
                 </div>
             </div>
         </div>
@@ -314,32 +506,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Page Horaires -->
-        <div id="horaires" class="page">
-            <div class="container">
-                <h1 class="page-title">Horaires d'Ouverture</h1>
-                <div class="horaires-content">
-                    <div class="horaires-card">
-                        <h3>Lundi - Vendredi</h3>
-                        <p>9h00 - 18h00</p>
-                    </div>
-                    <div class="horaires-card">
-                        <h3>Samedi</h3>
-                        <p>10h00 - 16h00</p>
-                    </div>
-                    <div class="horaires-card">
-                        <h3>Dimanche</h3>
-                        <p>Fermé</p>
-                    </div>
-                </div>
-                <div class="info-box">
-                    <p><strong>Adresse:</strong> 123 Rue de la Bibliothèque, Ville</p>
-                    <p><strong>Téléphone:</strong> 01 23 45 67 89</p>
-                    <p><strong>Email:</strong> contact@bibliotheca.fr</p>
-                </div>
-            </div>
-        </div>
         </div>
     </main>
 
@@ -359,10 +525,13 @@
                 </div>
                 <div class="form-group">
                     <label for="book-genre">Genre</label>
-                    <select id="book-genre" required>
+                    <select id="book-genre-modal" required>
                         <option value="fantaisie">Fantaisie</option>
-                        <option value="fiction">Fiction</option>
-                        <option value="fiction-historique">Fiction Historique</option>
+                        <option value="science-fiction">Science-Fiction</option>
+                        <option value="roman-historique">Roman Historique</option>
+                        <option value="policier">Policier/Thriller</option>
+                        <option value="biographie">Biographie</option>
+                        <option value="poesie">Poésie</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -374,41 +543,5 @@
                     <input type="text" id="book-isbn" required>
                 </div>
                 <div class="form-group">
-                    <label for="book-status">Statut</label>
-                    <select id="book-status" required>
-                        <option value="available">Disponible</option>
-                        <option value="borrowed">Emprunté</option>
-                        <option value="lost">Perdu</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Ajouter Auteur -->
-    <div class="modal" id="add-author-modal">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <h2>Enregistrer un nouvel auteur</h2>
-            <form id="add-author-form">
-                <div class="form-group">
-                    <label for="author-name">Nom complet</label>
-                    <input type="text" id="author-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="author-nationality">Nationalité</label>
-                    <input type="text" id="author-nationality" required>
-                </div>
-                <div class="form-group">
-                    <label for="author-birth">Année de naissance</label>
-                    <input type="number" id="author-birth" required>
-                </div>
-                <button type="submit" class="btn btn-primary">➕ Ajouter</button>
-            </form>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+                    <label for="book-cover">URL de la couverture</label>
+                    <input type="text" id

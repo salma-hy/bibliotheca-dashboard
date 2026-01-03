@@ -1,78 +1,414 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Bibliotheca Dashboard</title>
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliotheca - Administration</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="logo" data-page="dashboard">📚 Bibliotheca</a>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" data-page="dashboard">📊 Tableau de bord</a></li>
+                <li><a href="#" class="nav-link" data-page="collection">📚 Collection</a></li>
+                <li><a href="#" class="nav-link" data-page="auteurs">✍️ Auteurs</a></li>
+                <li><a href="#" class="nav-link" data-page="favoris">❤️ Favoris</a></li>
+                <li><a href="#" class="nav-link" data-page="emprunts">📖 Emprunts</a></li>
+                <li><a href="#" class="nav-link" data-page="contact">📧 Contact</a></li>
+                <li><a href="#" class="nav-link" data-page="horaires">🕐 Horaires</a></li>
+            </ul>
+        </nav>
+    </aside>
 
-<header class="navbar">📚 Bibliotheca Dashboard</header>
+    <!-- Header Top -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-search">
+                <input type="text" id="global-search" placeholder="Rechercher un livre, un auteur...">
+                <button class="search-btn">🔍</button>
+            </div>
+            <div class="header-right">
+                <div class="notifications">
+                    <button class="notification-btn">🔔</button>
+                    <span class="notification-badge">3</span>
+                    <div class="notifications-dropdown" id="notifications-dropdown">
+                        <div class="notification-header">Notifications</div>
+                        <div class="notification-item">
+                            <div class="notification-icon">📚</div>
+                            <div class="notification-content">
+                                <div class="notification-title">Nouveau livre ajouté</div>
+                                <div class="notification-time">Il y a 2 heures</div>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon">📖</div>
+                            <div class="notification-content">
+                                <div class="notification-title">Livre retourné</div>
+                                <div class="notification-time">Il y a 5 heures</div>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon">⚠️</div>
+                            <div class="notification-content">
+                                <div class="notification-title">Retour en retard</div>
+                                <div class="notification-time">Il y a 1 jour</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Administrateur</div>
+                        <div class="user-role">Bibliothécaire</div>
+                    </div>
+                    <div class="user-avatar">👤</div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<aside class="sidebar">
-  <button onclick="showSection('dashboard')">Dashboard</button>
-  <button onclick="showSection('books')">Livres</button>
-  <button onclick="showSection('authors')">Auteurs</button>
-  <button onclick="showSection('api')">API</button>
-</aside>
+    <!-- Contenu principal - Toutes les pages -->
+    <main class="main-content">
+        <div class="content-wrapper">
+        <!-- Page Tableau de bord -->
+        <div id="dashboard" class="page active">
+            <div class="container">
+                <h1 class="page-title">Tableau de bord</h1>
 
-<main>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-info">
+                            <h3>Total livres</h3>
+                            <p class="stat-number">5</p>
+                            <p class="stat-change positive">+2 depuis la semaine dernière</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✍️</div>
+                        <div class="stat-info">
+                            <h3>Auteurs</h3>
+                            <p class="stat-number">5</p>
+                            <p class="stat-change">Contributeurs actifs</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <h3>Disponibles</h3>
+                            <p class="stat-number">3</p>
+                            <p class="stat-change">Prêts à l'emprunt</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📖</div>
+                        <div class="stat-info">
+                            <h3>Empruntés</h3>
+                            <p class="stat-number">1</p>
+                            <p class="stat-change">Actuellement sortis</p>
+                        </div>
+                    </div>
+                </div>
 
-<section id="dashboard" class="section active">
-  <h2>Dashboard</h2>
+                <div class="books-by-genre">
+                    <div class="genre-section">
+                        <h2>Fantaisie <span class="book-count">(3 livres)</span></h2>
+                        <div class="genre-books">
+                            <div class="genre-book-item">
+                                <span class="book-initial">H</span>
+                                <div class="book-details">
+                                    <span class="book-title">Harry Potter à l'école des sorciers</span>
+                                </div>
+                                <button class="favorite-btn active" data-book="Harry Potter à l'école des sorciers">❤️</button>
+                            </div>
+                            <div class="genre-book-item">
+                                <span class="book-initial">L</span>
+                                <div class="book-details">
+                                    <span class="book-title">Le Hobbit</span>
+                                </div>
+                                <button class="favorite-btn" data-book="Le Hobbit">🤍</button>
+                            </div>
+                            <div class="genre-book-item">
+                                <span class="book-initial">T</span>
+                                <div class="book-details">
+                                    <span class="book-title">Le Trône de fer</span>
+                                </div>
+                                <button class="favorite-btn active" data-book="Le Trône de fer">❤️</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="genre-section">
+                        <h2>Fiction <span class="book-count">(1 livre)</span></h2>
+                        <div class="genre-books">
+                            <div class="genre-book-item">
+                                <span class="book-initial">B</span>
+                                <div class="book-details">
+                                    <span class="book-title">La Ballade de l'impossible</span>
+                                </div>
+                                <button class="favorite-btn" data-book="La Ballade de l'impossible">🤍</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="genre-section">
+                        <h2>Fiction Historique <span class="book-count">(1 livre)</span></h2>
+                        <div class="genre-books">
+                            <div class="genre-book-item">
+                                <span class="book-initial">M</span>
+                                <div class="book-details">
+                                    <span class="book-title">Les Misérables</span>
+                                </div>
+                                <button class="favorite-btn" data-book="Les Misérables">🤍</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-  <div class="kpi">
-    <div class="card">📘 Livres: <span id="kpiBooks">0</span></div>
-    <div class="card">✍️ Auteurs: <span id="kpiAuthors">0</span></div>
-  </div>
+                <div class="dashboard-bottom">
+                    <div class="chart-section">
+                        <h2>Répartition par Genre</h2>
+                        <div class="chart-container">
+                            <canvas id="genreChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-section">
+                        <h2>Visiteurs de la Bibliothèque</h2>
+                        <div class="chart-container">
+                            <canvas id="visitorsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-section">
+                        <h2>Livres Lus / Empruntés</h2>
+                        <div class="chart-container">
+                            <canvas id="booksChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="suggestions-section">
+                        <h2>Suggestions</h2>
+                        <div class="suggestions-list" id="suggestions-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  <canvas id="booksChart"></canvas>
-</section>
+        <!-- Page Collection -->
+        <div id="collection" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Collection de la Bibliothèque</h1>
+                    <button class="btn btn-primary" id="add-book-btn">➕ Ajouter un livre</button>
+                </div>
+                <div class="collection-filters">
+                    <div class="search-filter">
+                        <input type="text" id="collection-search" placeholder="Rechercher par titre ou genre...">
+                    </div>
+                    <div class="status-filter">
+                        <select id="status-filter">
+                            <option value="all">Tous les statuts</option>
+                            <option value="available">Disponible</option>
+                            <option value="borrowed">Emprunté</option>
+                            <option value="lost">Perdu</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="collection-grid" id="collection-grid"></div>
+            </div>
+        </div>
 
-<section id="books" class="section">
-  <h2>Gestion des Livres</h2>
+        <!-- Page Auteurs -->
+        <div id="auteurs" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Auteurs</h1>
+                    <button class="btn btn-primary" id="add-author-btn">➕ Ajouter un auteur</button>
+                </div>
+                <div class="authors-search">
+                    <input type="text" id="authors-search" placeholder="Rechercher un auteur...">
+                </div>
+                <div class="authors-grid" id="authors-grid"></div>
+            </div>
+        </div>
 
-  <form id="bookForm">
-    <input type="text" id="title" placeholder="Titre" required>
-    <input type="number" id="year" placeholder="Année" required>
-    <button>Ajouter</button>
-  </form>
+        <!-- Page Favoris -->
+        <div id="favoris" class="page">
+            <div class="container">
+                <h1 class="page-title">Mes Favoris</h1>
+                <div class="favorites-search">
+                    <input type="text" id="favorites-search" placeholder="Rechercher dans mes favoris...">
+                </div>
+                <div class="favorites-grid" id="favorites-grid"></div>
+            </div>
+        </div>
 
-  <input type="text" id="searchBook" placeholder="Rechercher...">
+        <!-- Page Emprunts -->
+        <div id="emprunts" class="page">
+            <div class="container">
+                <h1 class="page-title">Gestion des Emprunts</h1>
+                <div class="emprunts-table-container">
+                    <table class="emprunts-table">
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Auteur</th>
+                                <th>Emprunteur</th>
+                                <th>Date d'emprunt</th>
+                                <th>Date de retour prévue</th>
+                                <th>Statut</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="emprunts-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-  <ul id="bookList"></ul>
-</section>
+        <!-- Page Contact -->
+        <div id="contact" class="page">
+            <div class="container">
+                <h1 class="page-title">Contact & Aide</h1>
+                <div class="contact-content">
+                    <div class="contact-form-section">
+                        <h2>Contactez-nous</h2>
+                        <form class="contact-form" id="contact-form">
+                            <div class="form-group">
+                                <label for="name">Nom</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sujet">Sujet</label>
+                                <input type="text" id="sujet" name="sujet" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Envoyer</button>
+                        </form>
+                    </div>
+                    <div class="faq-section">
+                        <h2>Questions Fréquentes</h2>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <div class="faq-question">Comment emprunter un livre ?</div>
+                                <div class="faq-answer">Vous pouvez emprunter un livre directement depuis la page Collection. Cliquez sur le livre souhaité et suivez les instructions.</div>
+                            </div>
+                            <div class="faq-item">
+                                <div class="faq-question">Quelle est la durée d'emprunt ?</div>
+                                <div class="faq-answer">La durée d'emprunt standard est de 30 jours. Vous pouvez prolonger l'emprunt depuis la page Emprunts.</div>
+                            </div>
+                            <div class="faq-item">
+                                <div class="faq-question">Comment ajouter un livre à mes favoris ?</div>
+                                <div class="faq-answer">Cliquez sur l'icône cœur (❤️) à côté du livre pour l'ajouter à vos favoris.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<section id="authors" class="section">
-  <h2>Auteurs</h2>
+        <!-- Page Horaires -->
+        <div id="horaires" class="page">
+            <div class="container">
+                <h1 class="page-title">Horaires d'Ouverture</h1>
+                <div class="horaires-content">
+                    <div class="horaires-card">
+                        <h3>Lundi - Vendredi</h3>
+                        <p>9h00 - 18h00</p>
+                    </div>
+                    <div class="horaires-card">
+                        <h3>Samedi</h3>
+                        <p>10h00 - 16h00</p>
+                    </div>
+                    <div class="horaires-card">
+                        <h3>Dimanche</h3>
+                        <p>Fermé</p>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <p><strong>Adresse:</strong> 123 Rue de la Bibliothèque, Ville</p>
+                    <p><strong>Téléphone:</strong> 01 23 45 67 89</p>
+                    <p><strong>Email:</strong> contact@bibliotheca.fr</p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
 
-  <form id="authorForm">
-    <input type="text" id="authorName" placeholder="Nom auteur" required>
-    <button>Ajouter</button>
-  </form>
+    <!-- Modal Ajouter Livre -->
+    <div class="modal" id="add-book-modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Ajouter un livre</h2>
+            <form id="add-book-form">
+                <div class="form-group">
+                    <label for="book-title">Titre</label>
+                    <input type="text" id="book-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="book-author">Auteur</label>
+                    <input type="text" id="book-author" required>
+                </div>
+                <div class="form-group">
+                    <label for="book-genre">Genre</label>
+                    <select id="book-genre" required>
+                        <option value="fantaisie">Fantaisie</option>
+                        <option value="fiction">Fiction</option>
+                        <option value="fiction-historique">Fiction Historique</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="book-year">Année</label>
+                    <input type="number" id="book-year" required>
+                </div>
+                <div class="form-group">
+                    <label for="book-isbn">ISBN</label>
+                    <input type="text" id="book-isbn" required>
+                </div>
+                <div class="form-group">
+                    <label for="book-status">Statut</label>
+                    <select id="book-status" required>
+                        <option value="available">Disponible</option>
+                        <option value="borrowed">Emprunté</option>
+                        <option value="lost">Perdu</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </form>
+        </div>
+    </div>
 
-  <ul id="authorList"></ul>
-</section>
+    <!-- Modal Ajouter Auteur -->
+    <div class="modal" id="add-author-modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Enregistrer un nouvel auteur</h2>
+            <form id="add-author-form">
+                <div class="form-group">
+                    <label for="author-name">Nom complet</label>
+                    <input type="text" id="author-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="author-nationality">Nationalité</label>
+                    <input type="text" id="author-nationality" required>
+                </div>
+                <div class="form-group">
+                    <label for="author-birth">Année de naissance</label>
+                    <input type="number" id="author-birth" required>
+                </div>
+                <button type="submit" class="btn btn-primary">➕ Ajouter</button>
+            </form>
+        </div>
+    </div>
 
-<section id="api" class="section">
-  <h2>OpenLibrary API</h2>
-  <button onclick="fetchBooks()">Charger livres API</button>
-  <ul id="apiBooks"></ul>
-</section>
-
-</main>
-
-<!-- JS (ORDRE IMPORTANT) -->
-<script src="js/app.js"></script>
-<script src="js/livres.js"></script>
-<script src="js/auteurs.js"></script>
-<script src="js/dashboard.js"></script>
-<script src="js/api.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>

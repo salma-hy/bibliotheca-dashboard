@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bibliotheca - Connexion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         :root {
@@ -25,24 +25,25 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .login-container {
             width: 100%;
             max-width: 420px;
-            padding: 2rem;
         }
 
         .login-card {
             background: var(--white);
             padding: 3rem;
             border-radius: 16px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border);
             text-align: center;
         }
@@ -145,7 +146,7 @@
 <body>
     <div class="login-container">
         <div class="login-card">
-            <div class="login-logo">📚</div>
+            <div class="login-logo"><i class="fas fa-book"></i></div>
             <h1 class="login-title">Bibliotheca</h1>
             <p class="login-subtitle">Accédez à votre espace administrateur</p>
             
@@ -160,7 +161,7 @@
                     <input type="password" id="password" name="password" required placeholder="••••••••">
                 </div>
                 
-                <div class="error-message" id="error-message">Identifiants incorrects. Utilisez admin/admin123</div>
+                <div class="error-message" id="error-message">Identifiants incorrects</div>
                 
                 <button type="submit" class="login-btn">Se connecter</button>
             </form>
@@ -184,19 +185,15 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Validation simple
             if ((username === 'admin' || username === 'admin@bibliotheca.fr') && password === 'admin123') {
-                // Stocker l'état de connexion
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('username', username);
-                // Rediriger vers la page principale
                 window.location.href = 'index.html';
             } else {
                 document.getElementById('error-message').style.display = 'block';
             }
         });
 
-        // Vérifier si déjà connecté
         if (localStorage.getItem('isLoggedIn') === 'true') {
             window.location.href = 'index.html';
         }

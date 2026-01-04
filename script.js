@@ -1,5 +1,5 @@
-// Données globales avec VRAIES couvertures de livres
-const books = [
+// Données globales
+let books = JSON.parse(localStorage.getItem('books')) || [
     {
         id: 1,
         title: 'Harry Potter à l\'école des sorciers',
@@ -9,7 +9,6 @@ const books = [
         isbn: '978-2070584628',
         status: 'available',
         favorite: true,
-        likes: 45,
         cover: 'https://m.media-amazon.com/images/I/91eopoUCjLL._AC_UF1000,1000_QL80_.jpg'
     },
     {
@@ -21,7 +20,6 @@ const books = [
         isbn: '978-2266280012',
         status: 'borrowed',
         favorite: false,
-        likes: 32,
         cover: 'https://m.media-amazon.com/images/I/71FQdRz6uEL._AC_UF1000,1000_QL80_.jpg'
     },
     {
@@ -33,120 +31,11 @@ const books = [
         isbn: '978-2253123276',
         status: 'available',
         favorite: true,
-        likes: 38,
         cover: 'https://m.media-amazon.com/images/I/81LkSwSrrPL._AC_UF1000,1000_QL80_.jpg'
-    },
-    {
-        id: 4,
-        title: 'La Ballade de l\'impossible',
-        author: 'Haruki Murakami',
-        genre: 'fiction',
-        year: 1987,
-        isbn: '978-2070381659',
-        status: 'available',
-        favorite: false,
-        likes: 28,
-        cover: 'https://m.media-amazon.com/images/I/71OgjODiv1L._AC_UF1000,1000_QL80_.jpg'
-    },
-    {
-        id: 5,
-        title: 'Les Misérables',
-        author: 'Victor Hugo',
-        genre: 'roman-historique',
-        year: 1862,
-        isbn: '978-2253004249',
-        status: 'lost',
-        favorite: false,
-        likes: 52,
-        cover: 'https://m.media-amazon.com/images/I/81PCl8dQO-L._AC_UF1000,1000_QL80_.jpg'
-    },
-    {
-        id: 6,
-        title: 'Dune',
-        author: 'Frank Herbert',
-        genre: 'science-fiction',
-        year: 1965,
-        isbn: '978-2253021161',
-        status: 'available',
-        favorite: true,
-        likes: 67,
-        cover: 'https://m.media-amazon.com/images/I/81zqVq0roWL._AC_UF1000,1000_QL80_.jpg'
-    },
-    {
-        id: 7,
-        title: 'Le Comte de Monte-Cristo',
-        author: 'Alexandre Dumas',
-        genre: 'roman-historique',
-        year: 1844,
-        isbn: '978-2253006635',
-        status: 'borrowed',
-        favorite: false,
-        likes: 41,
-        cover: 'https://m.media-amazon.com/images/I/81Uv+OS5k-L._AC_UF1000,1000_QL80_.jpg'
-    },
-    {
-        id: 8,
-        title: 'Le Crime de l\'Orient-Express',
-        author: 'Agatha Christie',
-        genre: 'policier',
-        year: 1934,
-        isbn: '978-2253000510',
-        status: 'available',
-        favorite: false,
-        likes: 33,
-        cover: 'https://m.media-amazon.com/images/I/81+kE0I6A4L._AC_UF1000,1000_QL80_.jpg'
-    },
-    {
-        id: 9,
-        title: 'Les Fleurs du Mal',
-        author: 'Charles Baudelaire',
-        genre: 'poesie',
-        year: 1857,
-        isbn: '978-2070360029',
-        status: 'available',
-        favorite: false,
-        likes: 29,
-        cover: 'https://m.media-amazon.com/images/I/91UWl1jh6LL._AC_UF1000,1000_QL80_.jpg'
-    },
-    {
-        id: 10,
-        title: 'Steve Jobs',
-        author: 'Walter Isaacson',
-        genre: 'biographie',
-        year: 2011,
-        isbn: '978-2221109201',
-        status: 'borrowed',
-        favorite: false,
-        likes: 38,
-        cover: 'https://m.media-amazon.com/images/I/81D2H6lH7gL._AC_UF1000,1000_QL80_.jpg'
-    },
-    {
-        id: 11,
-        title: 'Fondation',
-        author: 'Isaac Asimov',
-        genre: 'science-fiction',
-        year: 1951,
-        isbn: '978-2070360531',
-        status: 'available',
-        favorite: true,
-        likes: 44,
-        cover: 'https://m.media-amazon.com/images/I/81eIDJ-hmHL._AC_UF1000,1000_QL80_.jpg'
-    },
-    {
-        id: 12,
-        title: 'Guerre et Paix',
-        author: 'Léon Tolstoï',
-        genre: 'roman-historique',
-        year: 1869,
-        isbn: '978-2253000251',
-        status: 'available',
-        favorite: false,
-        likes: 36,
-        cover: 'https://m.media-amazon.com/images/I/91QYpXW9YLL._AC_UF1000,1000_QL80_.jpg'
     }
 ];
 
-const authors = [
+let authors = JSON.parse(localStorage.getItem('authors')) || [
     { 
         id: 1, 
         name: 'J.K. Rowling', 
@@ -170,139 +59,30 @@ const authors = [
         birthYear: 1948, 
         booksCount: 1,
         initial: 'G'
-    },
-    { 
-        id: 4, 
-        name: 'Haruki Murakami', 
-        nationality: 'Japonais', 
-        birthYear: 1949, 
-        booksCount: 1,
-        initial: 'H'
-    },
-    { 
-        id: 5, 
-        name: 'Victor Hugo', 
-        nationality: 'Français', 
-        birthYear: 1802, 
-        booksCount: 1,
-        initial: 'V'
-    },
-    { 
-        id: 6, 
-        name: 'Frank Herbert', 
-        nationality: 'Américain', 
-        birthYear: 1920, 
-        booksCount: 1,
-        initial: 'F'
-    },
-    { 
-        id: 7, 
-        name: 'Alexandre Dumas', 
-        nationality: 'Français', 
-        birthYear: 1802, 
-        booksCount: 1,
-        initial: 'A'
-    },
-    { 
-        id: 8, 
-        name: 'Agatha Christie', 
-        nationality: 'Britannique', 
-        birthYear: 1890, 
-        booksCount: 1,
-        initial: 'A'
     }
 ];
 
-const emprunts = [
+let emprunts = JSON.parse(localStorage.getItem('emprunts')) || [
     {
         id: 1,
+        bookId: 2,
         title: 'Le Hobbit',
         author: 'J.R.R. Tolkien',
         borrower: 'Jean Dupont',
         dateEmprunt: '2025-12-15',
         dateRetour: '2026-01-15',
         status: 'en-cours'
-    },
-    {
-        id: 2,
-        title: 'Harry Potter à l\'école des sorciers',
-        author: 'J.K. Rowling',
-        borrower: 'Marie Martin',
-        dateEmprunt: '2025-12-20',
-        dateRetour: '2026-01-20',
-        status: 'en-cours'
-    },
-    {
-        id: 3,
-        title: 'Le Comte de Monte-Cristo',
-        author: 'Alexandre Dumas',
-        borrower: 'Pierre Lambert',
-        dateEmprunt: '2025-12-10',
-        dateRetour: '2026-01-10',
-        status: 'retard'
     }
 ];
 
-const suggestions = [
-    {
-        title: 'Le Comte de Monte-Cristo',
-        author: 'Alexandre Dumas',
-        year: 1844,
-        cover: 'https://m.media-amazon.com/images/I/81Uv+OS5k-L._AC_UF1000,1000_QL80_.jpg',
-        genre: 'Roman Historique'
-    },
-    {
-        title: 'Les Trois Mousquetaires',
-        author: 'Alexandre Dumas',
-        year: 1844,
-        cover: 'https://m.media-amazon.com/images/I/81iyx0OANFL._AC_UF1000,1000_QL80_.jpg',
-        genre: 'Roman Historique'
-    },
-    {
-        title: 'Notre-Dame de Paris',
-        author: 'Victor Hugo',
-        year: 1831,
-        cover: 'https://m.media-amazon.com/images/I/81+IUsqaLmL._AC_UF1000,1000_QL80_.jpg',
-        genre: 'Roman Historique'
-    },
-    {
-        title: '1984',
-        author: 'George Orwell',
-        year: 1949,
-        cover: 'https://m.media-amazon.com/images/I/71kxa1-0mfL._AC_UF1000,1000_QL80_.jpg',
-        genre: 'Science-Fiction'
-    },
-    {
-        title: 'Le Petit Prince',
-        author: 'Antoine de Saint-Exupéry',
-        year: 1943,
-        cover: 'https://m.media-amazon.com/images/I/81TRAdx4LIL._AC_UF1000,1000_QL80_.jpg',
-        genre: 'Fiction'
-    },
-    {
-        title: 'Orgueil et Préjugés',
-        author: 'Jane Austen',
-        year: 1813,
-        cover: 'https://m.media-amazon.com/images/I/71Q1tPupKjL._AC_UF1000,1000_QL80_.jpg',
-        genre: 'Roman'
-    },
-    {
-        title: 'L\'Étranger',
-        author: 'Albert Camus',
-        year: 1942,
-        cover: 'https://m.media-amazon.com/images/I/81nGXmy5MIL._AC_UF1000,1000_QL80_.jpg',
-        genre: 'Philosophie'
-    },
-    {
-        title: 'Cent ans de solitude',
-        author: 'Gabriel García Márquez',
-        year: 1967,
-        cover: 'https://m.media-amazon.com/images/I/81ai6zx9eRL._AC_UF1000,1000_QL80_.jpg',
-        genre: 'Fiction'
-    }
-];
+// Sauvegarder les données
+function saveData() {
+    localStorage.setItem('books', JSON.stringify(books));
+    localStorage.setItem('authors', JSON.stringify(authors));
+    localStorage.setItem('emprunts', JSON.stringify(emprunts));
+}
 
-// Navigation entre pages - FONCTIONNEL
+// Navigation entre pages
 function initNavigation() {
     const navLinks = document.querySelectorAll('.nav-link:not(.logout-btn)');
     const pages = document.querySelectorAll('.page');
@@ -321,38 +101,32 @@ function initNavigation() {
             const target = document.getElementById(targetPage);
             if (target) {
                 target.classList.add('active');
-                // Changer le titre de la page
-                document.title = `Bibliotheca - ${targetPage.charAt(0).toUpperCase() + targetPage.slice(1)}`;
+                document.title = `Bibliotheca - ${link.textContent.trim()}`;
+                
+                // Charger les données de la page
+                loadPageData(targetPage);
             }
-
-            // Charger les données de la page
-            loadPageData(targetPage);
         });
     });
 
-    // Déconnexion - FONCTIONNEL
-    const logoutBtn = document.querySelector('.logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('username');
-                window.location.href = 'login.html';
-            }
-        });
-    }
+    // Déconnexion
+    document.querySelector('.logout-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'login.html';
+        }
+    });
 }
 
-// Charger les données selon la page - AMÉLIORÉ
+// Charger les données selon la page
 function loadPageData(page) {
-    console.log('Chargement de la page:', page);
+    console.log(`Chargement de la page: ${page}`);
     
     switch(page) {
         case 'dashboard':
             updateStats();
-            initChart();
-            initVisitorsChart();
+            initCharts();
             loadSuggestions();
             break;
         case 'collection':
@@ -368,29 +142,19 @@ function loadPageData(page) {
             break;
         case 'emprunts':
             displayEmprunts();
-            break;
-        case 'evenements':
-            // Ne rien faire, page statique
-            break;
-        case 'contact':
-            // Ne rien faire, page statique
+            updateEmpruntsCount();
             break;
     }
 }
 
-// Mettre à jour les statistiques - FONCTIONNEL
+// Mettre à jour les statistiques
 function updateStats() {
-    console.log('Mise à jour des statistiques...');
-    
-    // Calculer les statistiques
     const totalBooks = books.length;
     const totalAuthors = authors.length;
     const availableBooks = books.filter(book => book.status === 'available').length;
     const borrowedBooks = books.filter(book => book.status === 'borrowed').length;
     
-    console.log('Stats calculées:', { totalBooks, totalAuthors, availableBooks, borrowedBooks });
-    
-    // Mettre à jour les cartes de stats
+    // Mettre à jour les cartes
     const statNumbers = document.querySelectorAll('.stat-number');
     if (statNumbers.length >= 4) {
         statNumbers[0].textContent = totalBooks;
@@ -398,194 +162,156 @@ function updateStats() {
         statNumbers[2].textContent = availableBooks;
         statNumbers[3].textContent = borrowedBooks;
     }
-    
-    // Mettre à jour les changements
-    const statChanges = document.querySelectorAll('.stat-change');
-    if (statChanges.length >= 4) {
-        statChanges[0].textContent = `+${Math.floor(Math.random() * 5) + 1} cette semaine`;
-        statChanges[1].textContent = 'Contributeurs actifs';
-        statChanges[2].textContent = 'Prêts à l\'emprunt';
-        statChanges[3].textContent = 'Actuellement sortis';
-    }
 }
 
-// Mettre à jour le total des livres - FONCTIONNEL
+// Mettre à jour le total des livres
 function updateTotalBooks() {
-    const totalBooksBadge = document.querySelector('.total-books-badge span');
-    if (totalBooksBadge) {
-        totalBooksBadge.textContent = `${books.length} livres au total`;
+    const totalBooksElement = document.getElementById('total-books-count');
+    if (totalBooksElement) {
+        totalBooksElement.textContent = `${books.length} livres au total`;
     }
 }
 
-// Mettre à jour le compte des favoris - FONCTIONNEL
+// Mettre à jour le compte des favoris
 function updateFavoritesCount() {
-    const favoritesCount = document.querySelector('.favorites-count span');
+    const favoritesCount = document.getElementById('favorites-count');
     if (favoritesCount) {
-        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        const favorites = books.filter(book => book.favorite);
         favoritesCount.textContent = `${favorites.length} livres favoris`;
     }
 }
 
-// Recherche globale - FONCTIONNEL
-function initGlobalSearch() {
-    const globalSearch = document.getElementById('global-search');
-    const searchBtn = document.querySelector('.search-btn');
+// Mettre à jour le compte des emprunts
+function updateEmpruntsCount() {
+    const empruntsCount = document.getElementById('emprunts-count');
+    if (empruntsCount) {
+        const activeEmprunts = emprunts.filter(e => e.status === 'en-cours');
+        empruntsCount.textContent = `${activeEmprunts.length} emprunts actifs`;
+    }
+}
 
-    if (globalSearch && searchBtn) {
-        const performSearch = () => {
-            const searchTerm = globalSearch.value.toLowerCase().trim();
-            if (searchTerm) {
-                // Aller à la page collection et rechercher
-                const collectionLink = document.querySelector('[data-page="collection"]');
-                if (collectionLink) {
-                    collectionLink.click();
-                    setTimeout(() => {
-                        const collectionSearch = document.getElementById('collection-search');
-                        if (collectionSearch) {
-                            collectionSearch.value = searchTerm;
-                            filterBooks();
-                        }
-                    }, 100);
-                }
-            }
-        };
-
-        searchBtn.addEventListener('click', performSearch);
-        globalSearch.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') performSearch();
+// Initialiser les graphiques
+function initCharts() {
+    // Graphique des genres
+    const genreCanvas = document.getElementById('genreChart');
+    if (genreCanvas) {
+        const genreCtx = genreCanvas.getContext('2d');
+        
+        // Calculer la répartition par genre
+        const genreCounts = {};
+        books.forEach(book => {
+            genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1;
+        });
+        
+        const genres = Object.keys(genreCounts);
+        const counts = Object.values(genreCounts);
+        
+        // Effacer et redessiner
+        genreCtx.clearRect(0, 0, genreCanvas.width, genreCanvas.height);
+        
+        if (genres.length > 0) {
+            const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'];
+            const barWidth = 40;
+            const spacing = 20;
+            const maxHeight = 150;
+            const maxCount = Math.max(...counts);
+            
+            genres.forEach((genre, index) => {
+                const barHeight = (counts[index] / maxCount) * maxHeight;
+                const x = 50 + index * (barWidth + spacing);
+                const y = 180 - barHeight;
+                
+                // Dessiner la barre
+                genreCtx.fillStyle = colors[index % colors.length];
+                genreCtx.fillRect(x, y, barWidth, barHeight);
+                
+                // Texte du genre
+                genreCtx.fillStyle = '#374151';
+                genreCtx.font = '12px Inter';
+                genreCtx.textAlign = 'center';
+                genreCtx.fillText(genre, x + barWidth/2, 200);
+                
+                // Nombre
+                genreCtx.fillStyle = colors[index % colors.length];
+                genreCtx.font = 'bold 14px Inter';
+                genreCtx.fillText(counts[index], x + barWidth/2, y - 5);
+            });
+        }
+    }
+    
+    // Graphique des visiteurs
+    const visitorsCanvas = document.getElementById('visitorsChart');
+    if (visitorsCanvas) {
+        const visitorsCtx = visitorsCanvas.getContext('2d');
+        
+        const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+        const visitors = [85, 120, 95, 150, 180, 75];
+        
+        visitorsCtx.clearRect(0, 0, visitorsCanvas.width, visitorsCanvas.height);
+        
+        const barWidth = 40;
+        const spacing = 15;
+        const maxHeight = 150;
+        const maxVisitors = Math.max(...visitors);
+        
+        days.forEach((day, index) => {
+            const barHeight = (visitors[index] / maxVisitors) * maxHeight;
+            const x = 50 + index * (barWidth + spacing);
+            const y = 180 - barHeight;
+            
+            // Gradient pour la barre
+            const gradient = visitorsCtx.createLinearGradient(x, y, x, 180);
+            gradient.addColorStop(0, '#3b82f6');
+            gradient.addColorStop(1, '#1e40af');
+            visitorsCtx.fillStyle = gradient;
+            visitorsCtx.fillRect(x, y, barWidth, barHeight);
+            
+            // Jour
+            visitorsCtx.fillStyle = '#374151';
+            visitorsCtx.font = '12px Inter';
+            visitorsCtx.textAlign = 'center';
+            visitorsCtx.fillText(day, x + barWidth/2, 200);
+            
+            // Nombre
+            visitorsCtx.fillStyle = '#1e40af';
+            visitorsCtx.font = 'bold 14px Inter';
+            visitorsCtx.fillText(visitors[index], x + barWidth/2, y - 5);
         });
     }
 }
 
-// Graphique par genre - FONCTIONNEL
-function initChart() {
-    const canvas = document.getElementById('genreChart');
-    if (!canvas) {
-        console.log('Canvas genreChart non trouvé');
-        return;
-    }
-
-    // Calculer les données par genre
-    const genreData = {};
-    books.forEach(book => {
-        const genre = getGenreName(book.genre);
-        if (!genreData[genre]) {
-            genreData[genre] = 0;
-        }
-        genreData[genre]++;
-    });
-
-    const genres = Object.keys(genreData);
-    const counts = Object.values(genreData);
-    const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4'];
-
-    // Créer le canvas si nécessaire
-    if (!canvas.getContext) {
-        console.log('Canvas non supporté');
-        return;
-    }
-
-    const ctx = canvas.getContext('2d');
-    const maxCount = Math.max(...counts, 1);
-    const barWidth = Math.min(50, (canvas.width - 100) / genres.length);
-    const barMaxHeight = canvas.height - 60;
-    const spacing = 15;
-
-    // Effacer le canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    genres.forEach((genre, index) => {
-        const barHeight = (counts[index] / maxCount) * barMaxHeight;
-        const x = 40 + index * (barWidth + spacing);
-        const y = canvas.height - 30 - barHeight;
-
-        // Barre
-        const gradient = ctx.createLinearGradient(x, y, x, canvas.height - 30);
-        gradient.addColorStop(0, colors[index % colors.length]);
-        gradient.addColorStop(1, colors[index % colors.length] + '80');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(x, y, barWidth, barHeight);
-
-        // Nom du genre
-        ctx.fillStyle = '#1f2937';
-        ctx.font = '10px Arial';
-        ctx.textAlign = 'center';
-        const genreText = genre.length > 10 ? genre.substring(0, 10) + '...' : genre;
-        ctx.fillText(genreText, x + barWidth / 2, canvas.height - 10);
-
-        // Nombre
-        ctx.fillStyle = '#1f2937';
-        ctx.font = 'bold 11px Arial';
-        ctx.fillText(counts[index].toString(), x + barWidth / 2, y - 5);
-    });
-}
-
-// Graphique des visiteurs - FONCTIONNEL
-function initVisitorsChart() {
-    const canvas = document.getElementById('visitorsChart');
-    if (!canvas) {
-        console.log('Canvas visitorsChart non trouvé');
-        return;
-    }
-
-    if (!canvas.getContext) {
-        console.log('Canvas non supporté');
-        return;
-    }
-
-    const ctx = canvas.getContext('2d');
-    const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-    const visitors = [85, 120, 95, 150, 180, 75];
-    const maxVisitors = Math.max(...visitors);
-    const barWidth = (canvas.width - 100) / days.length;
-    const barMaxHeight = canvas.height - 60;
-    const spacing = 10;
-
-    // Effacer le canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    days.forEach((day, index) => {
-        const barHeight = (visitors[index] / maxVisitors) * barMaxHeight;
-        const x = 40 + index * (barWidth + spacing);
-        const y = canvas.height - 30 - barHeight;
-
-        const gradient = ctx.createLinearGradient(x, y, x, canvas.height - 30);
-        gradient.addColorStop(0, '#3b82f6');
-        gradient.addColorStop(1, '#8b5cf6');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(x, y, barWidth, barHeight);
-
-        // Jour
-        ctx.fillStyle = '#1f2937';
-        ctx.font = '10px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(day, x + barWidth / 2, canvas.height - 10);
-
-        // Nombre de visiteurs
-        ctx.fillStyle = '#3b82f6';
-        ctx.font = 'bold 10px Arial';
-        ctx.fillText(visitors[index].toString(), x + barWidth / 2, y - 5);
-    });
-}
-
-// Suggestions - FONCTIONNEL
+// Suggestions
 function loadSuggestions() {
     const suggestionsList = document.getElementById('suggestions-list');
-    if (!suggestionsList) {
-        console.log('Élément suggestions-list non trouvé');
-        return;
-    }
-
+    if (!suggestionsList) return;
+    
+    const suggestions = [
+        {
+            title: 'Le Comte de Monte-Cristo',
+            author: 'Alexandre Dumas',
+            year: 1844,
+            cover: 'https://m.media-amazon.com/images/I/81Uv+OS5k-L._AC_UF1000,1000_QL80_.jpg',
+            genre: 'Roman Historique'
+        },
+        {
+            title: 'Les Trois Mousquetaires',
+            author: 'Alexandre Dumas',
+            year: 1844,
+            cover: 'https://m.media-amazon.com/images/I/81iyx0OANFL._AC_UF1000,1000_QL80_.jpg',
+            genre: 'Roman Historique'
+        },
+        {
+            title: '1984',
+            author: 'George Orwell',
+            year: 1949,
+            cover: 'https://m.media-amazon.com/images/I/71kxa1-0mfL._AC_UF1000,1000_QL80_.jpg',
+            genre: 'Science-Fiction'
+        }
+    ];
+    
     suggestionsList.innerHTML = '';
     
-    // Prendre 3 suggestions aléatoires
-    const randomSuggestions = [...suggestions]
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3);
-
-    console.log('Chargement de suggestions:', randomSuggestions);
-
-    randomSuggestions.forEach(book => {
+    suggestions.forEach(book => {
         const item = document.createElement('div');
         item.className = 'suggestion-item';
         item.innerHTML = `
@@ -594,108 +320,59 @@ function loadSuggestions() {
                 <div class="suggestion-title">${book.title}</div>
                 <div class="suggestion-author">${book.author} • ${book.genre}</div>
                 <div class="suggestion-year">${book.year}</div>
-                <button class="btn-add-favorite" data-book="${book.title}">
+                <button class="btn-add-favorite" data-title="${book.title}">
                     <i class="far fa-heart"></i> Ajouter aux favoris
                 </button>
             </div>
         `;
         suggestionsList.appendChild(item);
     });
-
-    // Ajouter les listeners pour les boutons favoris
+    
+    // Ajouter les event listeners
     suggestionsList.querySelectorAll('.btn-add-favorite').forEach(btn => {
         btn.addEventListener('click', function() {
-            const bookTitle = this.getAttribute('data-book');
-            toggleFavorite(bookTitle);
+            const title = this.getAttribute('data-title');
+            // Simuler l'ajout aux favoris
             this.innerHTML = '<i class="fas fa-heart"></i> Ajouté !';
             this.style.color = '#ef4444';
-            setTimeout(() => {
-                if (document.querySelector('#favoris.page.active')) {
-                    displayFavorites();
-                }
-            }, 500);
+            this.disabled = true;
         });
     });
 }
 
-// Favoris - FONCTIONNEL
-function toggleFavorite(bookTitle) {
-    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    const book = books.find(b => b.title === bookTitle);
-    
-    if (favorites.includes(bookTitle)) {
-        favorites = favorites.filter(f => f !== bookTitle);
-        if (book) {
-            book.favorite = false;
-            book.likes = Math.max(0, (book.likes || 0) - 1);
-        }
-    } else {
-        favorites.push(bookTitle);
-        if (book) {
-            book.favorite = true;
-            book.likes = (book.likes || 0) + 1;
-        }
-    }
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    
-    // Mettre à jour l'affichage
-    updateFavoriteButtons();
-    updateFavoritesCount();
-    
-    // Si on est sur la page des favoris, recharger
-    if (document.querySelector('#favoris.page.active')) {
-        displayFavorites();
-    }
-}
-
-function updateFavoriteButtons() {
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    document.querySelectorAll('.favorite-btn').forEach(btn => {
-        const bookTitle = btn.getAttribute('data-book');
-        if (bookTitle) {
-            if (favorites.includes(bookTitle)) {
-                btn.classList.add('active');
-                btn.innerHTML = '<i class="fas fa-heart"></i>';
-                btn.style.color = '#ef4444';
-            } else {
-                btn.classList.remove('active');
-                btn.innerHTML = '<i class="far fa-heart"></i>';
-                btn.style.color = '#9ca3af';
-            }
-        }
-    });
-}
-
-// Collection - Afficher les livres - FONCTIONNEL
+// Collection - Afficher les livres
 function displayBooks(filteredBooks = books) {
     const grid = document.getElementById('collection-grid');
-    if (!grid) {
-        console.log('Élément collection-grid non trouvé');
-        return;
-    }
-
+    if (!grid) return;
+    
     grid.innerHTML = '';
-
+    
     if (filteredBooks.length === 0) {
         grid.innerHTML = `
-            <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-light);">
+            <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #6b7280;">
                 <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
                 <p>Aucun livre trouvé.</p>
             </div>`;
         return;
     }
-
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-
+    
     filteredBooks.forEach(book => {
         const card = document.createElement('div');
         card.className = 'collection-book-card';
-        const isFavorite = favorites.includes(book.title) || book.favorite;
-
+        
+        // Déterminer le badge de statut
+        let statusBadge = '';
+        if (book.status === 'available') {
+            statusBadge = '<div class="book-status-badge status-available">Disponible</div>';
+        } else if (book.status === 'borrowed') {
+            statusBadge = '<div class="book-status-badge status-borrowed">Emprunté</div>';
+        } else {
+            statusBadge = '<div class="book-status-badge status-lost">Perdu</div>';
+        }
+        
         card.innerHTML = `
             <div class="collection-book-cover" style="background-image: url('${book.cover}')">
-                ${book.status === 'borrowed' ? '<div class="borrowed-badge">Emprunté</div>' : ''}
-                ${book.status === 'lost' ? '<div class="lost-badge">Perdu</div>' : ''}
+                ${statusBadge}
             </div>
             <div class="collection-book-title">${book.title}</div>
             <div class="collection-book-info">
@@ -714,33 +391,85 @@ function displayBooks(filteredBooks = books) {
                 <i class="fas fa-barcode"></i>
                 <span>${book.isbn}</span>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
-                <div class="collection-book-status ${book.status}">
-                    ${book.status === 'available' ? '🟢 Disponible' : 
-                      book.status === 'borrowed' ? '🟡 Emprunté' : 
-                      '🔴 Perdu'}
-                </div>
-                <button class="favorite-btn ${isFavorite ? 'active' : ''}" 
-                        data-book="${book.title}" 
-                        style="background: none; border: none; cursor: pointer; font-size: 1.2rem; color: ${isFavorite ? '#ef4444' : '#9ca3af'}; padding: 0.25rem;">
-                    <i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i>
+            <div class="collection-book-actions">
+                <button class="favorite-btn ${book.favorite ? 'active' : ''}" data-id="${book.id}">
+                    <i class="${book.favorite ? 'fas' : 'far'} fa-heart"></i>
                 </button>
+                ${book.status === 'available' ? 
+                  `<button class="borrow-btn" data-id="${book.id}">Emprunter</button>` : 
+                  `<button class="borrow-btn" disabled>Indisponible</button>`}
             </div>
         `;
+        
         grid.appendChild(card);
     });
-
-    // Ajouter les event listeners pour les favoris
+    
+    // Ajouter les event listeners
     grid.querySelectorAll('.favorite-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            const bookTitle = this.getAttribute('data-book');
-            toggleFavorite(bookTitle);
+            const bookId = parseInt(this.getAttribute('data-id'));
+            const book = books.find(b => b.id === bookId);
             
-            // Animation visuelle
-            this.style.transform = 'scale(1.3)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 300);
+            if (book) {
+                book.favorite = !book.favorite;
+                saveData();
+                
+                // Mettre à jour l'icône
+                const icon = this.querySelector('i');
+                if (book.favorite) {
+                    icon.className = 'fas fa-heart';
+                    this.classList.add('active');
+                } else {
+                    icon.className = 'far fa-heart';
+                    this.classList.remove('active');
+                }
+                
+                // Animation
+                this.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+                
+                // Mettre à jour les compteurs
+                updateFavoritesCount();
+            }
+        });
+    });
+    
+    grid.querySelectorAll('.borrow-btn:not([disabled])').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const bookId = parseInt(this.getAttribute('data-id'));
+            const book = books.find(b => b.id === bookId);
+            
+            if (book) {
+                const borrower = prompt(`Emprunter "${book.title}"\nNom de l'emprunteur:`, "Jean Dupont");
+                
+                if (borrower && borrower.trim()) {
+                    // Mettre à jour le statut du livre
+                    book.status = 'borrowed';
+                    
+                    // Ajouter à la liste des emprunts
+                    const newEmprunt = {
+                        id: emprunts.length + 1,
+                        bookId: book.id,
+                        title: book.title,
+                        author: book.author,
+                        borrower: borrower.trim(),
+                        dateEmprunt: new Date().toISOString().split('T')[0],
+                        dateRetour: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        status: 'en-cours'
+                    };
+                    emprunts.push(newEmprunt);
+                    
+                    // Sauvegarder et mettre à jour
+                    saveData();
+                    displayBooks();
+                    updateStats();
+                    updateEmpruntsCount();
+                    
+                    alert(`"${book.title}" a été emprunté par ${borrower.trim()}`);
+                }
+            }
         });
     });
 }
@@ -758,56 +487,60 @@ function getGenreName(genreKey) {
     return genres[genreKey] || genreKey;
 }
 
-// Collection - Filtres - FONCTIONNEL
-function filterBooks() {
-    const searchTerm = document.getElementById('collection-search')?.value.toLowerCase() || '';
-    const status = document.getElementById('status-filter')?.value || 'all';
-    const genre = document.getElementById('genre-filter')?.value || 'all';
-
-    console.log('Filtrage avec:', { searchTerm, status, genre });
-
-    let filtered = books;
-
-    if (searchTerm) {
-        filtered = filtered.filter(book => 
-            book.title.toLowerCase().includes(searchTerm) ||
-            book.author.toLowerCase().includes(searchTerm) ||
-            book.genre.toLowerCase().includes(searchTerm) ||
-            book.isbn.toLowerCase().includes(searchTerm)
-        );
-    }
-
-    if (status !== 'all') {
-        filtered = filtered.filter(book => book.status === status);
-    }
-
-    if (genre !== 'all') {
-        filtered = filtered.filter(book => book.genre === genre);
-    }
-
-    console.log('Livres filtrés:', filtered.length);
-    displayBooks(filtered);
+// Collection - Filtres
+function initCollectionFilters() {
+    const searchInput = document.getElementById('collection-search');
+    const statusFilter = document.getElementById('status-filter');
+    const genreFilter = document.getElementById('genre-filter');
+    
+    const filterBooks = () => {
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        const status = statusFilter ? statusFilter.value : 'all';
+        const genre = genreFilter ? genreFilter.value : 'all';
+        
+        let filtered = books;
+        
+        if (searchTerm) {
+            filtered = filtered.filter(book => 
+                book.title.toLowerCase().includes(searchTerm) ||
+                book.author.toLowerCase().includes(searchTerm) ||
+                book.genre.toLowerCase().includes(searchTerm) ||
+                book.isbn.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        if (status !== 'all') {
+            filtered = filtered.filter(book => book.status === status);
+        }
+        
+        if (genre !== 'all') {
+            filtered = filtered.filter(book => book.genre === genre);
+        }
+        
+        displayBooks(filtered);
+    };
+    
+    if (searchInput) searchInput.addEventListener('input', filterBooks);
+    if (statusFilter) statusFilter.addEventListener('change', filterBooks);
+    if (genreFilter) genreFilter.addEventListener('change', filterBooks);
 }
 
-// Auteurs - FONCTIONNEL
+// Auteurs
 function displayAuthors(filteredAuthors = authors) {
     const grid = document.getElementById('authors-grid');
-    if (!grid) {
-        console.log('Élément authors-grid non trouvé');
-        return;
-    }
-
+    if (!grid) return;
+    
     grid.innerHTML = '';
-
+    
     if (filteredAuthors.length === 0) {
         grid.innerHTML = `
-            <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-light);">
+            <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #6b7280;">
                 <i class="fas fa-user" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
                 <p>Aucun auteur trouvé.</p>
             </div>`;
         return;
     }
-
+    
     filteredAuthors.forEach(author => {
         const card = document.createElement('div');
         card.className = 'author-card';
@@ -827,96 +560,95 @@ function displayAuthors(filteredAuthors = authors) {
     });
 }
 
-// Favoris - FONCTIONNEL
-function displayFavorites() {
-    const container = document.getElementById('favorites-horizontal');
-    if (!container) {
-        console.log('Élément favorites-horizontal non trouvé');
-        return;
+// Recherche auteurs
+function initAuthorsSearch() {
+    const searchInput = document.getElementById('authors-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = authors.filter(author => 
+                author.name.toLowerCase().includes(searchTerm) ||
+                author.nationality.toLowerCase().includes(searchTerm)
+            );
+            displayAuthors(filtered);
+        });
     }
+}
 
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    const favoriteBooks = books.filter(book => favorites.includes(book.title));
-
-    container.innerHTML = '';
-
+// Favoris
+function displayFavorites() {
+    const grid = document.getElementById('favorites-grid');
+    if (!grid) return;
+    
+    const favoriteBooks = books.filter(book => book.favorite);
+    
+    grid.innerHTML = '';
+    
     if (favoriteBooks.length === 0) {
-        container.innerHTML = `
-            <div class="no-results" style="text-align: center; padding: 3rem; color: var(--text-light);">
+        grid.innerHTML = `
+            <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #6b7280;">
                 <i class="fas fa-heart" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
                 <p>Aucun livre favori pour le moment.</p>
                 <p style="margin-top: 1rem; font-size: 0.9rem;">Ajoutez des livres à vos favoris en cliquant sur l'icône cœur ❤️</p>
             </div>`;
         return;
     }
-
+    
     favoriteBooks.forEach(book => {
         const card = document.createElement('div');
-        card.className = 'favorite-horizontal-card';
+        card.className = 'favorite-card';
+        
+        // Déterminer le statut
+        let statusText = '';
+        if (book.status === 'available') {
+            statusText = 'Disponible';
+        } else if (book.status === 'borrowed') {
+            statusText = 'Emprunté';
+        } else {
+            statusText = 'Perdu';
+        }
         
         card.innerHTML = `
-            <div class="favorite-horizontal-cover" style="background-image: url('${book.cover}')"></div>
-            <div class="favorite-horizontal-content">
-                <div class="favorite-horizontal-title">${book.title}</div>
-                <div class="favorite-horizontal-author">${book.author}</div>
-                <div class="favorite-horizontal-meta">
+            <div class="favorite-cover" style="background-image: url('${book.cover}')"></div>
+            <div class="favorite-content">
+                <div class="favorite-title">${book.title}</div>
+                <div class="favorite-author">${book.author}</div>
+                <div class="favorite-meta">
                     <span><i class="fas fa-tag"></i> ${getGenreName(book.genre)}</span>
                     <span><i class="fas fa-calendar"></i> ${book.year}</span>
-                    <span><i class="fas fa-heart"></i> ${book.likes || 0} likes</span>
+                    <span><i class="fas fa-info-circle"></i> ${statusText}</span>
+                </div>
+                <div class="favorite-actions">
+                    <button class="btn btn-primary borrow-favorite-btn" data-id="${book.id}" 
+                            ${book.status !== 'available' ? 'disabled' : ''}>
+                        <i class="fas fa-exchange-alt"></i> Emprunter
+                    </button>
+                    <button class="btn btn-secondary remove-favorite-btn" data-id="${book.id}">
+                        <i class="fas fa-heart-broken"></i> Retirer
+                    </button>
                 </div>
             </div>
-            <div class="favorite-horizontal-actions">
-                ${book.status === 'available' ? 
-                  '<button class="btn btn-primary borrow-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Emprunter</button>' : 
-                  '<button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" disabled>Indisponible</button>'}
-                <button class="favorite-btn active" data-book="${book.title}" 
-                        style="background: none; border: 1px solid var(--border); color: #ef4444; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
-                    <i class="fas fa-heart"></i> Retirer
-                </button>
-            </div>
         `;
-        container.appendChild(card);
+        
+        grid.appendChild(card);
     });
-
-    // Recherche dans les favoris
-    const favoritesSearch = document.getElementById('favorites-search');
-    if (favoritesSearch) {
-        favoritesSearch.oninput = (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const filtered = favoriteBooks.filter(book => 
-                book.title.toLowerCase().includes(searchTerm) ||
-                book.author.toLowerCase().includes(searchTerm) ||
-                getGenreName(book.genre).toLowerCase().includes(searchTerm)
-            );
-            displayFavoritesFiltered(filtered);
-        };
-    }
-
-    // Event listeners pour les favoris
-    container.querySelectorAll('.favorite-btn').forEach(btn => {
+    
+    // Ajouter les event listeners
+    grid.querySelectorAll('.borrow-favorite-btn:not([disabled])').forEach(btn => {
         btn.addEventListener('click', function() {
-            const bookTitle = this.getAttribute('data-book');
-            toggleFavorite(bookTitle);
-        });
-    });
-
-    // Event listeners pour emprunter
-    container.querySelectorAll('.borrow-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const card = this.closest('.favorite-horizontal-card');
-            const title = card.querySelector('.favorite-horizontal-title').textContent;
-            const borrower = prompt(`Emprunter "${title}"\nNom de l'emprunteur:`, "Jean Dupont");
+            const bookId = parseInt(this.getAttribute('data-id'));
+            const book = books.find(b => b.id === bookId);
             
-            if (borrower && borrower.trim()) {
-                // Mettre à jour le statut du livre
-                const book = books.find(b => b.title === title);
-                if (book) {
+            if (book) {
+                const borrower = prompt(`Emprunter "${book.title}"\nNom de l'emprunteur:`, "Jean Dupont");
+                
+                if (borrower && borrower.trim()) {
                     book.status = 'borrowed';
                     
-                    // Ajouter à la liste des emprunts
                     const newEmprunt = {
                         id: emprunts.length + 1,
-                        title: title,
+                        bookId: book.id,
+                        title: book.title,
                         author: book.author,
                         borrower: borrower.trim(),
                         dateEmprunt: new Date().toISOString().split('T')[0],
@@ -925,80 +657,112 @@ function displayFavorites() {
                     };
                     emprunts.push(newEmprunt);
                     
-                    // Mettre à jour l'affichage
+                    saveData();
                     displayFavorites();
                     updateStats();
+                    updateEmpruntsCount();
                     
-                    alert(`"${title}" a été emprunté par ${borrower.trim()}`);
+                    alert(`"${book.title}" a été emprunté par ${borrower.trim()}`);
                 }
             }
         });
     });
+    
+    grid.querySelectorAll('.remove-favorite-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const bookId = parseInt(this.getAttribute('data-id'));
+            const book = books.find(b => b.id === bookId);
+            
+            if (book && confirm(`Retirer "${book.title}" des favoris ?`)) {
+                book.favorite = false;
+                saveData();
+                displayFavorites();
+                updateFavoritesCount();
+            }
+        });
+    });
+    
+    // Recherche dans les favoris
+    const searchInput = document.getElementById('favorites-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = favoriteBooks.filter(book => 
+                book.title.toLowerCase().includes(searchTerm) ||
+                book.author.toLowerCase().includes(searchTerm)
+            );
+            
+            // Réafficher avec filtrage
+            if (searchTerm) {
+                displayFilteredFavorites(filtered);
+            } else {
+                displayFavorites();
+            }
+        });
+    }
 }
 
-function displayFavoritesFiltered(filtered) {
-    const container = document.getElementById('favorites-horizontal');
-    if (!container) return;
-
-    container.innerHTML = '';
+function displayFilteredFavorites(filtered) {
+    const grid = document.getElementById('favorites-grid');
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    
     if (filtered.length === 0) {
-        container.innerHTML = `
-            <div class="no-results" style="text-align: center; padding: 3rem; color: var(--text-light);">
+        grid.innerHTML = `
+            <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #6b7280;">
                 <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
                 <p>Aucun résultat trouvé.</p>
             </div>`;
         return;
     }
-
+    
     filtered.forEach(book => {
         const card = document.createElement('div');
-        card.className = 'favorite-horizontal-card';
+        card.className = 'favorite-card';
         
         card.innerHTML = `
-            <div class="favorite-horizontal-cover" style="background-image: url('${book.cover}')"></div>
-            <div class="favorite-horizontal-content">
-                <div class="favorite-horizontal-title">${book.title}</div>
-                <div class="favorite-horizontal-author">${book.author}</div>
-                <div class="favorite-horizontal-meta">
+            <div class="favorite-cover" style="background-image: url('${book.cover}')"></div>
+            <div class="favorite-content">
+                <div class="favorite-title">${book.title}</div>
+                <div class="favorite-author">${book.author}</div>
+                <div class="favorite-meta">
                     <span><i class="fas fa-tag"></i> ${getGenreName(book.genre)}</span>
                     <span><i class="fas fa-calendar"></i> ${book.year}</span>
                 </div>
-            </div>
-            <div class="favorite-horizontal-actions">
-                ${book.status === 'available' ? 
-                  '<button class="btn btn-primary borrow-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Emprunter</button>' : 
-                  '<button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" disabled>Indisponible</button>'}
-                <button class="favorite-btn active" data-book="${book.title}" 
-                        style="background: none; border: 1px solid var(--border); color: #ef4444; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
-                    <i class="fas fa-heart"></i> Retirer
-                </button>
+                <div class="favorite-actions">
+                    <button class="btn btn-primary borrow-favorite-btn" data-id="${book.id}">
+                        <i class="fas fa-exchange-alt"></i> Emprunter
+                    </button>
+                    <button class="btn btn-secondary remove-favorite-btn" data-id="${book.id}">
+                        <i class="fas fa-heart-broken"></i> Retirer
+                    </button>
+                </div>
             </div>
         `;
-        container.appendChild(card);
+        
+        grid.appendChild(card);
     });
 }
 
-// Emprunts - FONCTIONNEL
+// Emprunts
 function displayEmprunts() {
     const tbody = document.getElementById('emprunts-body');
-    if (!tbody) {
-        console.log('Élément emprunts-body non trouvé');
-        return;
-    }
-
+    if (!tbody) return;
+    
     tbody.innerHTML = '';
-
+    
     if (emprunts.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-light);">
+                <td colspan="7" style="text-align: center; padding: 2rem; color: #6b7280;">
                     <i class="fas fa-exchange-alt" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
                     <p>Aucun emprunt enregistré.</p>
                 </td>
             </tr>`;
         return;
     }
-
+    
     emprunts.forEach(emprunt => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -1010,16 +774,17 @@ function displayEmprunts() {
             <td><span class="status-badge ${emprunt.status}">${getStatusName(emprunt.status)}</span></td>
             <td>
                 <button class="btn btn-primary prolonger-btn" data-id="${emprunt.id}" 
-                        style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                        style="padding: 0.5rem 1rem; font-size: 0.85rem;"
+                        ${emprunt.status !== 'en-cours' ? 'disabled' : ''}>
                     Prolonger
                 </button>
             </td>
         `;
         tbody.appendChild(row);
     });
-
-    // Ajouter les listeners pour les boutons "Prolonger"
-    tbody.querySelectorAll('.prolonger-btn').forEach(btn => {
+    
+    // Ajouter les event listeners pour prolonger
+    tbody.querySelectorAll('.prolonger-btn:not([disabled])').forEach(btn => {
         btn.addEventListener('click', function() {
             const empruntId = parseInt(this.getAttribute('data-id'));
             const emprunt = emprunts.find(e => e.id === empruntId);
@@ -1029,14 +794,14 @@ function displayEmprunts() {
                     formatDate(emprunt.dateRetour));
                 
                 if (nouvelleDate) {
-                    // Valider et mettre à jour la date
                     const dateParts = nouvelleDate.split('/');
                     if (dateParts.length === 3) {
                         const newDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
                         if (!isNaN(Date.parse(newDate))) {
                             emprunt.dateRetour = newDate;
-                            alert('Date de retour prolongée avec succès !');
+                            saveData();
                             displayEmprunts();
+                            alert('Date de retour prolongée avec succès !');
                         } else {
                             alert('Date invalide. Format attendu: JJ/MM/AAAA');
                         }
@@ -1051,7 +816,7 @@ function displayEmprunts() {
 
 function formatDate(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return date.toLocaleDateString('fr-FR');
 }
 
 function getStatusName(status) {
@@ -1063,185 +828,207 @@ function getStatusName(status) {
     return statusNames[status] || status;
 }
 
-// Modals - FONCTIONNEL
+// Modals
 function initModals() {
-    const modals = document.querySelectorAll('.modal');
-    const modalCloses = document.querySelectorAll('.modal-close');
-
-    modalCloses.forEach(close => {
-        close.addEventListener('click', () => {
-            close.closest('.modal').style.display = 'none';
+    // Boutons pour ouvrir les modals
+    document.getElementById('add-book-btn').addEventListener('click', () => {
+        openAddBookModal();
+    });
+    
+    document.getElementById('add-author-btn').addEventListener('click', () => {
+        openAddAuthorModal();
+    });
+    
+    document.getElementById('add-author-card').addEventListener('click', () => {
+        openAddAuthorModal();
+    });
+    
+    // Fermer les modals
+    document.querySelectorAll('.modal-close').forEach(closeBtn => {
+        closeBtn.addEventListener('click', function() {
+            this.closest('.modal').style.display = 'none';
         });
     });
-
+    
+    // Fermer en cliquant en dehors
     window.addEventListener('click', (e) => {
-        modals.forEach(modal => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
     });
-
-    // Bouton ajouter livre
-    const addBookBtn = document.getElementById('add-book-btn');
-    const addBookModal = document.getElementById('add-book-modal');
-    if (addBookBtn && addBookModal) {
-        addBookBtn.addEventListener('click', () => {
-            addBookModal.style.display = 'block';
-        });
-    }
-
-    // Case ajouter auteur
-    const addAuthorCard = document.getElementById('add-author-card');
-    const addAuthorModal = document.getElementById('add-author-modal');
-    if (addAuthorCard && addAuthorModal) {
-        addAuthorCard.addEventListener('click', () => {
-            addAuthorModal.style.display = 'block';
-        });
-    }
-
-    // Bouton ajouter auteur
-    const addAuthorBtn = document.getElementById('add-author-btn');
-    if (addAuthorBtn && addAuthorModal) {
-        addAuthorBtn.addEventListener('click', () => {
-            addAuthorModal.style.display = 'block';
-        });
-    }
-
+    
     // Formulaire ajouter livre
-    const addBookForm = document.getElementById('add-book-form');
-    if (addBookForm) {
-        addBookForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const newBook = {
-                id: books.length + 1,
-                title: document.getElementById('book-title').value,
-                author: document.getElementById('book-author').value,
-                genre: document.getElementById('book-genre-modal').value,
-                year: parseInt(document.getElementById('book-year').value),
-                isbn: document.getElementById('book-isbn').value,
-                status: document.getElementById('book-status').value,
-                favorite: false,
-                likes: 0,
-                cover: 'https://m.media-amazon.com/images/I/81eIDJ-hmHL._AC_UF1000,1000_QL80_.jpg' // Image par défaut
-            };
-            
-            books.push(newBook);
-            
-            // Mettre à jour l'auteur
-            const author = authors.find(a => a.name === newBook.author);
-            if (author) {
-                author.booksCount++;
-            } else {
-                // Créer un nouvel auteur
-                authors.push({
-                    id: authors.length + 1,
-                    name: newBook.author,
-                    nationality: 'Inconnue',
-                    birthYear: 1900,
-                    booksCount: 1,
-                    initial: newBook.author.charAt(0).toUpperCase()
-                });
-            }
-            
-            // Mettre à jour les vues
-            displayBooks();
-            updateStats();
-            updateTotalBooks();
-            
-            // Fermer le modal et réinitialiser le formulaire
-            addBookModal.style.display = 'none';
-            addBookForm.reset();
-            
-            // Notification
-            alert(`Livre "${newBook.title}" ajouté avec succès !`);
-        });
-    }
-
-    // Formulaire ajouter auteur
-    const addAuthorForm = document.getElementById('add-author-form');
-    if (addAuthorForm) {
-        addAuthorForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('author-name').value;
-            const nationality = document.getElementById('author-nationality').value;
-            const birthYear = parseInt(document.getElementById('author-birth').value);
-            
-            const newAuthor = {
+    document.getElementById('add-book-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const title = document.getElementById('book-title').value;
+        const authorName = document.getElementById('book-author').value;
+        const genre = document.getElementById('book-genre').value;
+        const year = parseInt(document.getElementById('book-year').value);
+        const isbn = document.getElementById('book-isbn').value;
+        const cover = document.getElementById('book-cover').value || 'https://m.media-amazon.com/images/I/81eIDJ-hmHL._AC_UF1000,1000_QL80_.jpg';
+        
+        // Vérifier si l'auteur existe
+        let author = authors.find(a => a.name === authorName);
+        if (!author) {
+            // Créer un nouvel auteur
+            author = {
                 id: authors.length + 1,
-                name: name,
-                nationality: nationality,
-                birthYear: birthYear,
+                name: authorName,
+                nationality: 'Inconnue',
+                birthYear: 1900,
                 booksCount: 0,
-                initial: name.charAt(0).toUpperCase()
+                initial: authorName.charAt(0).toUpperCase()
             };
-            
-            authors.push(newAuthor);
+            authors.push(author);
+        }
+        
+        // Créer le nouveau livre
+        const newBook = {
+            id: books.length + 1,
+            title,
+            author: authorName,
+            genre,
+            year,
+            isbn,
+            status: 'available',
+            favorite: false,
+            cover
+        };
+        
+        books.push(newBook);
+        author.booksCount++;
+        
+        // Sauvegarder
+        saveData();
+        
+        // Fermer le modal
+        document.getElementById('add-book-modal').style.display = 'none';
+        
+        // Réinitialiser le formulaire
+        this.reset();
+        
+        // Mettre à jour l'affichage
+        if (document.getElementById('collection').classList.contains('active')) {
+            displayBooks();
+            updateTotalBooks();
+        }
+        updateStats();
+        
+        // Notification
+        alert(`Livre "${title}" ajouté avec succès !`);
+    });
+    
+    // Formulaire ajouter auteur
+    document.getElementById('add-author-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('author-name').value;
+        const nationality = document.getElementById('author-nationality').value;
+        const birthYear = parseInt(document.getElementById('author-birth').value);
+        
+        const newAuthor = {
+            id: authors.length + 1,
+            name,
+            nationality,
+            birthYear,
+            booksCount: 0,
+            initial: name.charAt(0).toUpperCase()
+        };
+        
+        authors.push(newAuthor);
+        saveData();
+        
+        // Fermer le modal
+        document.getElementById('add-author-modal').style.display = 'none';
+        
+        // Réinitialiser le formulaire
+        this.reset();
+        
+        // Mettre à jour l'affichage
+        if (document.getElementById('auteurs').classList.contains('active')) {
             displayAuthors();
-            
-            // Fermer le modal et réinitialiser le formulaire
-            addAuthorModal.style.display = 'none';
-            addAuthorForm.reset();
-            
-            // Notification
-            alert(`Auteur "${name}" ajouté avec succès !`);
-        });
-    }
+        }
+        
+        // Notification
+        alert(`Auteur "${name}" ajouté avec succès !`);
+    });
 }
 
-// Recherche auteurs - FONCTIONNEL
-function initAuthorsSearch() {
-    const authorsSearch = document.getElementById('authors-search');
-    if (authorsSearch) {
-        authorsSearch.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const filtered = authors.filter(author => 
-                author.name.toLowerCase().includes(searchTerm) ||
-                author.nationality.toLowerCase().includes(searchTerm)
-            );
-            displayAuthors(filtered);
-        });
-    }
+function openAddBookModal() {
+    const modal = document.getElementById('add-book-modal');
+    const authorSelect = document.getElementById('book-author');
+    
+    // Remplir la liste des auteurs
+    authorSelect.innerHTML = '<option value="">Sélectionner un auteur</option>';
+    authors.forEach(author => {
+        const option = document.createElement('option');
+        option.value = author.name;
+        option.textContent = author.name;
+        authorSelect.appendChild(option);
+    });
+    
+    // Ajouter une option pour un nouvel auteur
+    const newOption = document.createElement('option');
+    newOption.value = 'new';
+    newOption.textContent = '+ Ajouter un nouvel auteur';
+    authorSelect.appendChild(newOption);
+    
+    // Gérer la sélection "nouvel auteur"
+    authorSelect.addEventListener('change', function() {
+        if (this.value === 'new') {
+            // Ouvrir le modal d'ajout d'auteur
+            document.getElementById('add-book-modal').style.display = 'none';
+            openAddAuthorModal();
+        }
+    });
+    
+    modal.style.display = 'block';
 }
 
-// Formulaire contact - FONCTIONNEL
-function initContactForm() {
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Récupérer les valeurs
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const sujet = document.getElementById('sujet').value;
-            const message = document.getElementById('message').value;
-            
-            // Simuler l'envoi
-            console.log('Message envoyé:', { name, email, sujet, message });
-            
-            // Afficher un message de confirmation
-            alert('Merci pour votre message ! Nous vous répondrons bientôt.');
-            
-            // Réinitialiser le formulaire
-            contactForm.reset();
-        });
-    }
+function openAddAuthorModal() {
+    document.getElementById('add-author-modal').style.display = 'block';
 }
 
-// Notifications - FONCTIONNEL
+// Recherche globale
+function initGlobalSearch() {
+    const searchInput = document.getElementById('global-search');
+    const searchBtn = document.querySelector('.search-btn');
+    
+    const performSearch = () => {
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm) {
+            // Aller à la page collection
+            document.querySelector('[data-page="collection"]').click();
+            
+            // Mettre la recherche dans le champ de la collection
+            setTimeout(() => {
+                const collectionSearch = document.getElementById('collection-search');
+                if (collectionSearch) {
+                    collectionSearch.value = searchTerm;
+                    collectionSearch.dispatchEvent(new Event('input'));
+                }
+            }, 100);
+        }
+    };
+    
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') performSearch();
+    });
+}
+
+// Notifications
 function initNotifications() {
     const notificationBtn = document.querySelector('.notification-btn');
     const notificationsDropdown = document.getElementById('notifications-dropdown');
-
+    
     if (notificationBtn && notificationsDropdown) {
         notificationBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             notificationsDropdown.classList.toggle('active');
         });
-
+        
         // Fermer quand on clique ailleurs
         document.addEventListener('click', (e) => {
             if (!notificationBtn.contains(e.target) && !notificationsDropdown.contains(e.target)) {
@@ -1251,177 +1038,157 @@ function initNotifications() {
     }
 }
 
-// Actualiser les suggestions - FONCTIONNEL
+// Actualiser les suggestions
 function initRefreshSuggestions() {
     const refreshBtn = document.getElementById('refresh-suggestions');
     if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
-            // Animation de chargement
+            // Animation
             refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualisation...';
+            refreshBtn.disabled = true;
             
-            // Simuler un délai
             setTimeout(() => {
                 loadSuggestions();
                 refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Actualiser';
+                refreshBtn.disabled = false;
                 
                 // Notification
-                const notification = document.createElement('div');
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 100px;
-                    right: 20px;
-                    background: #10b981;
-                    color: white;
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                    z-index: 9999;
-                    animation: slideIn 0.3s ease;
-                `;
-                notification.innerHTML = 'Suggestions actualisées !';
-                document.body.appendChild(notification);
-                
-                setTimeout(() => {
-                    notification.style.animation = 'slideOut 0.3s ease';
-                    setTimeout(() => notification.remove(), 300);
-                }, 2000);
+                showNotification('Suggestions actualisées !', 'success');
             }, 800);
         });
     }
 }
 
-// Initialisation au chargement - AMÉLIORÉ
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM chargé, initialisation en cours...');
+// Formulaire contact
+function initContactForm() {
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Récupérer les valeurs
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData);
+            
+            // Simuler l'envoi
+            console.log('Message contact:', data);
+            
+            // Réinitialiser le formulaire
+            contactForm.reset();
+            
+            // Notification
+            showNotification('Message envoyé avec succès !', 'success');
+        });
+    }
+}
+
+// Notification
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
     
+    document.body.appendChild(notification);
+    
+    // Animation d'entrée
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    // Supprimer après 3 secondes
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
     // Vérifier la connexion
     if (localStorage.getItem('isLoggedIn') !== 'true') {
-        console.log('Non connecté, redirection vers login.html');
         window.location.href = 'login.html';
         return;
     }
     
-    console.log('Utilisateur connecté:', localStorage.getItem('username'));
+    console.log('Initialisation du site Bibliotheca...');
     
     // Initialiser toutes les fonctionnalités
-    try {
-        initNavigation();
-        console.log('Navigation initialisée');
-        
-        initGlobalSearch();
-        console.log('Recherche globale initialisée');
-        
-        initModals();
-        console.log('Modals initialisés');
-        
-        initAuthorsSearch();
-        console.log('Recherche auteurs initialisée');
-        
-        initContactForm();
-        console.log('Formulaire contact initialisé');
-        
-        initNotifications();
-        console.log('Notifications initialisées');
-        
-        initRefreshSuggestions();
-        console.log('Refresh suggestions initialisé');
-        
-        updateFavoriteButtons();
-        console.log('Boutons favoris mis à jour');
-        
-        // Charger les données de la page active
-        const activePage = document.querySelector('.page.active');
-        if (activePage) {
-            const pageId = activePage.id;
-            console.log('Page active détectée:', pageId);
-            loadPageData(pageId);
-        } else {
-            console.log('Aucune page active détectée');
-        }
-
-        // Event listeners pour les filtres collection
-        const collectionSearch = document.getElementById('collection-search');
-        const statusFilter = document.getElementById('status-filter');
-        const genreFilter = document.getElementById('genre-filter');
-        
-        if (collectionSearch) {
-            collectionSearch.addEventListener('input', filterBooks);
-            console.log('Filtre recherche collection initialisé');
-        }
-        if (statusFilter) {
-            statusFilter.addEventListener('change', filterBooks);
-            console.log('Filtre statut initialisé');
-        }
-        if (genreFilter) {
-            genreFilter.addEventListener('change', filterBooks);
-            console.log('Filtre genre initialisé');
-        }
-        
-        console.log('Initialisation terminée avec succès !');
-        
-    } catch (error) {
-        console.error('Erreur lors de l\'initialisation:', error);
+    initNavigation();
+    initGlobalSearch();
+    initNotifications();
+    initModals();
+    initCollectionFilters();
+    initAuthorsSearch();
+    initRefreshSuggestions();
+    initContactForm();
+    
+    // Charger la page active
+    const activePage = document.querySelector('.page.active');
+    if (activePage) {
+        loadPageData(activePage.id);
     }
+    
+    // Redessiner les graphiques lors du redimensionnement
+    window.addEventListener('resize', () => {
+        if (document.querySelector('#dashboard.page.active')) {
+            initCharts();
+        }
+    });
+    
+    console.log('Site initialisé avec succès !');
 });
 
-// Redessiner les graphiques lors du redimensionnement
-window.addEventListener('resize', function() {
-    if (document.querySelector('#dashboard.page.active')) {
-        setTimeout(() => {
-            initChart();
-            initVisitorsChart();
-        }, 100);
-    }
-});
-
-// Ajouter du CSS pour les animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
+// Ajouter le CSS pour les notifications
+const notificationStyles = document.createElement('style');
+notificationStyles.textContent = `
+    .notification {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transform: translateX(120%);
+        transition: transform 0.3s ease;
+        z-index: 9999;
+        border-left: 4px solid #3b82f6;
     }
     
-    .borrowed-badge, .lost-badge {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: white;
+    .notification.show {
+        transform: translateX(0);
     }
     
-    .borrowed-badge {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    .notification-success {
+        border-left-color: #10b981;
     }
     
-    .lost-badge {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
     }
     
-    .btn-add-favorite {
-        margin-top: 0.5rem;
-        padding: 0.5rem;
-        background: none;
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        color: var(--text-light);
-        cursor: pointer;
-        font-size: 0.85rem;
-        transition: all 0.2s;
+    .notification i {
+        font-size: 1.25rem;
     }
     
-    .btn-add-favorite:hover {
-        background: #fef2f2;
-        color: #ef4444;
-        border-color: #ef4444;
+    .notification-success i {
+        color: #10b981;
+    }
+    
+    .notification span {
+        font-weight: 500;
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(notificationStyles);

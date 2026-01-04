@@ -4,54 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bibliotheca - Connexion</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
-            --primary: #1e40af;
             --primary-dark: #1e3a8a;
-            --primary-light: #3b82f6;
-            --text: #1f2937;
-            --text-light: #6b7280;
-            --bg: #f8fafc;
-            --white: #ffffff;
-            --border: #e5e7eb;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --primary: #2563eb;
+            --primary-light: #60a5fa;
+            --secondary: #7c3aed;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #f8fafc;
+            --text-light: #cbd5e1;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.3);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            font-family: 'Georgia', serif;
         }
 
         .login-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
+            padding: 2rem;
         }
 
         .login-card {
-            background: var(--white);
+            background: var(--card-bg);
             padding: 3rem;
-            border-radius: 16px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
             border: 1px solid var(--border);
             text-align: center;
         }
 
         .login-logo {
-            font-size: 3.5rem;
+            font-size: 3rem;
             margin-bottom: 1.5rem;
-            color: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .login-title {
@@ -63,7 +66,7 @@
 
         .login-subtitle {
             color: var(--text-light);
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             font-size: 1rem;
         }
 
@@ -75,25 +78,25 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--text);
+            color: var(--text-light);
             font-weight: 500;
-            font-size: 0.95rem;
         }
 
         .form-group input {
             width: 100%;
             padding: 0.875rem 1rem;
+            background: #0f172a;
             border: 2px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
+            color: var(--text);
             font-size: 1rem;
             transition: all 0.3s;
-            background: var(--bg);
         }
 
         .form-group input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .login-btn {
@@ -102,7 +105,7 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
@@ -112,41 +115,26 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-
-        .error-message {
-            color: #ef4444;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            display: none;
+            box-shadow: var(--shadow-md);
         }
 
         .login-footer {
             margin-top: 2rem;
             color: var(--text-light);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
 
-        .demo-credentials {
-            background: var(--bg);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1.5rem;
-            text-align: left;
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-
-        .demo-credentials strong {
-            color: var(--text);
+        .error-message {
+            color: var(--danger);
+            margin-top: 1rem;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
-            <div class="login-logo"><i class="fas fa-book"></i></div>
+            <div class="login-logo">📚</div>
             <h1 class="login-title">Bibliotheca</h1>
             <p class="login-subtitle">Accédez à votre espace administrateur</p>
             
@@ -165,15 +153,9 @@
                 
                 <button type="submit" class="login-btn">Se connecter</button>
             </form>
-
-            <div class="demo-credentials">
-                <p><strong>Identifiants de démonstration :</strong></p>
-                <p>Nom d'utilisateur: <strong>admin</strong></p>
-                <p>Mot de passe: <strong>admin123</strong></p>
-            </div>
             
             <div class="login-footer">
-                <p>© 2024 Bibliotheca - Système de gestion de bibliothèque</p>
+                <p>© 2024 Bibliotheca - Tous droits réservés</p>
             </div>
         </div>
     </div>
@@ -185,15 +167,18 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
+            // Validation simple (dans un vrai système, cela serait sécurisé avec un backend)
             if ((username === 'admin' || username === 'admin@bibliotheca.fr') && password === 'admin123') {
+                // Stocker l'état de connexion
                 localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('username', username);
+                // Rediriger vers la page principale
                 window.location.href = 'index.html';
             } else {
                 document.getElementById('error-message').style.display = 'block';
             }
         });
 
+        // Vérifier si déjà connecté
         if (localStorage.getItem('isLoggedIn') === 'true') {
             window.location.href = 'index.html';
         }

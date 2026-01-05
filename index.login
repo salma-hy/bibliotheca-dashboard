@@ -5,69 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bibliotheca - Connexion</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-dark: #1e3a8a;
-            --primary: #2563eb;
-            --primary-light: #60a5fa;
-            --secondary: #7c3aed;
-            --accent: #f59e0b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --text: #f8fafc;
-            --text-light: #cbd5e1;
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --border: #334155;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        .login-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Georgia', serif;
-        }
-
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 2rem;
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            padding: 1rem;
         }
 
         .login-card {
-            background: var(--card-bg);
+            background: white;
             padding: 3rem;
-            border-radius: 20px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
         }
 
         .login-logo {
-            font-size: 3rem;
+            font-size: 2.5rem;
+            color: #1e40af;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .login-title {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--text);
+            font-size: 1.75rem;
             font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
         }
 
         .login-subtitle {
-            color: var(--text-light);
+            color: #6b7280;
             margin-bottom: 2rem;
-            font-size: 1rem;
+        }
+
+        .login-form {
+            margin-top: 2rem;
         }
 
         .form-group {
@@ -78,35 +56,33 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--text-light);
-            font-weight: 500;
+            font-weight: 600;
+            color: #374151;
         }
 
         .form-group input {
             width: 100%;
-            padding: 0.875rem 1rem;
-            background: #0f172a;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: var(--text);
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
         }
 
         .login-btn {
             width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 0.875rem;
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -115,47 +91,70 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 5px 15px rgba(30, 64, 175, 0.3);
+        }
+
+        .login-error {
+            color: #ef4444;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            display: none;
         }
 
         .login-footer {
             margin-top: 2rem;
-            color: var(--text-light);
-            font-size: 0.9rem;
+            color: #6b7280;
+            font-size: 0.875rem;
         }
 
-        .error-message {
-            color: var(--danger);
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             margin-top: 1rem;
-            display: none;
+        }
+
+        .remember-me input {
+            width: auto;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
-            <div class="login-logo">📚</div>
+            <div class="login-logo">
+                <i class="fas fa-book"></i>
+            </div>
             <h1 class="login-title">Bibliotheca</h1>
-            <p class="login-subtitle">Accédez à votre espace administrateur</p>
+            <p class="login-subtitle">Système de gestion de bibliothèque</p>
             
-            <form id="login-form">
+            <form class="login-form" id="login-form">
                 <div class="form-group">
-                    <label for="username">Nom d'utilisateur ou Email</label>
-                    <input type="text" id="username" name="username" required placeholder="admin@bibliotheca.fr">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" placeholder="admin" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                    <input type="password" id="password" placeholder="••••••••" required>
                 </div>
                 
-                <div class="error-message" id="error-message">Identifiants incorrects</div>
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Se souvenir de moi</label>
+                </div>
                 
-                <button type="submit" class="login-btn">Se connecter</button>
+                <div class="login-error" id="login-error">
+                    Identifiants incorrects. Veuillez réessayer.
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
             </form>
             
             <div class="login-footer">
-                <p>© 2024 Bibliotheca - Tous droits réservés</p>
+                <p>Identifiants par défaut : admin / admin123</p>
             </div>
         </div>
     </div>
@@ -166,22 +165,60 @@
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('login-error');
             
-            // Validation simple (dans un vrai système, cela serait sécurisé avec un backend)
-            if ((username === 'admin' || username === 'admin@bibliotheca.fr') && password === 'admin123') {
-                // Stocker l'état de connexion
+            // Identifiants par défaut
+            const validUsername = 'admin';
+            const validPassword = 'admin123';
+            
+            if (username === validUsername && password === validPassword) {
+                // Stocker l'état de connexion dans localStorage
                 localStorage.setItem('isLoggedIn', 'true');
-                // Rediriger vers la page principale
+                localStorage.setItem('username', username);
+                
+                // Rediriger vers le tableau de bord
                 window.location.href = 'index.html';
             } else {
-                document.getElementById('error-message').style.display = 'block';
+                errorElement.style.display = 'block';
+                // Effacer les champs
+                document.getElementById('password').value = '';
+                // Secouer l'animation
+                document.querySelector('.login-card').style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    document.querySelector('.login-card').style.animation = '';
+                }, 500);
             }
         });
 
-        // Vérifier si déjà connecté
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = 'index.html';
-        }
+        // Vérifier si "Se souvenir de moi" était coché
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('rememberUsername') === 'true') {
+                document.getElementById('username').value = localStorage.getItem('savedUsername') || '';
+                document.getElementById('remember').checked = true;
+            }
+        });
+
+        // Gérer "Se souvenir de moi"
+        document.getElementById('remember').addEventListener('change', function(e) {
+            if (e.target.checked) {
+                localStorage.setItem('rememberUsername', 'true');
+                localStorage.setItem('savedUsername', document.getElementById('username').value);
+            } else {
+                localStorage.removeItem('rememberUsername');
+                localStorage.removeItem('savedUsername');
+            }
+        });
+
+        // Ajouter l'animation shake au CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

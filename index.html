@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bibliotheca - Administration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Solution 1 : Version spécifique -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         /* === STYLES GÉNÉRAUX === */
         * {
@@ -673,6 +675,7 @@
         .chart-container {
             height: 280px;
             width: 100%;
+            position: relative;
         }
 
         .suggestions-sidebar {
@@ -794,7 +797,7 @@
             min-width: 300px;
         }
 
-        .search-filter input, .status-filter select, .genre-filter select {
+        .search-filter input, .status-filter select, .genre-filter select, .sort-filter select {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid var(--border);
@@ -817,6 +820,7 @@
             border: 1px solid var(--border);
             transition: all 0.2s;
             position: relative;
+            cursor: pointer;
         }
 
         .collection-book-card:hover {
@@ -831,7 +835,6 @@
             background-size: cover;
             background-position: center;
             margin-bottom: 1rem;
-            cursor: pointer;
         }
 
         .collection-book-title {
@@ -883,6 +886,7 @@
             font-size: 1.2rem;
             color: #9ca3af;
             transition: all 0.2s;
+            z-index: 2;
         }
 
         .favorite-btn:hover {
@@ -910,6 +914,7 @@
             cursor: pointer;
             opacity: 0.8;
             transition: all 0.2s;
+            z-index: 2;
         }
 
         .delete-btn:hover {
@@ -1005,27 +1010,39 @@
             color: var(--primary);
         }
 
-        .author-delete-btn {
+        .author-actions {
             position: absolute;
             bottom: 1rem;
             right: 1rem;
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 50%;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .author-edit-btn, .author-delete-btn {
             width: 32px;
             height: 32px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            opacity: 0.8;
             transition: all 0.2s;
+            border: none;
         }
 
-        .author-delete-btn:hover {
-            opacity: 1;
+        .author-edit-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .author-delete-btn {
+            background: var(--danger);
+            color: white;
+        }
+
+        .author-edit-btn:hover, .author-delete-btn:hover {
             transform: scale(1.1);
+            opacity: 0.9;
         }
 
         /* Carte "Ajouter un auteur" - DANS LA MÊME GRILLE */
@@ -1104,6 +1121,13 @@
         }
 
         /* Emprunts Page - Tableau */
+        .emprunts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
         .emprunts-table-container {
             background: var(--white);
             border-radius: 12px;
@@ -1395,7 +1419,7 @@
             .contact-content {
                 grid-template-columns: 1fr;
             }
-            .collection-header, .authors-header, .favorites-header {
+            .collection-header, .authors-header, .favorites-header, .emprunts-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
@@ -1588,6 +1612,42 @@
                         </div>
                     </div>
 
+                    <!-- KPI supplémentaire depuis API -->
+                    <div class="stats-grid-single">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-star"></i></div>
+                            <div class="stat-info">
+                                <h3>Suggestions API</h3>
+                                <p class="stat-number" id="api-suggestions-count">0</p>
+                                <p class="stat-change">Livres recommandés</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                            <div class="stat-info">
+                                <h3>Favoris</h3>
+                                <p class="stat-number" id="favorites-count-dash">0</p>
+                                <p class="stat-change">Livres favoris</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="stat-info">
+                                <h3>Taux d'emprunt</h3>
+                                <p class="stat-number" id="borrow-rate">0%</p>
+                                <p class="stat-change">Livres empruntés</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-tag"></i></div>
+                            <div class="stat-info">
+                                <h3>Genres actifs</h3>
+                                <p class="stat-number" id="active-genres">0</p>
+                                <p class="stat-change">Genres représentés</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Genres (6 types avec couvertures) -->
                     <div class="section-title">Livres par Genres</div>
                     <div class="genres-grid">
@@ -1697,14 +1757,14 @@
                     <!-- Graphiques et Suggestions côte à côte -->
                     <div class="charts-suggestions-container">
                         <div class="chart-card">
-                            <h2>Répartition par Genre</h2>
+                            <h2>Répartition par Genre (Chart.js)</h2>
                             <div class="chart-container">
                                 <canvas id="genreChart"></canvas>
                             </div>
                         </div>
                         <div class="suggestions-sidebar">
                             <div class="suggestions-header">
-                                <h2>Suggestions</h2>
+                                <h2>Suggestions depuis l'API OpenLibrary</h2>
                                 <button class="refresh-btn" id="refresh-suggestions">
                                     <i class="fas fa-sync-alt"></i> Actualiser
                                 </button>
@@ -1749,6 +1809,15 @@
                                 <option value="fiction">Fiction</option>
                             </select>
                         </div>
+                        <div class="sort-filter">
+                            <select id="sort-filter">
+                                <option value="title-asc">Titre (A-Z)</option>
+                                <option value="title-desc">Titre (Z-A)</option>
+                                <option value="year-asc">Année (ancien)</option>
+                                <option value="year-desc">Année (récent)</option>
+                                <option value="author-asc">Auteur (A-Z)</option>
+                            </select>
+                        </div>
                     </div>
                     
                     <div class="collection-grid" id="collection-grid">
@@ -1760,6 +1829,9 @@
                 <div id="auteurs" class="page">
                     <div class="authors-header">
                         <h1 class="page-title">Auteurs</h1>
+                        <button class="btn btn-primary" id="add-author-btn">
+                            <i class="fas fa-plus"></i> Ajouter un auteur
+                        </button>
                     </div>
                     
                     <div class="authors-search">
@@ -1768,7 +1840,6 @@
                     
                     <div class="authors-grid" id="authors-grid">
                         <!-- Auteurs chargés dynamiquement -->
-                        <!-- La carte "Ajouter un auteur" sera ajoutée à la fin de cette grille -->
                     </div>
                 </div>
 
@@ -1789,7 +1860,12 @@
 
                 <!-- Page Emprunts -->
                 <div id="emprunts" class="page">
-                    <h1 class="page-title">Gestion des Emprunts</h1>
+                    <div class="emprunts-header">
+                        <h1 class="page-title">Gestion des Emprunts</h1>
+                        <button class="btn btn-primary" id="add-emprunt-btn">
+                            <i class="fas fa-plus"></i> Nouvel emprunt
+                        </button>
+                    </div>
                     
                     <div class="emprunts-table-container">
                         <table class="emprunts-table">
@@ -1897,6 +1973,14 @@
                     <input type="number" id="book-year" required min="1000" max="2025">
                 </div>
                 <div class="form-group">
+                    <label for="book-isbn">ISBN (optionnel)</label>
+                    <input type="text" id="book-isbn" placeholder="978-3-16-148410-0">
+                </div>
+                <div class="form-group">
+                    <label for="book-description">Description</label>
+                    <textarea id="book-description" rows="3" placeholder="Brève description du livre..."></textarea>
+                </div>
+                <div class="form-group">
                     <label for="book-status">Statut</label>
                     <select id="book-status-modal" required>
                         <option value="available">Disponible</option>
@@ -1910,6 +1994,72 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Ajouter le livre</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal Modifier Livre -->
+    <div class="modal" id="edit-book-modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Modifier le livre</h2>
+            <form id="edit-book-form">
+                <input type="hidden" id="edit-book-id">
+                <div class="form-group">
+                    <label for="edit-book-title">Titre</label>
+                    <input type="text" id="edit-book-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-book-author">Auteur</label>
+                    <input type="text" id="edit-book-author" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-book-genre">Genre</label>
+                    <select id="edit-book-genre" required>
+                        <option value="fantaisie">Fantaisie</option>
+                        <option value="science-fiction">Science-Fiction</option>
+                        <option value="roman-historique">Roman Historique</option>
+                        <option value="policier">Policier/Thriller</option>
+                        <option value="biographie">Biographie</option>
+                        <option value="poesie">Poésie</option>
+                        <option value="fiction">Fiction</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-book-year">Année</label>
+                    <input type="number" id="edit-book-year" required min="1000" max="2025">
+                </div>
+                <div class="form-group">
+                    <label for="edit-book-isbn">ISBN</label>
+                    <input type="text" id="edit-book-isbn">
+                </div>
+                <div class="form-group">
+                    <label for="edit-book-description">Description</label>
+                    <textarea id="edit-book-description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-book-status">Statut</label>
+                    <select id="edit-book-status" required>
+                        <option value="available">Disponible</option>
+                        <option value="borrowed">Emprunté</option>
+                        <option value="lost">Perdu</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-book-cover">URL de la couverture</label>
+                    <input type="text" id="edit-book-cover" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Fiche détaillée Livre -->
+    <div class="modal" id="book-detail-modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="modal-close">&times;</span>
+            <div id="book-detail-content">
+                <!-- Contenu chargé dynamiquement -->
+            </div>
         </div>
     </div>
 
@@ -1931,268 +2081,244 @@
                     <label for="author-birth">Année de naissance</label>
                     <input type="number" id="author-birth" required min="1000" max="2025">
                 </div>
+                <div class="form-group">
+                    <label for="author-death">Année de décès (optionnel)</label>
+                    <input type="number" id="author-death" min="1000" max="2025">
+                </div>
+                <div class="form-group">
+                    <label for="author-bio">Biographie (optionnel)</label>
+                    <textarea id="author-bio" rows="3" placeholder="Brève biographie de l'auteur..."></textarea>
+                </div>
                 <button type="submit" class="btn btn-primary">Ajouter l'auteur</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Modifier Auteur -->
+    <div class="modal" id="edit-author-modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Modifier l'auteur</h2>
+            <form id="edit-author-form">
+                <input type="hidden" id="edit-author-id">
+                <div class="form-group">
+                    <label for="edit-author-name">Nom complet</label>
+                    <input type="text" id="edit-author-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-author-nationality">Nationalité</label>
+                    <input type="text" id="edit-author-nationality" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-author-birth">Année de naissance</label>
+                    <input type="number" id="edit-author-birth" required min="1000" max="2025">
+                </div>
+                <div class="form-group">
+                    <label for="edit-author-death">Année de décès (optionnel)</label>
+                    <input type="number" id="edit-author-death" min="1000" max="2025">
+                </div>
+                <div class="form-group">
+                    <label for="edit-author-bio">Biographie</label>
+                    <textarea id="edit-author-bio" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Nouvel Emprunt -->
+    <div class="modal" id="add-emprunt-modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Nouvel emprunt</h2>
+            <form id="add-emprunt-form">
+                <div class="form-group">
+                    <label for="emprunt-book">Livre</label>
+                    <select id="emprunt-book" required>
+                        <option value="">Sélectionner un livre</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="emprunt-borrower">Emprunteur</label>
+                    <input type="text" id="emprunt-borrower" required placeholder="Nom complet de l'emprunteur">
+                </div>
+                <div class="form-group">
+                    <label for="emprunt-date">Date d'emprunt</label>
+                    <input type="date" id="emprunt-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="emprunt-return">Date de retour prévue</label>
+                    <input type="date" id="emprunt-return" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Enregistrer l'emprunt</button>
             </form>
         </div>
     </div>
 
     <script>
         // === DONNÉES INITIALES ===
-        let books = [
-            {
-                id: 1,
-                title: 'Harry Potter à l\'école des sorciers',
-                author: 'J.K. Rowling',
-                genre: 'fantaisie',
-                year: 1997,
-                status: 'available',
-                favorite: true,
-                cover: 'https://cdn1.booknode.com/book_cover/4981/full/harry-potter-tome-1-harry-potter-a-lecole-des-sorciers-4981020.jpg'
-            },
-            {
-                id: 2,
-                title: 'Le Hobbit',
-                author: 'J.R.R. Tolkien',
-                genre: 'fantaisie',
-                year: 1937,
-                status: 'borrowed',
-                favorite: false,
-                cover: 'https://www.livres-cinema.info/cover/22/2266154117.jpg'
-            },
-            {
-                id: 3,
-                title: 'La Ballade de l\'impossible',
-                author: 'Haruki Murakami',
-                genre: 'fiction',
-                year: 1987,
-                status: 'available',
-                favorite: false,
-                cover: 'https://cdn1.booknode.com/book_cover/1023/la_ballade_de_limpossible-1023423-264-432.webp'
-            },
-            {
-                id: 4,
-                title: 'Les Misérables',
-                author: 'Victor Hugo',
-                genre: 'roman-historique',
-                year: 1862,
-                status: 'available',
-                favorite: false,
-                cover: 'https://cdn1.booknode.com/book_cover/3614/full/les-miserables-3614132.jpg'
-            },
-            {
-                id: 5,
-                title: 'Dune',
-                author: 'Frank Herbert',
-                genre: 'science-fiction',
-                year: 1965,
-                status: 'available',
-                favorite: true,
-                cover: 'https://img.livraddict.com/covers/453/453370//couv47835879.jpg'
-            },
-            {
-                id: 6,
-                title: 'Le Comte de Monte-Cristo',
-                author: 'Alexandre Dumas',
-                genre: 'roman-historique',
-                year: 1844,
-                status: 'borrowed',
-                favorite: false,
-                cover: 'https://region-ouest.epudf.org/wp-content/uploads/sites/9/2024/09/Monte_Christo.png'
-            },
-            {
-                id: 7,
-                title: 'Les Trois Mousquetaires',
-                author: 'Alexandre Dumas',
-                genre: 'roman-historique',
-                year: 1844,
-                status: 'available',
-                favorite: true,
-                cover: 'https://www.ecoledesloisirs.fr/sites/default/files/styles/couverture_livre/public/couverture/9782211238397.jpg?itok=PCiOYiQx'
-            },
-            {
-                id: 8,
-                title: 'Notre-Dame de Paris',
-                author: 'Victor Hugo',
-                genre: 'roman-historique',
-                year: 1831,
-                status: 'available',
-                favorite: false,
-                cover: 'https://static.fnac-static.com/multimedia/PE/Images/FR/NR/dd/5e/13/1269469/1507-1/tsp20251130162449/Notre-Dame-de-Paris.jpg'
-            },
-            {
-                id: 9,
-                title: '1984',
-                author: 'George Orwell',
-                genre: 'science-fiction',
-                year: 1949,
-                status: 'available',
-                favorite: false,
-                cover: 'https://cdn1.booknode.com/book_cover/72/1984-72084-264-432.webp'
-            },
-            {
-                id: 10,
-                title: 'Le Petit Prince',
-                author: 'Antoine de Saint-Exupéry',
-                genre: 'fiction',
-                year: 1943,
-                status: 'available',
-                favorite: false,
-                cover: 'https://images-eu.ssl-images-amazon.com/images/I/41Qhq5E90aL._AC_UL900_SR615,900_.jpg'
-            },
-            {
-                id: 11,
-                title: 'Les Fleurs du Mal',
-                author: 'Charles Baudelaire',
-                genre: 'poesie',
-                year: 1857,
-                status: 'available',
-                favorite: false,
-                cover: 'https://cdn1.booknode.com/book_cover/83/full/les-fleurs-du-mal-83490.jpg'
-            },
-            {
-                id: 12,
-                title: 'Steve Jobs',
-                author: 'Walter Isaacson',
-                genre: 'biographie',
-                year: 2011,
-                status: 'available',
-                favorite: false,
-                cover: 'https://servimg.eyrolles.com/static/media/8522/9782253168522_internet_w290.jpg'
-            }
-        ];
+        let books = [];
+        let authors = [];
+        let emprunts = [];
+        let chartInstance = null;
 
-        let authors = [
-            { 
-                id: 1, 
-                name: 'J.K. Rowling', 
-                nationality: 'Britannique', 
-                birthYear: 1965,
-                initial: 'J'
-            },
-            { 
-                id: 2, 
-                name: 'J.R.R. Tolkien', 
-                nationality: 'Britannique', 
-                birthYear: 1892,
-                initial: 'J'
-            },
-            { 
-                id: 3, 
-                name: 'Haruki Murakami', 
-                nationality: 'Japonais', 
-                birthYear: 1949,
-                initial: 'H'
-            },
-            { 
-                id: 4, 
-                name: 'Victor Hugo', 
-                nationality: 'Français', 
-                birthYear: 1802,
-                initial: 'V'
-            },
-            { 
-                id: 5, 
-                name: 'Frank Herbert', 
-                nationality: 'Américain', 
-                birthYear: 1920,
-                initial: 'F'
-            },
-            { 
-                id: 6, 
-                name: 'Alexandre Dumas', 
-                nationality: 'Français', 
-                birthYear: 1802,
-                initial: 'A'
-            },
-            { 
-                id: 7, 
-                name: 'George Orwell', 
-                nationality: 'Britannique', 
-                birthYear: 1903,
-                initial: 'G'
-            },
-            { 
-                id: 8, 
-                name: 'Antoine de Saint-Exupéry', 
-                nationality: 'Français', 
-                birthYear: 1900,
-                initial: 'A'
-            },
-            { 
-                id: 9, 
-                name: 'Charles Baudelaire', 
-                nationality: 'Français', 
-                birthYear: 1821,
-                initial: 'C'
-            },
-            { 
-                id: 10, 
-                name: 'Walter Isaacson', 
-                nationality: 'Américain', 
-                birthYear: 1952,
-                initial: 'W'
-            }
-        ];
+        // === LOCALSTORAGE - PERSISTANCE TOTALE ===
+        function saveAllData() {
+            localStorage.setItem('bibliotheca_books', JSON.stringify(books));
+            localStorage.setItem('bibliotheca_authors', JSON.stringify(authors));
+            localStorage.setItem('bibliotheca_emprunts', JSON.stringify(emprunts));
+            console.log('✅ Données sauvegardées dans localStorage');
+        }
 
-        let emprunts = [
-            {
-                id: 1,
-                bookId: 2,
-                borrower: 'Jean Dupont',
-                dateEmprunt: '2024-01-15',
-                dateRetour: '2024-02-15',
-                status: 'en-cours'
-            },
-            {
-                id: 2,
-                bookId: 6,
-                borrower: 'Marie Martin',
-                dateEmprunt: '2024-01-20',
-                dateRetour: '2024-02-20',
-                status: 'en-cours'
-            },
-            {
-                id: 3,
-                bookId: 1,
-                borrower: 'Pierre Lambert',
-                dateEmprunt: '2024-01-10',
-                dateRetour: '2024-02-10',
-                status: 'retard'
-            }
-        ];
+        function loadAllData() {
+            const savedBooks = localStorage.getItem('bibliotheca_books');
+            const savedAuthors = localStorage.getItem('bibliotheca_authors');
+            const savedEmprunts = localStorage.getItem('bibliotheca_emprunts');
 
-        const suggestions = [
-            {
-                title: 'Le Comte de Monte-Cristo',
-                author: 'Alexandre Dumas',
-                year: 1844,
-                cover: 'https://region-ouest.epudf.org/wp-content/uploads/sites/9/2024/09/Monte_Christo.png'
-            },
-            {
-                title: 'Les Trois Mousquetaires',
-                author: 'Alexandre Dumas',
-                year: 1844,
-                cover: 'https://www.ecoledesloisirs.fr/sites/default/files/styles/couverture_livre/public/couverture/9782211238397.jpg?itok=PCiOYiQx'
-            },
-            {
-                title: 'Notre-Dame de Paris',
-                author: 'Victor Hugo',
-                year: 1831,
-                cover: 'https://static.fnac-static.com/multimedia/PE/Images/FR/NR/dd/5e/13/1269469/1507-1/tsp20251130162449/Notre-Dame-de-Paris.jpg'
-            },
-            {
-                title: '1984',
-                author: 'George Orwell',
-                year: 1949,
-                cover: 'https://cdn1.booknode.com/book_cover/72/1984-72084-264-432.webp'
-            },
-            {
-                title: 'Le Petit Prince',
-                author: 'Antoine de Saint-Exupéry',
-                year: 1943,
-                cover: 'https://images-eu.ssl-images-amazon.com/images/I/41Qhq5E90aL._AC_UL900_SR615,900_.jpg'
+            if (savedBooks) books = JSON.parse(savedBooks);
+            if (savedAuthors) authors = JSON.parse(savedAuthors);
+            if (savedEmprunts) emprunts = JSON.parse(savedEmprunts);
+
+            // Si pas de données, initialiser avec des données par défaut
+            if (books.length === 0) {
+                initializeDefaultData();
             }
-        ];
+        }
+
+        function initializeDefaultData() {
+            books = [
+                {
+                    id: Date.now(),
+                    title: 'Harry Potter à l\'école des sorciers',
+                    author: 'J.K. Rowling',
+                    genre: 'fantaisie',
+                    year: 1997,
+                    isbn: '978-2070612368',
+                    description: 'Le premier tome des aventures du jeune sorcier.',
+                    status: 'available',
+                    favorite: true,
+                    cover: 'https://cdn1.booknode.com/book_cover/4981/full/harry-potter-tome-1-harry-potter-a-lecole-des-sorciers-4981020.jpg'
+                },
+                {
+                    id: Date.now() + 1,
+                    title: 'Le Hobbit',
+                    author: 'J.R.R. Tolkien',
+                    genre: 'fantaisie',
+                    year: 1937,
+                    isbn: '978-2266282942',
+                    description: 'Aventures de Bilbo le Hobbit.',
+                    status: 'borrowed',
+                    favorite: false,
+                    cover: 'https://www.livres-cinema.info/cover/22/2266154117.jpg'
+                },
+                {
+                    id: Date.now() + 2,
+                    title: 'Dune',
+                    author: 'Frank Herbert',
+                    genre: 'science-fiction',
+                    year: 1965,
+                    isbn: '978-2290114918',
+                    description: 'Épopée spatiale sur la planète désertique Arrakis.',
+                    status: 'available',
+                    favorite: true,
+                    cover: 'https://img.livraddict.com/covers/453/453370//couv47835879.jpg'
+                },
+                {
+                    id: Date.now() + 3,
+                    title: 'Les Misérables',
+                    author: 'Victor Hugo',
+                    genre: 'roman-historique',
+                    year: 1862,
+                    isbn: '978-2253168522',
+                    description: 'Roman historique sur la société française du XIXe siècle.',
+                    status: 'available',
+                    favorite: false,
+                    cover: 'https://cdn1.booknode.com/book_cover/3614/full/les-miserables-3614132.jpg'
+                },
+                {
+                    id: Date.now() + 4,
+                    title: '1984',
+                    author: 'George Orwell',
+                    genre: 'science-fiction',
+                    year: 1949,
+                    isbn: '978-2070368226',
+                    description: 'Dystopie sur une société totalitaire.',
+                    status: 'available',
+                    favorite: false,
+                    cover: 'https://cdn1.booknode.com/book_cover/72/1984-72084-264-432.webp'
+                }
+            ];
+
+            authors = [
+                { 
+                    id: Date.now() + 10, 
+                    name: 'J.K. Rowling', 
+                    nationality: 'Britannique', 
+                    birthYear: 1965,
+                    deathYear: null,
+                    bio: 'Auteure de la saga Harry Potter.',
+                    initial: 'J'
+                },
+                { 
+                    id: Date.now() + 11, 
+                    name: 'J.R.R. Tolkien', 
+                    nationality: 'Britannique', 
+                    birthYear: 1892,
+                    deathYear: 1973,
+                    bio: 'Auteur du Seigneur des Anneaux et du Hobbit.',
+                    initial: 'J'
+                },
+                { 
+                    id: Date.now() + 12, 
+                    name: 'Frank Herbert', 
+                    nationality: 'Américain', 
+                    birthYear: 1920,
+                    deathYear: 1986,
+                    bio: 'Auteur de la série Dune.',
+                    initial: 'F'
+                },
+                { 
+                    id: Date.now() + 13, 
+                    name: 'Victor Hugo', 
+                    nationality: 'Français', 
+                    birthYear: 1802,
+                    deathYear: 1885,
+                    bio: 'Grand écrivain français, auteur des Misérables.',
+                    initial: 'V'
+                },
+                { 
+                    id: Date.now() + 14, 
+                    name: 'George Orwell', 
+                    nationality: 'Britannique', 
+                    birthYear: 1903,
+                    deathYear: 1950,
+                    bio: 'Auteur de 1984 et La Ferme des animaux.',
+                    initial: 'G'
+                }
+            ];
+
+            emprunts = [
+                {
+                    id: Date.now() + 20,
+                    bookId: Date.now() + 1,
+                    borrower: 'Jean Dupont',
+                    dateEmprunt: '2024-02-01',
+                    dateRetour: '2024-03-01',
+                    status: 'en-cours'
+                },
+                {
+                    id: Date.now() + 21,
+                    bookId: Date.now() + 3,
+                    borrower: 'Marie Martin',
+                    dateEmprunt: '2024-01-15',
+                    dateRetour: '2024-02-15',
+                    status: 'retourne'
+                }
+            ];
+
+            saveAllData();
+        }
 
         // === CONNEXION ===
         document.getElementById('login-form').addEventListener('submit', function(e) {
@@ -2205,12 +2331,17 @@
             if (username === 'admin' && password === 'admin123') {
                 document.getElementById('login-page').style.display = 'none';
                 document.getElementById('dashboard-page').style.display = 'block';
+                
+                // Charger les données depuis localStorage
+                loadAllData();
+                
                 initDashboard();
                 updateDashboardStats();
                 displayBooks();
                 displayAuthors();
                 displayFavorites();
                 displayEmprunts();
+                loadBookOptionsForEmprunt();
             } else {
                 errorMessage.textContent = 'Nom d\'utilisateur ou mot de passe incorrect';
                 errorMessage.style.display = 'block';
@@ -2275,25 +2406,25 @@
             document.getElementById('global-search').addEventListener('input', function(e) {
                 const searchTerm = e.target.value.toLowerCase();
                 if (searchTerm.trim() !== '') {
-                    // Aller à la page collection avec la recherche
                     const collectionLink = document.querySelector('[data-page="collection"]');
                     if (collectionLink && !collectionLink.classList.contains('active')) {
                         collectionLink.click();
                         setTimeout(() => {
                             document.getElementById('collection-search').value = searchTerm;
-                            filterBooks();
+                            filterAndSortBooks();
                         }, 100);
                     } else if (document.getElementById('collection').classList.contains('active')) {
                         document.getElementById('collection-search').value = searchTerm;
-                        filterBooks();
+                        filterAndSortBooks();
                     }
                 }
             });
 
-            // Recherche collection
-            document.getElementById('collection-search').addEventListener('input', filterBooks);
-            document.getElementById('status-filter').addEventListener('change', filterBooks);
-            document.getElementById('genre-filter').addEventListener('change', filterBooks);
+            // Recherche et tri collection
+            document.getElementById('collection-search').addEventListener('input', filterAndSortBooks);
+            document.getElementById('status-filter').addEventListener('change', filterAndSortBooks);
+            document.getElementById('genre-filter').addEventListener('change', filterAndSortBooks);
+            document.getElementById('sort-filter').addEventListener('change', filterAndSortBooks);
 
             // Recherche auteurs
             document.getElementById('authors-search').addEventListener('input', function(e) {
@@ -2308,6 +2439,15 @@
             // Boutons d'ajout
             document.getElementById('add-book-btn').addEventListener('click', () => {
                 document.getElementById('add-book-modal').style.display = 'block';
+            });
+
+            document.getElementById('add-author-btn').addEventListener('click', () => {
+                document.getElementById('add-author-modal').style.display = 'block';
+            });
+
+            document.getElementById('add-emprunt-btn').addEventListener('click', () => {
+                loadBookOptionsForEmprunt();
+                document.getElementById('add-emprunt-modal').style.display = 'block';
             });
 
             // Fermer les modals
@@ -2328,25 +2468,58 @@
                 e.preventDefault();
                 
                 const newBook = {
-                    id: books.length + 1,
+                    id: Date.now(),
                     title: document.getElementById('book-title').value,
                     author: document.getElementById('book-author').value,
                     genre: document.getElementById('book-genre-modal').value,
                     year: parseInt(document.getElementById('book-year').value),
+                    isbn: document.getElementById('book-isbn').value || '',
+                    description: document.getElementById('book-description').value || '',
                     status: document.getElementById('book-status-modal').value,
                     favorite: false,
                     cover: document.getElementById('book-cover').value || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
                 };
                 
                 books.push(newBook);
+                saveAllData();
                 document.getElementById('add-book-modal').style.display = 'none';
                 this.reset();
                 displayBooks();
                 updateDashboardStats();
+                loadBookOptionsForEmprunt();
                 
-                // Mettre à jour les notifications
                 updateNotificationBadge();
                 alert('Livre ajouté avec succès !');
+            });
+
+            // Formulaire modifier livre
+            document.getElementById('edit-book-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const bookId = parseInt(document.getElementById('edit-book-id').value);
+                const bookIndex = books.findIndex(b => b.id === bookId);
+                
+                if (bookIndex !== -1) {
+                    books[bookIndex] = {
+                        ...books[bookIndex],
+                        title: document.getElementById('edit-book-title').value,
+                        author: document.getElementById('edit-book-author').value,
+                        genre: document.getElementById('edit-book-genre').value,
+                        year: parseInt(document.getElementById('edit-book-year').value),
+                        isbn: document.getElementById('edit-book-isbn').value,
+                        description: document.getElementById('edit-book-description').value,
+                        status: document.getElementById('edit-book-status').value,
+                        cover: document.getElementById('edit-book-cover').value
+                    };
+                    
+                    saveAllData();
+                    document.getElementById('edit-book-modal').style.display = 'none';
+                    displayBooks();
+                    displayFavorites();
+                    displayEmprunts();
+                    updateDashboardStats();
+                    alert('Livre mis à jour avec succès !');
+                }
             });
 
             // Formulaire ajouter auteur
@@ -2355,19 +2528,89 @@
                 
                 const name = document.getElementById('author-name').value;
                 const newAuthor = {
-                    id: authors.length + 1,
+                    id: Date.now(),
                     name: name,
                     nationality: document.getElementById('author-nationality').value,
                     birthYear: parseInt(document.getElementById('author-birth').value),
+                    deathYear: document.getElementById('author-death').value ? parseInt(document.getElementById('author-death').value) : null,
+                    bio: document.getElementById('author-bio').value || '',
                     initial: name.charAt(0).toUpperCase()
                 };
                 
                 authors.push(newAuthor);
+                saveAllData();
                 document.getElementById('add-author-modal').style.display = 'none';
                 this.reset();
                 displayAuthors();
                 updateDashboardStats();
                 alert('Auteur ajouté avec succès !');
+            });
+
+            // Formulaire modifier auteur
+            document.getElementById('edit-author-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const authorId = parseInt(document.getElementById('edit-author-id').value);
+                const authorIndex = authors.findIndex(a => a.id === authorId);
+                
+                if (authorIndex !== -1) {
+                    const name = document.getElementById('edit-author-name').value;
+                    authors[authorIndex] = {
+                        ...authors[authorIndex],
+                        name: name,
+                        nationality: document.getElementById('edit-author-nationality').value,
+                        birthYear: parseInt(document.getElementById('edit-author-birth').value),
+                        deathYear: document.getElementById('edit-author-death').value ? parseInt(document.getElementById('edit-author-death').value) : null,
+                        bio: document.getElementById('edit-author-bio').value,
+                        initial: name.charAt(0).toUpperCase()
+                    };
+                    
+                    saveAllData();
+                    document.getElementById('edit-author-modal').style.display = 'none';
+                    displayAuthors();
+                    displayBooks();
+                    updateDashboardStats();
+                    alert('Auteur mis à jour avec succès !');
+                }
+            });
+
+            // Formulaire nouvel emprunt
+            document.getElementById('add-emprunt-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const bookId = parseInt(document.getElementById('emprunt-book').value);
+                const book = books.find(b => b.id === bookId);
+                
+                if (!book) {
+                    alert('Livre non trouvé');
+                    return;
+                }
+                
+                if (book.status === 'borrowed') {
+                    alert('Ce livre est déjà emprunté !');
+                    return;
+                }
+                
+                const newEmprunt = {
+                    id: Date.now(),
+                    bookId: bookId,
+                    borrower: document.getElementById('emprunt-borrower').value,
+                    dateEmprunt: document.getElementById('emprunt-date').value,
+                    dateRetour: document.getElementById('emprunt-return').value,
+                    status: 'en-cours'
+                };
+                
+                // Mettre à jour le statut du livre
+                book.status = 'borrowed';
+                
+                emprunts.push(newEmprunt);
+                saveAllData();
+                document.getElementById('add-emprunt-modal').style.display = 'none';
+                this.reset();
+                displayEmprunts();
+                displayBooks();
+                updateDashboardStats();
+                alert('Emprunt enregistré avec succès !');
             });
 
             // Formulaire contact
@@ -2399,51 +2642,54 @@
             loadDashboardData();
         }
 
-        // === METTRE À JOUR LES STATISTIQUES ===
-        function updateDashboardStats() {
-            // Total livres
-            document.getElementById('total-books').textContent = books.length;
-            
-            // Total auteurs
-            document.getElementById('total-authors').textContent = authors.length;
-            
-            // Livres disponibles
-            const availableBooks = books.filter(book => book.status === 'available').length;
-            document.getElementById('available-books').textContent = availableBooks;
-            
-            // Livres empruntés
-            const borrowedBooks = books.filter(book => book.status === 'borrowed').length;
-            document.getElementById('borrowed-books').textContent = borrowedBooks;
-            
-            // Compter par genre
-            const genreCounts = {
-                'fantaisie': books.filter(b => b.genre === 'fantaisie').length,
-                'science-fiction': books.filter(b => b.genre === 'science-fiction').length,
-                'roman-historique': books.filter(b => b.genre === 'roman-historique').length,
-                'policier': books.filter(b => b.genre === 'policier').length,
-                'biographie': books.filter(b => b.genre === 'biographie').length,
-                'poesie': books.filter(b => b.genre === 'poesie').length
-            };
-            
-            // Mettre à jour les comptes de genre
-            document.getElementById('fantasy-count').textContent = genreCounts['fantaisie'] + ' livres';
-            document.getElementById('scifi-count').textContent = genreCounts['science-fiction'] + ' livres';
-            document.getElementById('historical-count').textContent = genreCounts['roman-historique'] + ' livres';
-            document.getElementById('crime-count').textContent = genreCounts['policier'] + ' livres';
-            document.getElementById('biography-count').textContent = genreCounts['biographie'] + ' livres';
-            document.getElementById('poetry-count').textContent = genreCounts['poesie'] + ' livres';
-            
-            // Mettre à jour le graphique
-            updateGenreChart();
-        }
+        // === FILTRER ET TRIER LES LIVRES ===
+        function filterAndSortBooks() {
+            const searchTerm = document.getElementById('collection-search').value.toLowerCase();
+            const status = document.getElementById('status-filter').value;
+            const genre = document.getElementById('genre-filter').value;
+            const sort = document.getElementById('sort-filter').value;
 
-        // === METTRE À JOUR LE BADGE DE NOTIFICATION ===
-        function updateNotificationBadge() {
-            const badge = document.querySelector('.notification-badge');
-            if (badge) {
-                const currentCount = parseInt(badge.textContent);
-                badge.textContent = currentCount + 1;
+            let filtered = [...books];
+
+            // Filtre recherche
+            if (searchTerm) {
+                filtered = filtered.filter(book => 
+                    book.title.toLowerCase().includes(searchTerm) ||
+                    book.author.toLowerCase().includes(searchTerm) ||
+                    book.genre.toLowerCase().includes(searchTerm) ||
+                    (book.isbn && book.isbn.toLowerCase().includes(searchTerm))
+                );
             }
+
+            // Filtre statut
+            if (status !== 'all') {
+                filtered = filtered.filter(book => book.status === status);
+            }
+
+            // Filtre genre
+            if (genre !== 'all') {
+                filtered = filtered.filter(book => book.genre === genre);
+            }
+
+            // Tri
+            filtered.sort((a, b) => {
+                switch(sort) {
+                    case 'title-asc':
+                        return a.title.localeCompare(b.title);
+                    case 'title-desc':
+                        return b.title.localeCompare(a.title);
+                    case 'year-asc':
+                        return a.year - b.year;
+                    case 'year-desc':
+                        return b.year - a.year;
+                    case 'author-asc':
+                        return a.author.localeCompare(b.author);
+                    default:
+                        return 0;
+                }
+            });
+
+            displayBooks(filtered);
         }
 
         // === AFFICHER LES LIVRES ===
@@ -2458,12 +2704,13 @@
                 return;
             }
 
-            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const favorites = JSON.parse(localStorage.getItem('bibliotheca_favorites') || '[]');
 
             filteredBooks.forEach(book => {
                 const isFavorite = favorites.includes(book.id);
                 const card = document.createElement('div');
                 card.className = 'collection-book-card';
+                card.setAttribute('data-book-id', book.id);
                 
                 card.innerHTML = `
                     <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-book-id="${book.id}">
@@ -2472,7 +2719,7 @@
                     <button class="delete-btn" data-book-id="${book.id}">
                         <i class="fas fa-trash"></i>
                     </button>
-                    <div class="collection-book-cover" style="background-image: url('${book.cover}')" data-book-id="${book.id}"></div>
+                    <div class="collection-book-cover" style="background-image: url('${book.cover}')"></div>
                     <div class="collection-book-title">${book.title}</div>
                     <div class="collection-book-info">
                         <i class="fas fa-user-edit"></i>
@@ -2495,26 +2742,20 @@
                 grid.appendChild(card);
             });
 
-            // Événement pour changer la couverture
-            grid.querySelectorAll('.collection-book-cover').forEach(cover => {
-                cover.addEventListener('click', function() {
-                    const bookId = parseInt(this.getAttribute('data-book-id'));
-                    const book = books.find(b => b.id === bookId);
-                    if (book) {
-                        const newCover = prompt('Entrez la nouvelle URL de la couverture:', book.cover);
-                        if (newCover && newCover.trim() !== '') {
-                            book.cover = newCover.trim();
-                            displayBooks();
-                            displayFavorites();
-                            alert('Couverture mise à jour !');
-                        }
+            // Événement pour cliquer sur une carte livre (fiche détaillée)
+            grid.querySelectorAll('.collection-book-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.closest('.favorite-btn') && !e.target.closest('.delete-btn')) {
+                        const bookId = parseInt(this.getAttribute('data-book-id'));
+                        showBookDetails(bookId);
                     }
                 });
             });
 
             // Événement pour favoris
             grid.querySelectorAll('.favorite-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     const bookId = parseInt(this.getAttribute('data-book-id'));
                     toggleFavorite(bookId);
                 });
@@ -2522,20 +2763,117 @@
 
             // Événement pour supprimer
             grid.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     const bookId = parseInt(this.getAttribute('data-book-id'));
-                    if (confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')) {
-                        books = books.filter(book => book.id !== bookId);
-                        // Supprimer aussi des emprunts si nécessaire
-                        emprunts = emprunts.filter(e => e.bookId !== bookId);
-                        displayBooks();
-                        updateDashboardStats();
-                        displayFavorites();
-                        displayEmprunts();
-                        alert('Livre supprimé !');
-                    }
+                    deleteBook(bookId);
                 });
             });
+        }
+
+        // === FICHE DÉTAILLÉE DU LIVRE ===
+        function showBookDetails(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            const modal = document.getElementById('book-detail-modal');
+            const content = document.getElementById('book-detail-content');
+            
+            const empruntsLivre = emprunts.filter(e => e.bookId === bookId);
+            const dernierEmprunt = empruntsLivre.length > 0 ? empruntsLivre[empruntsLivre.length - 1] : null;
+            
+            content.innerHTML = `
+                <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
+                    <div style="flex-shrink: 0;">
+                        <img src="${book.cover}" alt="${book.title}" style="width: 200px; height: 300px; border-radius: 8px; object-fit: cover;">
+                    </div>
+                    <div style="flex: 1;">
+                        <h2 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--text);">${book.title}</h2>
+                        <p style="font-size: 1.2rem; color: var(--text-light); margin-bottom: 1rem;"><strong>Auteur:</strong> ${book.author}</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Genre:</strong> ${getGenreName(book.genre)}</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Année:</strong> ${book.year}</p>
+                        ${book.isbn ? `<p style="margin-bottom: 0.5rem;"><strong>ISBN:</strong> ${book.isbn}</p>` : ''}
+                        <p style="margin-bottom: 0.5rem;"><strong>Statut:</strong> <span class="status-${book.status}">${book.status === 'available' ? 'Disponible' : book.status === 'borrowed' ? 'Emprunté' : 'Perdu'}</span></p>
+                        
+                        ${dernierEmprunt ? `
+                            <div style="background: var(--bg); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Dernier emprunt</h3>
+                                <p><strong>Emprunteur:</strong> ${dernierEmprunt.borrower}</p>
+                                <p><strong>Date d'emprunt:</strong> ${formatDate(dernierEmprunt.dateEmprunt)}</p>
+                                <p><strong>Date de retour:</strong> ${formatDate(dernierEmprunt.dateRetour)}</p>
+                                <p><strong>Statut:</strong> <span class="status-${dernierEmprunt.status}">${getStatusName(dernierEmprunt.status)}</span></p>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+                
+                ${book.description ? `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text);">Description</h3>
+                        <p style="color: var(--text-light); line-height: 1.6;">${book.description}</p>
+                    </div>
+                ` : ''}
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button class="btn btn-primary" id="edit-book-detail-btn" style="flex: 1;">
+                        <i class="fas fa-edit"></i> Modifier ce livre
+                    </button>
+                    <button class="btn" id="close-detail-btn" style="flex: 1; background: var(--border);">
+                        <i class="fas fa-times"></i> Fermer
+                    </button>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+            
+            // Bouton modifier dans la fiche détaillée
+            document.getElementById('edit-book-detail-btn').addEventListener('click', () => {
+                modal.style.display = 'none';
+                editBook(bookId);
+            });
+            
+            // Bouton fermer
+            document.getElementById('close-detail-btn').addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+        }
+
+        // === MODIFIER UN LIVRE ===
+        function editBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            document.getElementById('edit-book-id').value = book.id;
+            document.getElementById('edit-book-title').value = book.title;
+            document.getElementById('edit-book-author').value = book.author;
+            document.getElementById('edit-book-genre').value = book.genre;
+            document.getElementById('edit-book-year').value = book.year;
+            document.getElementById('edit-book-isbn').value = book.isbn || '';
+            document.getElementById('edit-book-description').value = book.description || '';
+            document.getElementById('edit-book-status').value = book.status;
+            document.getElementById('edit-book-cover').value = book.cover;
+            
+            document.getElementById('edit-book-modal').style.display = 'block';
+        }
+
+        // === SUPPRIMER UN LIVRE ===
+        function deleteBook(bookId) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')) return;
+            
+            books = books.filter(book => book.id !== bookId);
+            emprunts = emprunts.filter(e => e.bookId !== bookId);
+            
+            // Supprimer des favoris
+            let favorites = JSON.parse(localStorage.getItem('bibliotheca_favorites') || '[]');
+            favorites = favorites.filter(id => id !== bookId);
+            localStorage.setItem('bibliotheca_favorites', JSON.stringify(favorites));
+            
+            saveAllData();
+            displayBooks();
+            updateDashboardStats();
+            displayFavorites();
+            displayEmprunts();
+            alert('Livre supprimé !');
         }
 
         // === AFFICHER LES AUTEURS ===
@@ -2546,8 +2884,7 @@
             grid.innerHTML = '';
 
             if (filteredAuthors.length === 0) {
-                // Afficher uniquement la carte d'ajout
-                addAddAuthorCard(grid);
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-light);"><i class="fas fa-user-edit" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i><p>Aucun auteur trouvé.</p></div>';
                 return;
             }
 
@@ -2557,9 +2894,14 @@
                 card.className = 'author-card';
                 
                 card.innerHTML = `
-                    <button class="author-delete-btn" data-author-id="${author.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                    <div class="author-actions">
+                        <button class="author-edit-btn" data-author-id="${author.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="author-delete-btn" data-author-id="${author.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                     <div class="author-header">
                         <div class="author-avatar">${author.initial}</div>
                         <div>
@@ -2567,48 +2909,16 @@
                             <div class="author-info">${author.nationality}</div>
                         </div>
                     </div>
-                    <div class="author-info"><strong>Année de naissance:</strong> ${author.birthYear}</div>
+                    <div class="author-info"><strong>Année de naissance:</strong> ${author.birthYear}${author.deathYear ? ` - ${author.deathYear}` : ''}</div>
                     <div class="author-info"><strong>Livres dans la bibliothèque:</strong> ${authorBooks}</div>
+                    ${author.bio ? `<div class="author-info" style="margin-top: 1rem;"><strong>Biographie:</strong> ${author.bio.substring(0, 100)}${author.bio.length > 100 ? '...' : ''}</div>` : ''}
                 `;
                 grid.appendChild(card);
             });
 
             // Ajouter la carte "Ajouter un auteur" à la fin de la grille
-            addAddAuthorCard(grid);
-
-            // Événement pour supprimer
-            grid.querySelectorAll('.author-delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const authorId = parseInt(this.getAttribute('data-author-id'));
-                    const author = authors.find(a => a.id === authorId);
-                    
-                    if (author) {
-                        // Vérifier si l'auteur a des livres
-                        const authorBooks = books.filter(b => b.author === author.name);
-                        if (authorBooks.length > 0) {
-                            if (!confirm(`Cet auteur a ${authorBooks.length} livre(s) dans la bibliothèque. Supprimer l'auteur supprimera aussi ses livres. Continuer ?`)) {
-                                return;
-                            }
-                            // Supprimer les livres de l'auteur
-                            books = books.filter(b => b.author !== author.name);
-                        }
-                        
-                        authors = authors.filter(a => a.id !== authorId);
-                        displayAuthors();
-                        displayBooks();
-                        updateDashboardStats();
-                        displayFavorites();
-                        alert('Auteur supprimé !');
-                    }
-                });
-            });
-        }
-
-        // === AJOUTER LA CARTE "AJOUTER UN AUTEUR" ===
-        function addAddAuthorCard(grid) {
             const addCard = document.createElement('div');
             addCard.className = 'add-author-grid-item';
-            
             addCard.innerHTML = `
                 <div class="add-author-card" id="add-author-card">
                     <div class="add-author-content">
@@ -2621,16 +2931,73 @@
                 </div>
             `;
             grid.appendChild(addCard);
-            
-            // Événement pour ouvrir le modal
+
+            // Événement pour ouvrir le modal d'ajout
             addCard.querySelector('.add-author-card').addEventListener('click', () => {
                 document.getElementById('add-author-modal').style.display = 'block';
             });
+
+            // Événement pour modifier
+            grid.querySelectorAll('.author-edit-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const authorId = parseInt(this.getAttribute('data-author-id'));
+                    editAuthor(authorId);
+                });
+            });
+
+            // Événement pour supprimer
+            grid.querySelectorAll('.author-delete-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const authorId = parseInt(this.getAttribute('data-author-id'));
+                    deleteAuthor(authorId);
+                });
+            });
+        }
+
+        // === MODIFIER UN AUTEUR ===
+        function editAuthor(authorId) {
+            const author = authors.find(a => a.id === authorId);
+            if (!author) return;
+
+            document.getElementById('edit-author-id').value = author.id;
+            document.getElementById('edit-author-name').value = author.name;
+            document.getElementById('edit-author-nationality').value = author.nationality;
+            document.getElementById('edit-author-birth').value = author.birthYear;
+            document.getElementById('edit-author-death').value = author.deathYear || '';
+            document.getElementById('edit-author-bio').value = author.bio || '';
+            
+            document.getElementById('edit-author-modal').style.display = 'block';
+        }
+
+        // === SUPPRIMER UN AUTEUR ===
+        function deleteAuthor(authorId) {
+            const author = authors.find(a => a.id === authorId);
+            if (!author) return;
+
+            // Vérifier si l'auteur a des livres
+            const authorBooks = books.filter(b => b.author === author.name);
+            if (authorBooks.length > 0) {
+                if (!confirm(`Cet auteur a ${authorBooks.length} livre(s) dans la bibliothèque. Supprimer l'auteur supprimera aussi ses livres. Continuer ?`)) {
+                    return;
+                }
+                // Supprimer les livres de l'auteur
+                books = books.filter(b => b.author !== author.name);
+            }
+            
+            authors = authors.filter(a => a.id !== authorId);
+            saveAllData();
+            displayAuthors();
+            displayBooks();
+            updateDashboardStats();
+            displayFavorites();
+            alert('Auteur supprimé !');
         }
 
         // === BASculer FAVORIS ===
         function toggleFavorite(bookId) {
-            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            let favorites = JSON.parse(localStorage.getItem('bibliotheca_favorites') || '[]');
             const book = books.find(b => b.id === bookId);
             
             if (favorites.includes(bookId)) {
@@ -2641,7 +3008,7 @@
                 if (book) book.favorite = true;
             }
             
-            localStorage.setItem('favorites', JSON.stringify(favorites));
+            localStorage.setItem('bibliotheca_favorites', JSON.stringify(favorites));
             displayBooks();
             displayFavorites();
             updateFavoritesCount();
@@ -2649,8 +3016,9 @@
 
         // === METTRE À JOUR LE COMPTE DE FAVORIS ===
         function updateFavoritesCount() {
-            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const favorites = JSON.parse(localStorage.getItem('bibliotheca_favorites') || '[]');
             document.getElementById('favorites-count').textContent = `${favorites.length} livres favoris`;
+            document.getElementById('favorites-count-dash').textContent = favorites.length;
         }
 
         // === AFFICHER LES FAVORIS ===
@@ -2658,7 +3026,7 @@
             const grid = document.getElementById('favorites-grid');
             if (!grid) return;
 
-            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const favorites = JSON.parse(localStorage.getItem('bibliotheca_favorites') || '[]');
             const favoriteBooks = books.filter(book => favorites.includes(book.id));
 
             grid.innerHTML = '';
@@ -2673,6 +3041,7 @@
             favoriteBooks.forEach(book => {
                 const card = document.createElement('div');
                 card.className = 'collection-book-card';
+                card.setAttribute('data-book-id', book.id);
                 
                 card.innerHTML = `
                     <button class="favorite-btn active" data-book-id="${book.id}">
@@ -2681,7 +3050,7 @@
                     <button class="delete-btn" data-book-id="${book.id}">
                         <i class="fas fa-trash"></i>
                     </button>
-                    <div class="collection-book-cover" style="background-image: url('${book.cover}')" data-book-id="${book.id}"></div>
+                    <div class="collection-book-cover" style="background-image: url('${book.cover}')"></div>
                     <div class="collection-book-title">${book.title}</div>
                     <div class="collection-book-info">
                         <i class="fas fa-user-edit"></i>
@@ -2704,9 +3073,20 @@
                 grid.appendChild(card);
             });
 
+            // Événement pour cliquer sur une carte
+            grid.querySelectorAll('.collection-book-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.closest('.favorite-btn') && !e.target.closest('.delete-btn')) {
+                        const bookId = parseInt(this.getAttribute('data-book-id'));
+                        showBookDetails(bookId);
+                    }
+                });
+            });
+
             // Événement pour favoris
             grid.querySelectorAll('.favorite-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     const bookId = parseInt(this.getAttribute('data-book-id'));
                     toggleFavorite(bookId);
                 });
@@ -2714,46 +3094,12 @@
 
             // Événement pour supprimer
             grid.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     const bookId = parseInt(this.getAttribute('data-book-id'));
-                    if (confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')) {
-                        books = books.filter(book => book.id !== bookId);
-                        emprunts = emprunts.filter(e => e.bookId !== bookId);
-                        displayBooks();
-                        displayFavorites();
-                        updateDashboardStats();
-                        displayEmprunts();
-                        alert('Livre supprimé !');
-                    }
+                    deleteBook(bookId);
                 });
             });
-        }
-
-        // === FILTRER LES LIVRES ===
-        function filterBooks() {
-            const searchTerm = document.getElementById('collection-search').value.toLowerCase();
-            const status = document.getElementById('status-filter').value;
-            const genre = document.getElementById('genre-filter').value;
-
-            let filtered = books;
-
-            if (searchTerm) {
-                filtered = filtered.filter(book => 
-                    book.title.toLowerCase().includes(searchTerm) ||
-                    book.author.toLowerCase().includes(searchTerm) ||
-                    book.genre.toLowerCase().includes(searchTerm)
-                );
-            }
-
-            if (status !== 'all') {
-                filtered = filtered.filter(book => book.status === status);
-            }
-
-            if (genre !== 'all') {
-                filtered = filtered.filter(book => book.genre === genre);
-            }
-
-            displayBooks(filtered);
         }
 
         // === AFFICHER LES EMPRUNTS ===
@@ -2781,7 +3127,10 @@
                     <td>${formatDate(emprunt.dateRetour)}</td>
                     <td><span class="status-badge status-${emprunt.status}">${getStatusName(emprunt.status)}</span></td>
                     <td>
-                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;" data-emprunt-id="${emprunt.id}">Retourner</button>
+                        ${emprunt.status === 'en-cours' ? `
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem; margin-right: 0.5rem;" data-emprunt-id="${emprunt.id}">Retourner</button>
+                        ` : ''}
+                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; background: var(--danger); color: white;" data-emprunt-id="${emprunt.id}" data-action="delete">Supprimer</button>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -2791,63 +3140,141 @@
             tbody.querySelectorAll('.btn-primary').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const empruntId = parseInt(this.getAttribute('data-emprunt-id'));
-                    const emprunt = emprunts.find(e => e.id === empruntId);
-                    if (emprunt) {
-                        const book = books.find(b => b.id === emprunt.bookId);
-                        if (book) {
-                            book.status = 'available';
-                            emprunts = emprunts.filter(e => e.id !== empruntId);
-                            displayEmprunts();
-                            displayBooks();
-                            updateDashboardStats();
-                            alert('Livre retourné avec succès !');
-                        }
-                    }
+                    returnBook(empruntId);
+                });
+            });
+
+            // Bouton supprimer
+            tbody.querySelectorAll('[data-action="delete"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const empruntId = parseInt(this.getAttribute('data-emprunt-id'));
+                    deleteEmprunt(empruntId);
                 });
             });
         }
 
-        // === CHARGER LES DONNÉES DU DASHBOARD ===
-        function loadDashboardData() {
-            loadSuggestions();
-            updateGenreChart();
+        // === RETOURNER UN LIVRE ===
+        function returnBook(empruntId) {
+            const emprunt = emprunts.find(e => e.id === empruntId);
+            if (emprunt) {
+                const book = books.find(b => b.id === emprunt.bookId);
+                if (book) {
+                    book.status = 'available';
+                    emprunt.status = 'retourne';
+                    saveAllData();
+                    displayEmprunts();
+                    displayBooks();
+                    updateDashboardStats();
+                    alert('Livre retourné avec succès !');
+                }
+            }
         }
 
-        // === CHARGER LES SUGGESTIONS ===
-        function loadSuggestions() {
-            const container = document.getElementById('suggestions-list');
-            if (!container) return;
+        // === SUPPRIMER UN EMPRUNT ===
+        function deleteEmprunt(empruntId) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cet emprunt ?')) return;
             
-            container.innerHTML = '';
+            const emprunt = emprunts.find(e => e.id === empruntId);
+            if (emprunt && emprunt.status === 'en-cours') {
+                const book = books.find(b => b.id === emprunt.bookId);
+                if (book) {
+                    book.status = 'available';
+                }
+            }
             
-            const randomSuggestions = [...suggestions]
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 3);
+            emprunts = emprunts.filter(e => e.id !== empruntId);
+            saveAllData();
+            displayEmprunts();
+            displayBooks();
+            updateDashboardStats();
+            alert('Emprunt supprimé !');
+        }
+
+        // === CHARGER LES OPTIONS DE LIVRES POUR EMPRUNT ===
+        function loadBookOptionsForEmprunt() {
+            const select = document.getElementById('emprunt-book');
+            if (!select) return;
             
-            randomSuggestions.forEach(book => {
-                const item = document.createElement('div');
-                item.className = 'suggestion-item';
-                item.innerHTML = `
-                    <div class="suggestion-cover" style="background-image: url('${book.cover}')"></div>
-                    <div class="suggestion-info">
-                        <div class="suggestion-title">${book.title}</div>
-                        <div class="suggestion-author">${book.author}</div>
-                        <div class="suggestion-year">${book.year}</div>
-                    </div>
-                `;
-                container.appendChild(item);
+            select.innerHTML = '<option value="">Sélectionner un livre</option>';
+            
+            const availableBooks = books.filter(book => book.status === 'available');
+            availableBooks.forEach(book => {
+                const option = document.createElement('option');
+                option.value = book.id;
+                option.textContent = `${book.title} - ${book.author}`;
+                select.appendChild(option);
             });
         }
 
-        // === METTRE À JOUR LE GRAPHIQUE DES GENRES ===
-        function updateGenreChart() {
+        // === METTRE À JOUR LES STATISTIQUES ===
+        function updateDashboardStats() {
+            // Total livres
+            document.getElementById('total-books').textContent = books.length;
+            
+            // Total auteurs
+            document.getElementById('total-authors').textContent = authors.length;
+            
+            // Livres disponibles
+            const availableBooks = books.filter(book => book.status === 'available').length;
+            document.getElementById('available-books').textContent = availableBooks;
+            
+            // Livres empruntés
+            const borrowedBooks = books.filter(book => book.status === 'borrowed').length;
+            document.getElementById('borrowed-books').textContent = borrowedBooks;
+            
+            // Taux d'emprunt
+            const borrowRate = books.length > 0 ? Math.round((borrowedBooks / books.length) * 100) : 0;
+            document.getElementById('borrow-rate').textContent = `${borrowRate}%`;
+            
+            // Genres actifs
+            const uniqueGenres = [...new Set(books.map(b => b.genre))];
+            document.getElementById('active-genres').textContent = uniqueGenres.length;
+            
+            // Compter par genre
+            const genreCounts = {
+                'fantaisie': books.filter(b => b.genre === 'fantaisie').length,
+                'science-fiction': books.filter(b => b.genre === 'science-fiction').length,
+                'roman-historique': books.filter(b => b.genre === 'roman-historique').length,
+                'policier': books.filter(b => b.genre === 'policier').length,
+                'biographie': books.filter(b => b.genre === 'biographie').length,
+                'poesie': books.filter(b => b.genre === 'poesie').length
+            };
+            
+            // Mettre à jour les comptes de genre
+            document.getElementById('fantasy-count').textContent = genreCounts['fantaisie'] + ' livres';
+            document.getElementById('scifi-count').textContent = genreCounts['science-fiction'] + ' livres';
+            document.getElementById('historical-count').textContent = genreCounts['roman-historique'] + ' livres';
+            document.getElementById('crime-count').textContent = genreCounts['policier'] + ' livres';
+            document.getElementById('biography-count').textContent = genreCounts['biographie'] + ' livres';
+            document.getElementById('poetry-count').textContent = genreCounts['poesie'] + ' livres';
+            
+            // Mettre à jour le graphique Chart.js
+            updateGenreChartJS();
+            
+            // Mettre à jour les favoris
+            updateFavoritesCount();
+        }
+
+        // === METTRE À JOUR LE BADGE DE NOTIFICATION ===
+        function updateNotificationBadge() {
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                const currentCount = parseInt(badge.textContent);
+                badge.textContent = currentCount + 1;
+            }
+        }
+
+        // === CHART.JS - GRAPHIQUE DES GENRES ===
+        function updateGenreChartJS() {
             const canvas = document.getElementById('genreChart');
             if (!canvas) return;
             
             const ctx = canvas.getContext('2d');
-            const container = canvas.parentElement;
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
+            
+            // Détruire l'instance précédente si elle existe
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
             
             // Compter les livres par genre
             const genreData = {
@@ -2860,39 +3287,125 @@
                 'Fiction': books.filter(b => b.genre === 'fiction').length
             };
             
+            // Filtrer les genres avec 0 livre
             const genres = Object.keys(genreData).filter(g => genreData[g] > 0);
             const counts = genres.map(g => genreData[g]);
-            const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6'];
             
-            const maxCount = Math.max(...counts, 1);
-            const barWidth = Math.min(60, (canvas.width - 100) / genres.length);
-            const barMaxHeight = canvas.height - 60;
-            
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            genres.forEach((genre, index) => {
-                const barHeight = (counts[index] / maxCount) * barMaxHeight;
-                const x = 40 + index * (barWidth + 15);
-                const y = canvas.height - 30 - barHeight;
-                
-                // Barre avec dégradé
-                const gradient = ctx.createLinearGradient(x, y, x, canvas.height - 30);
-                gradient.addColorStop(0, colors[index % colors.length]);
-                gradient.addColorStop(1, colors[index % colors.length] + '80');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(x, y, barWidth, barHeight);
-                
-                // Nombre
-                ctx.fillStyle = '#1f2937';
-                ctx.font = 'bold 14px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText(counts[index].toString(), x + barWidth/2, y - 8);
-                
-                // Genre
-                ctx.font = '12px Arial';
-                const genreText = genre.length > 10 ? genre.substring(0, 10) + '...' : genre;
-                ctx.fillText(genreText, x + barWidth/2, canvas.height - 10);
+            chartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: genres,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: [
+                            '#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', 
+                            '#ef4444', '#06b6d4', '#8b5cf6'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} livres (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
             });
+        }
+
+        // === API OPENLIBRARY ===
+        async function loadSuggestions() {
+            const container = document.getElementById('suggestions-list');
+            if (!container) return;
+            
+            container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-light);"><i class="fas fa-spinner fa-spin"></i> Chargement des suggestions...</div>';
+            
+            try {
+                const response = await fetch('https://openlibrary.org/search.json?q=french+literature&limit=6');
+                const data = await response.json();
+                
+                container.innerHTML = '';
+                
+                if (!data.docs || data.docs.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 1rem; color: var(--text-light);">Aucune suggestion disponible</div>';
+                    return;
+                }
+                
+                // Mettre à jour le KPI API
+                document.getElementById('api-suggestions-count').textContent = data.docs.length;
+                
+                data.docs.slice(0, 3).forEach(book => {
+                    const coverId = book.cover_i;
+                    const coverUrl = coverId 
+                        ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`
+                        : 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80';
+                    
+                    const item = document.createElement('div');
+                    item.className = 'suggestion-item';
+                    item.innerHTML = `
+                        <div class="suggestion-cover" style="background-image: url('${coverUrl}')"></div>
+                        <div class="suggestion-info">
+                            <div class="suggestion-title">${book.title || 'Titre inconnu'}</div>
+                            <div class="suggestion-author">${book.author_name?.[0] || 'Auteur inconnu'}</div>
+                            <div class="suggestion-year">${book.first_publish_year || ''}</div>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+                
+                // Ajouter un livre de l'API à la collection locale (optionnel)
+                if (data.docs[0] && !books.some(b => b.title === data.docs[0].title)) {
+                    const apiBook = data.docs[0];
+                    const newBook = {
+                        id: Date.now(),
+                        title: apiBook.title || 'Livre de l\'API',
+                        author: apiBook.author_name?.[0] || 'Auteur inconnu',
+                        genre: 'fiction',
+                        year: apiBook.first_publish_year || 2024,
+                        isbn: apiBook.isbn?.[0] || '',
+                        description: 'Ajouté depuis l\'API OpenLibrary',
+                        status: 'available',
+                        favorite: false,
+                        cover: apiBook.cover_i 
+                            ? `https://covers.openlibrary.org/b/id/${apiBook.cover_i}-M.jpg`
+                            : 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80'
+                    };
+                    
+                    books.push(newBook);
+                    saveAllData();
+                    updateDashboardStats();
+                }
+                
+            } catch (error) {
+                console.error('Erreur API:', error);
+                container.innerHTML = '<div style="text-align: center; padding: 1rem; color: var(--danger);">Erreur de chargement des suggestions</div>';
+            }
+        }
+
+        // === CHARGER LES DONNÉES DU DASHBOARD ===
+        function loadDashboardData() {
+            loadSuggestions();
+            updateGenreChartJS();
         }
 
         // === FONCTIONS UTILITAIRES ===
@@ -2919,6 +3432,7 @@
         }
 
         function formatDate(dateString) {
+            if (!dateString) return 'N/A';
             const date = new Date(dateString);
             return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
         }
@@ -2926,7 +3440,7 @@
         // === REDIMENSIONNER LES GRAPHIQUES ===
         window.addEventListener('resize', function() {
             if (document.getElementById('dashboard').classList.contains('active')) {
-                updateGenreChart();
+                updateGenreChartJS();
             }
         });
 
@@ -2934,6 +3448,9 @@
         window.addEventListener('DOMContentLoaded', function() {
             console.log('✅ Site Bibliotheca chargé');
             console.log('🔐 Identifiants : admin / admin123');
+            console.log('💾 Persistance localStorage activée');
+            console.log('📊 Chart.js intégré');
+            console.log('🔍 CRUD complet avec tri et fiches détaillées');
         });
     </script>
 </body>

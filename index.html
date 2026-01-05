@@ -4,61 +4,1526 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bibliotheca - Administration</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === STYLES GÉNÉRAUX === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #7c3aed;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #f9fafb;
+            --white: #ffffff;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --border: #e5e7eb;
+            --shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --sidebar-width: 280px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        /* === PAGE DE CONNEXION === */
+        #login-page {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Georgia', serif;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: #1e293b;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid #334155;
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #f8fafc;
+            font-weight: 700;
+        }
+
+        .login-subtitle {
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            color: #f8fafc;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .error-message {
+            color: var(--danger);
+            margin-top: 1rem;
+            display: none;
+            padding: 0.75rem;
+            background: #fef2f2;
+            border-radius: 8px;
+            border: 1px solid #fecaca;
+        }
+
+        /* === DASHBOARD PRINCIPAL === */
+        #dashboard-page {
+            display: none;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            color: var(--text);
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            border-right: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-text {
+            font-weight: 700;
+        }
+
+        .sidebar-nav {
+            padding: 1.5rem 1rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-radius: 8px;
+            gap: 0.75rem;
+        }
+
+        .nav-link:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .logout-btn {
+            margin-top: 2rem;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+        }
+
+        /* Header avec barre de recherche */
+        .header {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: 70px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-search {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .header-search input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: var(--bg);
+        }
+
+        .header-search input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg);
+            border-radius: 8px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.95rem;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            line-height: 1.2;
+        }
+
+        .user-role.admin {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-role.librarian {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        /* Notifications */
+        .notifications {
+            position: relative;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            position: relative;
+            color: var(--text);
+            transition: color 0.2s;
+        }
+
+        .notification-btn:hover {
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .notifications-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 320px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            z-index: 1001;
+        }
+
+        .notifications-dropdown.active {
+            display: block;
+            animation: slideDown 0.2s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-header {
+            padding: 1rem 1.5rem;
+            background: var(--bg);
+            color: var(--text);
+            font-weight: 600;
+            font-size: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .notification-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: var(--bg);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            border-radius: 8px;
+            color: var(--primary);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .notification-time {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+            padding: 2rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Titres des pages */
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text);
+            letter-spacing: -0.025em;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1.5rem;
+            color: var(--text-light);
+        }
+
+        /* Stats Cards */
+        .stats-grid-single {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 12px;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-info h3 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        /* Genres Grid - Amélioré avec couvertures */
+        .genres-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .genre-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .genre-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .genre-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .genre-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .genre-count {
+            font-size: 1rem;
+            color: white;
+            background: var(--primary);
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .genre-books-preview {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .book-cover-preview {
+            width: 80px;
+            height: 120px;
+            border-radius: 6px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: var(--shadow-md);
+            flex-shrink: 0;
+        }
+
+        .genre-books-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .book-title-item {
+            font-size: 0.95rem;
+            color: var(--text);
+            padding-left: 1rem;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .book-title-item:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Suggestions à côté de Répartition par Genre */
+        .charts-suggestions-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .chart-card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .chart-container {
+            height: 280px;
+            width: 100%;
+        }
+
+        .suggestions-sidebar {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .suggestions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .suggestions-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .refresh-btn {
+            padding: 0.6rem 1.2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .suggestions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .suggestion-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: var(--bg);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+        }
+
+        .suggestion-cover {
+            width: 70px;
+            height: 100px;
+            border-radius: 6px;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            box-shadow: var(--shadow);
+        }
+
+        .suggestion-info {
+            flex: 1;
+        }
+
+        .suggestion-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .suggestion-author {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .suggestion-year {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Collection Page */
+        .collection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .collection-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-filter {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-filter input, .status-filter select, .genre-filter select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: var(--white);
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .collection-book-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .collection-book-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .collection-book-cover {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .collection-book-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .collection-book-info {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .collection-book-info i {
+            color: var(--primary);
+        }
+
+        .collection-book-status {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .status-available { background: #d1fae5; color: #065f46; }
+        .status-borrowed { background: #fef3c7; color: #92400e; }
+        .status-lost { background: #fee2e2; color: #991b1b; }
+
+        .favorite-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #9ca3af;
+            transition: all 0.2s;
+        }
+
+        .favorite-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .favorite-btn.active {
+            color: var(--danger);
+        }
+
+        .delete-btn {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Authors Page - Carte d'ajout dans la même grille */
+        .authors-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .authors-search {
+            margin-bottom: 2rem;
+        }
+
+        .authors-search input {
+            width: 100%;
+            max-width: 500px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: var(--white);
+        }
+
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Carte auteur normale */
+        .author-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .author-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .author-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .author-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.75rem;
+        }
+
+        .author-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text);
+        }
+
+        .author-info {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .author-books-count {
+            margin-top: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .author-delete-btn {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.2s;
+        }
+
+        .author-delete-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Carte "Ajouter un auteur" - DANS LA MÊME GRILLE */
+        .add-author-grid-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-author-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid rgba(255,255,255,0.3);
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-author-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: white;
+        }
+
+        .add-author-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .add-author-icon {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .add-author-content h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Favorites Page */
+        .favorites-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .favorites-count {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Emprunts Page - Tableau */
+        .emprunts-table-container {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .emprunts-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .emprunts-table th {
+            background: var(--bg);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .emprunts-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .emprunts-table tr:hover {
+            background: var(--bg);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-en-cours { background: #fef3c7; color: #92400e; }
+        .status-retourne { background: #d1fae5; color: #065f46; }
+        .status-retard { background: #fee2e2; color: #991b1b; }
+
+        /* Contact Page - Améliorée */
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-form-section, .faq-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .contact-form-section h2, .faq-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .contact-form-section .form-group label {
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .contact-form-section .form-group input,
+        .contact-form-section .form-group textarea {
+            border: 2px solid var(--border);
+            background: #f8fafc;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .contact-form-section .form-group input:focus,
+        .contact-form-section .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background: white;
+        }
+
+        .contact-form-section .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        .message-preview {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-top: 1rem;
+        }
+
+        .message-preview h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .message-preview p {
+            color: var(--text);
+            font-style: italic;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            background: var(--bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .faq-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow);
+        }
+
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .faq-answer {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+
+        .modal-content {
+            background: var(--white);
+            margin: auto;
+            padding: 2.5rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            border: 1px solid var(--border);
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 1.75rem;
+            cursor: pointer;
+            color: var(--text);
+            font-weight: bold;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg);
+            color: var(--danger);
+        }
+
+        .modal h2 {
+            margin-bottom: 2rem;
+            color: var(--text);
+            font-size: 1.75rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .modal .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .modal .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .modal .form-group input,
+        .modal .form-group select,
+        .modal .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--primary-light);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: #f8fafc;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .modal .form-group input:focus,
+        .modal .form-group select:focus,
+        .modal .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .modal .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .charts-suggestions-container {
+                grid-template-columns: 1fr;
+            }
+            .genres-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .header {
+                left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid-single {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .genres-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+            .collection-header, .authors-header, .favorites-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .collection-filters {
+                flex-direction: column;
+            }
+            .search-filter {
+                min-width: 100%;
+            }
+            .header-content {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            .header-search {
+                order: 3;
+                max-width: 100%;
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid-single {
+                grid-template-columns: 1fr;
+            }
+            .modal-content {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            .user-profile .user-info {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <a href="#" class="logo" data-page="dashboard">
-                <div class="logo-icon">📚</div>
-                <div class="logo-text">Bibliotheca</div>
-            </a>
-        </div>
-        <nav class="sidebar-nav">
-            <ul class="nav-menu">
-                <li><a href="#" class="nav-link active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a></li>
-                <li><a href="#" class="nav-link" data-page="collection"><i class="fas fa-book"></i> Collection</a></li>
-                <li><a href="#" class="nav-link" data-page="auteurs"><i class="fas fa-user-edit"></i> Auteurs</a></li>
-                <li><a href="#" class="nav-link" data-page="favoris"><i class="fas fa-heart"></i> Favoris</a></li>
-                <li><a href="#" class="nav-link" data-page="emprunts"><i class="fas fa-exchange-alt"></i> Emprunts</a></li>
-                <li><a href="#" class="nav-link" data-page="evenements"><i class="fas fa-calendar-alt"></i> Événements</a></li>
-                <li><a href="#" class="nav-link" data-page="contact"><i class="fas fa-envelope"></i> Contact</a></li>
-                <li><a href="#" class="nav-link logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
-            </ul>
-        </nav>
-    </aside>
-
-    <!-- Header Top -->
-    <header class="header">
-        <div class="header-content">
-            <div class="header-search">
-                <input type="text" id="global-search" placeholder="Rechercher un livre, un auteur...">
-                <button class="search-btn"><i class="fas fa-search"></i></button>
+    <!-- === PAGE DE CONNEXION === -->
+    <div id="login-page">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-logo">📚</div>
+                <h1 class="login-title">Bibliotheca</h1>
+                <p class="login-subtitle">Accédez à votre espace administrateur</p>
+                
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" id="username" name="username" required placeholder="admin">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" name="password" required placeholder="••••••••">
+                    </div>
+                    
+                    <div class="error-message" id="error-message">Identifiants incorrects</div>
+                    
+                    <button type="submit" class="login-btn">Se connecter</button>
+                </form>
+                
+                <div style="margin-top: 2rem; color: #cbd5e1; font-size: 0.9rem;">
+                    <p><strong>Identifiants de test :</strong></p>
+                    <p>Nom d'utilisateur: <strong>admin</strong></p>
+                    <p>Mot de passe: <strong>admin123</strong></p>
+                </div>
             </div>
-            <div class="header-right">
+        </div>
+    </div>
+
+    <!-- === DASHBOARD PRINCIPAL === -->
+    <div id="dashboard-page">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="logo">
+                    <div class="logo-icon">📚</div>
+                    <div class="logo-text">Bibliotheca</div>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-link active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a></li>
+                    <li><a href="#" class="nav-link" data-page="collection"><i class="fas fa-book"></i> Collection</a></li>
+                    <li><a href="#" class="nav-link" data-page="auteurs"><i class="fas fa-user-edit"></i> Auteurs</a></li>
+                    <li><a href="#" class="nav-link" data-page="favoris"><i class="fas fa-heart"></i> Favoris</a></li>
+                    <li><a href="#" class="nav-link" data-page="emprunts"><i class="fas fa-exchange-alt"></i> Emprunts</a></li>
+                    <li><a href="#" class="nav-link" data-page="contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                    <li><a href="#" class="nav-link logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Header avec barre de recherche -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-search">
+                    <input type="text" id="global-search" placeholder="Rechercher des livres, auteurs...">
+                </div>
+                
                 <div class="notifications">
-                    <button class="notification-btn"><i class="fas fa-bell"></i></button>
-                    <span class="notification-badge">3</span>
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
                     <div class="notifications-dropdown" id="notifications-dropdown">
                         <div class="notification-header">Notifications</div>
                         <div class="notification-item">
-                            <div class="notification-icon"><i class="fas fa-book"></i></div>
+                            <div class="notification-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
                             <div class="notification-content">
                                 <div class="notification-title">Nouveau livre ajouté</div>
                                 <div class="notification-time">Il y a 2 heures</div>
                             </div>
                         </div>
                         <div class="notification-item">
-                            <div class="notification-icon"><i class="fas fa-exchange-alt"></i></div>
+                            <div class="notification-icon">
+                                <i class="fas fa-undo"></i>
+                            </div>
                             <div class="notification-content">
                                 <div class="notification-title">Livre retourné</div>
                                 <div class="notification-time">Il y a 5 heures</div>
                             </div>
                         </div>
                         <div class="notification-item">
-                            <div class="notification-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="notification-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
                             <div class="notification-content">
                                 <div class="notification-title">Retour en retard</div>
                                 <div class="notification-time">Il y a 1 jour</div>
@@ -66,448 +1531,340 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="user-profile">
                     <div class="user-info">
                         <div class="user-name">Administrateur</div>
-                        <div class="user-role">Bibliothécaire en chef</div>
+                        <div class="user-role admin">Bibliothécaire</div>
                     </div>
                     <div class="user-avatar">
                         <i class="fas fa-user"></i>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- Contenu principal - Toutes les pages -->
-    <main class="main-content">
-        <div class="content-wrapper">
-        <!-- Page Tableau de bord -->
-        <div id="dashboard" class="page active">
+        <!-- Contenu principal -->
+        <main class="main-content">
             <div class="container">
-                <h1 class="page-title">Vue d'ensemble des statistiques et performances de la bibliothèque</h1>
+                <!-- Page Tableau de bord -->
+                <div id="dashboard" class="page active">
+                    <h1 class="page-title">Tableau de bord</h1>
+                    
+                    <!-- Stats en une ligne -->
+                    <div class="section-title">Vue d'ensemble des statistiques et performances de la bibliothèque</div>
+                    <div class="stats-grid-single">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-book"></i></div>
+                            <div class="stat-info">
+                                <h3>Total livres</h3>
+                                <p class="stat-number" id="total-books">0</p>
+                                <p class="stat-change">Dans la bibliothèque</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-user-edit"></i></div>
+                            <div class="stat-info">
+                                <h3>Auteurs</h3>
+                                <p class="stat-number" id="total-authors">0</p>
+                                <p class="stat-change">Enregistrés</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="stat-info">
+                                <h3>Disponibles</h3>
+                                <p class="stat-number" id="available-books">0</p>
+                                <p class="stat-change">À emprunter</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
+                            <div class="stat-info">
+                                <h3>Empruntés</h3>
+                                <p class="stat-number" id="borrowed-books">0</p>
+                                <p class="stat-change">En cours</p>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Stats en une ligne -->
-                <div class="stats-grid-single">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-book"></i></div>
-                        <div class="stat-info">
-                            <h3>Total livres</h3>
-                            <p class="stat-number">127</p>
-                            <p class="stat-change positive">+12 depuis le mois dernier</p>
+                    <!-- Genres (6 types avec couvertures) -->
+                    <div class="section-title">Livres par Genres</div>
+                    <div class="genres-grid">
+                        <!-- Fantaisie -->
+                        <div class="genre-card">
+                            <div class="genre-header">
+                                <h3>Fantaisie</h3>
+                                <span class="genre-count" id="fantasy-count">0 livres</span>
+                            </div>
+                            <div class="genre-books-preview">
+                                <div class="book-cover-preview" style="background-image: url('https://cdn1.booknode.com/book_cover/4981/full/harry-potter-tome-1-harry-potter-a-lecole-des-sorciers-4981020.jpg')"></div>
+                                <div class="book-cover-preview" style="background-image: url('https://www.livres-cinema.info/cover/22/2266154117.jpg')"></div>
+                            </div>
+                            <div class="genre-books-list">
+                                <div class="book-title-item">Harry Potter</div>
+                                <div class="book-title-item">Le Seigneur des Anneaux</div>
+                                <div class="book-title-item">Le Trône de fer</div>
+                            </div>
+                        </div>
+
+                        <!-- Science-Fiction -->
+                        <div class="genre-card">
+                            <div class="genre-header">
+                                <h3>Science-Fiction</h3>
+                                <span class="genre-count" id="scifi-count">0 livres</span>
+                            </div>
+                            <div class="genre-books-preview">
+                                <div class="book-cover-preview" style="background-image: url('https://img.livraddict.com/covers/453/453370//couv47835879.jpg')"></div>
+                                <div class="book-cover-preview" style="background-image: url('https://m.media-amazon.com/images/I/81T5ecpb8aL._SL1481_.jpg')"></div>
+                            </div>
+                            <div class="genre-books-list">
+                                <div class="book-title-item">Dune</div>
+                                <div class="book-title-item">Fondation</div>
+                                <div class="book-title-item">1984</div>
+                            </div>
+                        </div>
+
+                        <!-- Roman Historique -->
+                        <div class="genre-card">
+                            <div class="genre-header">
+                                <h3>Roman Historique</h3>
+                                <span class="genre-count" id="historical-count">0 livres</span>
+                            </div>
+                            <div class="genre-books-preview">
+                                <div class="book-cover-preview" style="background-image: url('https://cdn1.booknode.com/book_cover/3614/full/les-miserables-3614132.jpg')"></div>
+                                <div class="book-cover-preview" style="background-image: url('https://region-ouest.epudf.org/wp-content/uploads/sites/9/2024/09/Monte_Christo.png')"></div>
+                            </div>
+                            <div class="genre-books-list">
+                                <div class="book-title-item">Les Misérables</div>
+                                <div class="book-title-item">Le Comte de Monte-Cristo</div>
+                                <div class="book-title-item">Notre-Dame de Paris</div>
+                            </div>
+                        </div>
+
+                        <!-- Policier/Thriller -->
+                        <div class="genre-card">
+                            <div class="genre-header">
+                                <h3>Policier/Thriller</h3>
+                                <span class="genre-count" id="crime-count">0 livres</span>
+                            </div>
+                            <div class="genre-books-preview">
+                                <div class="book-cover-preview" style="background-image: url('https://www.bloombooks.ma/storage/uploads/le-crime-de-lorient-express-9782253104049.jpeg')"></div>
+                                <div class="book-cover-preview" style="background-image: url('https://images-eu.ssl-images-amazon.com/images/I/81+EDxaaLML._AC_UL900_SR615,900_.jpg')"></div>
+                            </div>
+                            <div class="genre-books-list">
+                                <div class="book-title-item">Le Crime de l'Orient-Express</div>
+                                <div class="book-title-item">Millénium</div>
+                                <div class="book-title-item">Da Vinci Code</div>
+                            </div>
+                        </div>
+
+                        <!-- Biographie -->
+                        <div class="genre-card">
+                            <div class="genre-header">
+                                <h3>Biographie</h3>
+                                <span class="genre-count" id="biography-count">0 livres</span>
+                            </div>
+                            <div class="genre-books-preview">
+                                <div class="book-cover-preview" style="background-image: url('https://servimg.eyrolles.com/static/media/8522/9782253168522_internet_w290.jpg')"></div>
+                                <div class="book-cover-preview" style="background-image: url('https://media.hachette.fr/fit-in/780x1280/imgArticle/GRASSETFASQUELLE/2023/9782246834175-001-X.jpeg?source=web')"></div>
+                            </div>
+                            <div class="genre-books-list">
+                                <div class="book-title-item">Steve Jobs</div>
+                                <div class="book-title-item">De Gaulle</div>
+                                <div class="book-title-item">Einstein</div>
+                            </div>
+                        </div>
+
+                        <!-- Poésie -->
+                        <div class="genre-card">
+                            <div class="genre-header">
+                                <h3>Poésie</h3>
+                                <span class="genre-count" id="poetry-count">0 livres</span>
+                            </div>
+                            <div class="genre-books-preview">
+                                <div class="book-cover-preview" style="background-image: url('https://cdn1.booknode.com/book_cover/83/full/les-fleurs-du-mal-83490.jpg')"></div>
+                                <div class="book-cover-preview" style="background-image: url('https://cdn1.booknode.com/book_cover/702/full/alcools-702439.jpg')"></div>
+                            </div>
+                            <div class="genre-books-list">
+                                <div class="book-title-item">Les Fleurs du Mal</div>
+                                <div class="book-title-item">Alcools</div>
+                                <div class="book-title-item">Les Contemplations</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-user-edit"></i></div>
-                        <div class="stat-info">
-                            <h3>Auteurs</h3>
-                            <p class="stat-number">68</p>
-                            <p class="stat-change">Contributeurs actifs</p>
+
+                    <!-- Graphiques et Suggestions côte à côte -->
+                    <div class="charts-suggestions-container">
+                        <div class="chart-card">
+                            <h2>Répartition par Genre</h2>
+                            <div class="chart-container">
+                                <canvas id="genreChart"></canvas>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-                        <div class="stat-info">
-                            <h3>Disponibles</h3>
-                            <p class="stat-number">89</p>
-                            <p class="stat-change">Prêts à l'emprunt</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
-                        <div class="stat-info">
-                            <h3>Empruntés</h3>
-                            <p class="stat-number">38</p>
-                            <p class="stat-change">Actuellement sortis</p>
+                        <div class="suggestions-sidebar">
+                            <div class="suggestions-header">
+                                <h2>Suggestions</h2>
+                                <button class="refresh-btn" id="refresh-suggestions">
+                                    <i class="fas fa-sync-alt"></i> Actualiser
+                                </button>
+                            </div>
+                            <div class="suggestions-list" id="suggestions-list">
+                                <!-- Suggestions chargées dynamiquement -->
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Livres par genres - 6 genres en 2 lignes -->
-                <div class="section-title">
-                    <h2>Livres par Genres</h2>
-                </div>
-                
-                <div class="genres-grid">
-                    <!-- Première ligne -->
-                    <div class="genre-card">
-                        <div class="genre-header">
-                            <h3>Fantaisie</h3>
-                            <span class="genre-count">24 livres</span>
-                        </div>
-                        <div class="genre-books-preview">
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-1.2.1&auto=format&fit=crop&w-200&q=80');"></div>
-                        </div>
-                        <div class="genre-footer">
-                            <div class="top-books">
-                                <span class="book-title">Harry Potter</span>
-                                <span class="book-title">Le Seigneur des Anneaux</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="genre-card">
-                        <div class="genre-header">
-                            <h3>Science-Fiction</h3>
-                            <span class="genre-count">18 livres</span>
-                        </div>
-                        <div class="genre-books-preview">
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                        </div>
-                        <div class="genre-footer">
-                            <div class="top-books">
-                                <span class="book-title">Dune</span>
-                                <span class="book-title">Fondation</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="genre-card">
-                        <div class="genre-header">
-                            <h3>Roman Historique</h3>
-                            <span class="genre-count">15 livres</span>
-                        </div>
-                        <div class="genre-books-preview">
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1497636577773-f1231844b336?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                        </div>
-                        <div class="genre-footer">
-                            <div class="top-books">
-                                <span class="book-title">Les Misérables</span>
-                                <span class="book-title">Guerre et Paix</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Deuxième ligne -->
-                    <div class="genre-card">
-                        <div class="genre-header">
-                            <h3>Policier/Thriller</h3>
-                            <span class="genre-count">22 livres</span>
-                        </div>
-                        <div class="genre-books-preview">
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                        </div>
-                        <div class="genre-footer">
-                            <div class="top-books">
-                                <span class="book-title">Le Crime de l'Orient-Express</span>
-                                <span class="book-title">Millénium</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="genre-card">
-                        <div class="genre-header">
-                            <h3>Biographie</h3>
-                            <span class="genre-count">12 livres</span>
-                        </div>
-                        <div class="genre-books-preview">
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1531346688376-ab6275c4725e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                        </div>
-                        <div class="genre-footer">
-                            <div class="top-books">
-                                <span class="book-title">Steve Jobs</span>
-                                <span class="book-title">De Gaulle</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="genre-card">
-                        <div class="genre-header">
-                            <h3>Poésie</h3>
-                            <span class="genre-count">9 livres</span>
-                        </div>
-                        <div class="genre-books-preview">
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                            <div class="book-cover-preview" style="background-image: url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80');"></div>
-                        </div>
-                        <div class="genre-footer">
-                            <div class="top-books">
-                                <span class="book-title">Les Fleurs du Mal</span>
-                                <span class="book-title">Alcools</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Statistiques et suggestions -->
-                <div class="dashboard-bottom">
-                    <div class="chart-section">
-                        <h2>Répartition par Genre</h2>
-                        <div class="chart-container">
-                            <canvas id="genreChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="chart-section">
-                        <h2>Visiteurs de la Bibliothèque</h2>
-                        <div class="chart-container">
-                            <canvas id="visitorsChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="suggestions-section">
-                        <div class="suggestions-header">
-                            <h2>Suggestions de Lecture</h2>
-                            <button class="refresh-btn" id="refresh-suggestions"><i class="fas fa-sync-alt"></i> Actualiser</button>
-                        </div>
-                        <div class="suggestions-list" id="suggestions-list"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Page Collection -->
-        <div id="collection" class="page">
-            <div class="container">
-                <div class="page-header">
-                    <div class="page-header-left">
+                <!-- Page Collection -->
+                <div id="collection" class="page">
+                    <div class="collection-header">
                         <h1 class="page-title">Collection de la Bibliothèque</h1>
-                        <div class="total-books-badge">
-                            <i class="fas fa-book"></i>
-                            <span>127 livres au total</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" id="add-book-btn"><i class="fas fa-plus"></i> Ajouter un livre</button>
-                </div>
-                
-                <div class="collection-filters">
-                    <div class="search-filter">
-                        <input type="text" id="collection-search" placeholder="Rechercher par titre, auteur ou genre...">
-                    </div>
-                    <div class="status-filter">
-                        <select id="status-filter">
-                            <option value="all">Tous les statuts</option>
-                            <option value="available">Disponible</option>
-                            <option value="borrowed">Emprunté</option>
-                            <option value="lost">Perdu</option>
-                        </select>
-                    </div>
-                    <div class="genre-filter">
-                        <select id="genre-filter">
-                            <option value="all">Tous les genres</option>
-                            <option value="fantaisie">Fantaisie</option>
-                            <option value="science-fiction">Science-Fiction</option>
-                            <option value="roman-historique">Roman Historique</option>
-                            <option value="policier">Policier/Thriller</option>
-                            <option value="biographie">Biographie</option>
-                            <option value="poesie">Poésie</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="collection-grid" id="collection-grid"></div>
-            </div>
-        </div>
-
-        <!-- Page Auteurs -->
-        <div id="auteurs" class="page">
-            <div class="container">
-                <div class="page-header">
-                    <h1 class="page-title">Auteurs</h1>
-                    <button class="btn btn-primary" id="add-author-btn"><i class="fas fa-plus"></i> Ajouter un auteur</button>
-                </div>
-                
-                <div class="authors-search">
-                    <input type="text" id="authors-search" placeholder="Rechercher un auteur par nom, nationalité...">
-                </div>
-                
-                <div class="authors-grid" id="authors-grid">
-                    <!-- Les auteurs seront ajoutés ici dynamiquement -->
-                </div>
-                
-                <!-- Case pour ajouter un nouvel auteur -->
-                <div class="add-author-card" id="add-author-card">
-                    <div class="add-author-content">
-                        <div class="add-author-icon">
-                            <i class="fas fa-plus-circle"></i>
-                        </div>
-                        <h3>Ajouter un nouvel auteur</h3>
-                        <p>Cliquez ici pour enregistrer un nouvel auteur dans la bibliothèque</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Page Favoris -->
-        <div id="favoris" class="page">
-            <div class="container">
-                <div class="page-header">
-                    <h1 class="page-title">Mes Favoris</h1>
-                    <div class="favorites-count">
-                        <i class="fas fa-heart"></i>
-                        <span>8 livres favoris</span>
-                    </div>
-                </div>
-                
-                <div class="favorites-search">
-                    <input type="text" id="favorites-search" placeholder="Rechercher dans mes favoris...">
-                </div>
-                
-                <div class="favorites-horizontal" id="favorites-horizontal">
-                    <!-- Les favoris en cartes horizontales -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Page Emprunts -->
-        <div id="emprunts" class="page">
-            <div class="container">
-                <h1 class="page-title">Gestion des Emprunts</h1>
-                <div class="emprunts-table-container">
-                    <table class="emprunts-table">
-                        <thead>
-                            <tr>
-                                <th>Titre</th>
-                                <th>Auteur</th>
-                                <th>Emprunteur</th>
-                                <th>Date d'emprunt</th>
-                                <th>Date de retour prévue</th>
-                                <th>Statut</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="emprunts-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Page Événements (remplace Horaires) -->
-        <div id="evenements" class="page">
-            <div class="container">
-                <h1 class="page-title">Événements de la Bibliothèque</h1>
-                
-                <div class="events-grid">
-                    <div class="event-card">
-                        <div class="event-date">
-                            <span class="event-day">15</span>
-                            <span class="event-month">Jan</span>
-                        </div>
-                        <div class="event-content">
-                            <h3>Club de Lecture</h3>
-                            <p>Discussion autour du livre "Les Misérables" de Victor Hugo</p>
-                            <div class="event-info">
-                                <span><i class="fas fa-clock"></i> 18h30 - 20h30</span>
-                                <span><i class="fas fa-users"></i> 25 participants</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-secondary">S'inscrire</button>
+                        <button class="btn btn-primary" id="add-book-btn">
+                            <i class="fas fa-plus"></i> Ajouter un livre
+                        </button>
                     </div>
                     
-                    <div class="event-card">
-                        <div class="event-date">
-                            <span class="event-day">22</span>
-                            <span class="event-month">Jan</span>
+                    <div class="collection-filters">
+                        <div class="search-filter">
+                            <input type="text" id="collection-search" placeholder="Rechercher par titre, auteur ou genre...">
                         </div>
-                        <div class="event-content">
-                            <h3>Atelier Écriture</h3>
-                            <p>Atelier d'écriture créative animé par l'auteur Jean Dupont</p>
-                            <div class="event-info">
-                                <span><i class="fas fa-clock"></i> 14h00 - 17h00</span>
-                                <span><i class="fas fa-users"></i> 15 places</span>
-                            </div>
+                        <div class="status-filter">
+                            <select id="status-filter">
+                                <option value="all">Tous les statuts</option>
+                                <option value="available">Disponible</option>
+                                <option value="borrowed">Emprunté</option>
+                                <option value="lost">Perdu</option>
+                            </select>
                         </div>
-                        <button class="btn btn-secondary">S'inscrire</button>
+                        <div class="genre-filter">
+                            <select id="genre-filter">
+                                <option value="all">Tous les genres</option>
+                                <option value="fantaisie">Fantaisie</option>
+                                <option value="science-fiction">Science-Fiction</option>
+                                <option value="roman-historique">Roman Historique</option>
+                                <option value="policier">Policier/Thriller</option>
+                                <option value="biographie">Biographie</option>
+                                <option value="poesie">Poésie</option>
+                                <option value="fiction">Fiction</option>
+                            </select>
+                        </div>
                     </div>
                     
-                    <div class="event-card">
-                        <div class="event-date">
-                            <span class="event-day">05</span>
-                            <span class="event-month">Fév</span>
-                        </div>
-                        <div class="event-content">
-                            <h3>Rencontre avec un Auteur</h3>
-                            <p>Rencontre avec Marie Martin, auteure de "Les Ombres du Passé"</p>
-                            <div class="event-info">
-                                <span><i class="fas fa-clock"></i> 19h00 - 21h00</span>
-                                <span><i class="fas fa-users"></i> 50 places</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-secondary">S'inscrire</button>
-                    </div>
-                    
-                    <div class="event-card">
-                        <div class="event-date">
-                            <span class="event-day">12</span>
-                            <span class="event-month">Fév</span>
-                        </div>
-                        <div class="event-content">
-                            <h3>Heure du Conte</h3>
-                            <p>Lecture de contes pour enfants de 3 à 8 ans</p>
-                            <div class="event-info">
-                                <span><i class="fas fa-clock"></i> 10h30 - 11h30</span>
-                                <span><i class="fas fa-users"></i> 30 enfants</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-secondary">S'inscrire</button>
+                    <div class="collection-grid" id="collection-grid">
+                        <!-- Livres chargés dynamiquement -->
                     </div>
                 </div>
-                
-                <div class="info-box">
-                    <h3>Proposer un événement</h3>
-                    <p>Vous souhaitez organiser un événement à la bibliothèque ? Contactez-nous à <strong>evenements@bibliotheca.fr</strong> avec votre proposition.</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Page Contact -->
-        <div id="contact" class="page">
-            <div class="container">
-                <h1 class="page-title">Contact & Aide</h1>
-                <div class="contact-content">
-                    <div class="contact-form-section">
-                        <h2>Contactez-nous</h2>
-                        <form class="contact-form" id="contact-form">
-                            <div class="form-group">
-                                <label for="name">Nom</label>
-                                <input type="text" id="name" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="sujet">Sujet</label>
-                                <input type="text" id="sujet" name="sujet" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="message">Message</label>
-                                <textarea id="message" name="message" rows="5" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Envoyer</button>
-                        </form>
+                <!-- Page Auteurs -->
+                <div id="auteurs" class="page">
+                    <div class="authors-header">
+                        <h1 class="page-title">Auteurs</h1>
                     </div>
-                    <div class="faq-section">
-                        <h2>Questions Fréquentes</h2>
-                        <div class="faq-list">
-                            <div class="faq-item">
-                                <div class="faq-question">Comment emprunter un livre ?</div>
-                                <div class="faq-answer">Vous pouvez emprunter un livre directement depuis la page Collection. Cliquez sur le livre souhaité et suivez les instructions.</div>
+                    
+                    <div class="authors-search">
+                        <input type="text" id="authors-search" placeholder="Rechercher un auteur par nom, nationalité...">
+                    </div>
+                    
+                    <div class="authors-grid" id="authors-grid">
+                        <!-- Auteurs chargés dynamiquement -->
+                        <!-- La carte "Ajouter un auteur" sera ajoutée à la fin de cette grille -->
+                    </div>
+                </div>
+
+                <!-- Page Favoris -->
+                <div id="favoris" class="page">
+                    <div class="favorites-header">
+                        <h1 class="page-title">Mes Favoris</h1>
+                        <div class="favorites-count">
+                            <i class="fas fa-heart"></i>
+                            <span id="favorites-count">0 livres favoris</span>
+                        </div>
+                    </div>
+                    
+                    <div class="collection-grid" id="favorites-grid">
+                        <!-- Livres favoris chargés dynamiquement -->
+                    </div>
+                </div>
+
+                <!-- Page Emprunts -->
+                <div id="emprunts" class="page">
+                    <h1 class="page-title">Gestion des Emprunts</h1>
+                    
+                    <div class="emprunts-table-container">
+                        <table class="emprunts-table">
+                            <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Auteur</th>
+                                    <th>Emprunteur</th>
+                                    <th>Date d'emprunt</th>
+                                    <th>Date de retour prévue</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="emprunts-body">
+                                <!-- Emprunts chargés dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Page Contact -->
+                <div id="contact" class="page">
+                    <h1 class="page-title">Contact & Aide</h1>
+                    
+                    <div class="contact-content">
+                        <div class="contact-form-section">
+                            <h2>Contactez-nous</h2>
+                            <form class="contact-form" id="contact-form">
+                                <div class="form-group">
+                                    <label for="name">Nom</label>
+                                    <input type="text" id="name" name="name" required placeholder="Votre nom complet">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" required placeholder="votre@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="sujet">Sujet</label>
+                                    <input type="text" id="sujet" name="sujet" required placeholder="Sujet de votre message">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message">Message</label>
+                                    <textarea id="message" name="message" rows="5" required placeholder="Votre message ici..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Envoyer le message</button>
+                            </form>
+                            <div class="message-preview" id="message-preview" style="display: none;">
+                                <h4>Aperçu du message :</h4>
+                                <p id="preview-content"></p>
                             </div>
-                            <div class="faq-item">
-                                <div class="faq-question">Quelle est la durée d'emprunt ?</div>
-                                <div class="faq-answer">La durée d'emprunt standard est de 30 jours. Vous pouvez prolonger l'emprunt depuis la page Emprunts.</div>
-                            </div>
-                            <div class="faq-item">
-                                <div class="faq-question">Comment ajouter un livre à mes favoris ?</div>
-                                <div class="faq-answer">Cliquez sur l'icône cœur (❤️) à côté du livre pour l'ajouter à vos favoris.</div>
+                        </div>
+                        
+                        <div class="faq-section">
+                            <h2>Questions Fréquentes</h2>
+                            <div class="faq-list">
+                                <div class="faq-item">
+                                    <div class="faq-question">Comment emprunter un livre ?</div>
+                                    <div class="faq-answer">Vous pouvez emprunter un livre directement depuis la page Collection. Cliquez sur le livre souhaité et suivez les instructions.</div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question">Quelle est la durée d'emprunt ?</div>
+                                    <div class="faq-answer">La durée d'emprunt standard est de 30 jours. Vous pouvez prolonger l'emprunt depuis la page Emprunts.</div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question">Comment ajouter un livre à mes favoris ?</div>
+                                    <div class="faq-answer">Cliquez sur l'icône cœur (❤️) à côté du livre pour l'ajouter à vos favoris.</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <!-- Modal Ajouter Livre -->
     <div class="modal" id="add-book-modal">
@@ -532,16 +1889,1052 @@
                         <option value="policier">Policier/Thriller</option>
                         <option value="biographie">Biographie</option>
                         <option value="poesie">Poésie</option>
+                        <option value="fiction">Fiction</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="book-year">Année</label>
-                    <input type="number" id="book-year" required>
+                    <label for="book-year">Année de publication</label>
+                    <input type="number" id="book-year" required min="1000" max="2025">
                 </div>
                 <div class="form-group">
-                    <label for="book-isbn">ISBN</label>
-                    <input type="text" id="book-isbn" required>
+                    <label for="book-status">Statut</label>
+                    <select id="book-status-modal" required>
+                        <option value="available">Disponible</option>
+                        <option value="borrowed">Emprunté</option>
+                        <option value="lost">Perdu</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="book-cover">URL de la couverture</label>
-                    <input type="text" id
+                    <input type="text" id="book-cover" placeholder="https://exemple.com/image.jpg" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Ajouter le livre</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ajouter Auteur -->
+    <div class="modal" id="add-author-modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Ajouter un auteur</h2>
+            <form id="add-author-form">
+                <div class="form-group">
+                    <label for="author-name">Nom complet</label>
+                    <input type="text" id="author-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="author-nationality">Nationalité</label>
+                    <input type="text" id="author-nationality" required>
+                </div>
+                <div class="form-group">
+                    <label for="author-birth">Année de naissance</label>
+                    <input type="number" id="author-birth" required min="1000" max="2025">
+                </div>
+                <button type="submit" class="btn btn-primary">Ajouter l'auteur</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // === DONNÉES INITIALES ===
+        let books = [
+            {
+                id: 1,
+                title: 'Harry Potter à l\'école des sorciers',
+                author: 'J.K. Rowling',
+                genre: 'fantaisie',
+                year: 1997,
+                status: 'available',
+                favorite: true,
+                cover: 'https://cdn1.booknode.com/book_cover/4981/full/harry-potter-tome-1-harry-potter-a-lecole-des-sorciers-4981020.jpg'
+            },
+            {
+                id: 2,
+                title: 'Le Hobbit',
+                author: 'J.R.R. Tolkien',
+                genre: 'fantaisie',
+                year: 1937,
+                status: 'borrowed',
+                favorite: false,
+                cover: 'https://www.livres-cinema.info/cover/22/2266154117.jpg'
+            },
+            {
+                id: 3,
+                title: 'La Ballade de l\'impossible',
+                author: 'Haruki Murakami',
+                genre: 'fiction',
+                year: 1987,
+                status: 'available',
+                favorite: false,
+                cover: 'https://cdn1.booknode.com/book_cover/1023/la_ballade_de_limpossible-1023423-264-432.webp'
+            },
+            {
+                id: 4,
+                title: 'Les Misérables',
+                author: 'Victor Hugo',
+                genre: 'roman-historique',
+                year: 1862,
+                status: 'available',
+                favorite: false,
+                cover: 'https://cdn1.booknode.com/book_cover/3614/full/les-miserables-3614132.jpg'
+            },
+            {
+                id: 5,
+                title: 'Dune',
+                author: 'Frank Herbert',
+                genre: 'science-fiction',
+                year: 1965,
+                status: 'available',
+                favorite: true,
+                cover: 'https://img.livraddict.com/covers/453/453370//couv47835879.jpg'
+            },
+            {
+                id: 6,
+                title: 'Le Comte de Monte-Cristo',
+                author: 'Alexandre Dumas',
+                genre: 'roman-historique',
+                year: 1844,
+                status: 'borrowed',
+                favorite: false,
+                cover: 'https://region-ouest.epudf.org/wp-content/uploads/sites/9/2024/09/Monte_Christo.png'
+            },
+            {
+                id: 7,
+                title: 'Les Trois Mousquetaires',
+                author: 'Alexandre Dumas',
+                genre: 'roman-historique',
+                year: 1844,
+                status: 'available',
+                favorite: true,
+                cover: 'https://www.ecoledesloisirs.fr/sites/default/files/styles/couverture_livre/public/couverture/9782211238397.jpg?itok=PCiOYiQx'
+            },
+            {
+                id: 8,
+                title: 'Notre-Dame de Paris',
+                author: 'Victor Hugo',
+                genre: 'roman-historique',
+                year: 1831,
+                status: 'available',
+                favorite: false,
+                cover: 'https://static.fnac-static.com/multimedia/PE/Images/FR/NR/dd/5e/13/1269469/1507-1/tsp20251130162449/Notre-Dame-de-Paris.jpg'
+            },
+            {
+                id: 9,
+                title: '1984',
+                author: 'George Orwell',
+                genre: 'science-fiction',
+                year: 1949,
+                status: 'available',
+                favorite: false,
+                cover: 'https://cdn1.booknode.com/book_cover/72/1984-72084-264-432.webp'
+            },
+            {
+                id: 10,
+                title: 'Le Petit Prince',
+                author: 'Antoine de Saint-Exupéry',
+                genre: 'fiction',
+                year: 1943,
+                status: 'available',
+                favorite: false,
+                cover: 'https://images-eu.ssl-images-amazon.com/images/I/41Qhq5E90aL._AC_UL900_SR615,900_.jpg'
+            },
+            {
+                id: 11,
+                title: 'Les Fleurs du Mal',
+                author: 'Charles Baudelaire',
+                genre: 'poesie',
+                year: 1857,
+                status: 'available',
+                favorite: false,
+                cover: 'https://cdn1.booknode.com/book_cover/83/full/les-fleurs-du-mal-83490.jpg'
+            },
+            {
+                id: 12,
+                title: 'Steve Jobs',
+                author: 'Walter Isaacson',
+                genre: 'biographie',
+                year: 2011,
+                status: 'available',
+                favorite: false,
+                cover: 'https://servimg.eyrolles.com/static/media/8522/9782253168522_internet_w290.jpg'
+            }
+        ];
+
+        let authors = [
+            { 
+                id: 1, 
+                name: 'J.K. Rowling', 
+                nationality: 'Britannique', 
+                birthYear: 1965,
+                initial: 'J'
+            },
+            { 
+                id: 2, 
+                name: 'J.R.R. Tolkien', 
+                nationality: 'Britannique', 
+                birthYear: 1892,
+                initial: 'J'
+            },
+            { 
+                id: 3, 
+                name: 'Haruki Murakami', 
+                nationality: 'Japonais', 
+                birthYear: 1949,
+                initial: 'H'
+            },
+            { 
+                id: 4, 
+                name: 'Victor Hugo', 
+                nationality: 'Français', 
+                birthYear: 1802,
+                initial: 'V'
+            },
+            { 
+                id: 5, 
+                name: 'Frank Herbert', 
+                nationality: 'Américain', 
+                birthYear: 1920,
+                initial: 'F'
+            },
+            { 
+                id: 6, 
+                name: 'Alexandre Dumas', 
+                nationality: 'Français', 
+                birthYear: 1802,
+                initial: 'A'
+            },
+            { 
+                id: 7, 
+                name: 'George Orwell', 
+                nationality: 'Britannique', 
+                birthYear: 1903,
+                initial: 'G'
+            },
+            { 
+                id: 8, 
+                name: 'Antoine de Saint-Exupéry', 
+                nationality: 'Français', 
+                birthYear: 1900,
+                initial: 'A'
+            },
+            { 
+                id: 9, 
+                name: 'Charles Baudelaire', 
+                nationality: 'Français', 
+                birthYear: 1821,
+                initial: 'C'
+            },
+            { 
+                id: 10, 
+                name: 'Walter Isaacson', 
+                nationality: 'Américain', 
+                birthYear: 1952,
+                initial: 'W'
+            }
+        ];
+
+        let emprunts = [
+            {
+                id: 1,
+                bookId: 2,
+                borrower: 'Jean Dupont',
+                dateEmprunt: '2024-01-15',
+                dateRetour: '2024-02-15',
+                status: 'en-cours'
+            },
+            {
+                id: 2,
+                bookId: 6,
+                borrower: 'Marie Martin',
+                dateEmprunt: '2024-01-20',
+                dateRetour: '2024-02-20',
+                status: 'en-cours'
+            },
+            {
+                id: 3,
+                bookId: 1,
+                borrower: 'Pierre Lambert',
+                dateEmprunt: '2024-01-10',
+                dateRetour: '2024-02-10',
+                status: 'retard'
+            }
+        ];
+
+        const suggestions = [
+            {
+                title: 'Le Comte de Monte-Cristo',
+                author: 'Alexandre Dumas',
+                year: 1844,
+                cover: 'https://region-ouest.epudf.org/wp-content/uploads/sites/9/2024/09/Monte_Christo.png'
+            },
+            {
+                title: 'Les Trois Mousquetaires',
+                author: 'Alexandre Dumas',
+                year: 1844,
+                cover: 'https://www.ecoledesloisirs.fr/sites/default/files/styles/couverture_livre/public/couverture/9782211238397.jpg?itok=PCiOYiQx'
+            },
+            {
+                title: 'Notre-Dame de Paris',
+                author: 'Victor Hugo',
+                year: 1831,
+                cover: 'https://static.fnac-static.com/multimedia/PE/Images/FR/NR/dd/5e/13/1269469/1507-1/tsp20251130162449/Notre-Dame-de-Paris.jpg'
+            },
+            {
+                title: '1984',
+                author: 'George Orwell',
+                year: 1949,
+                cover: 'https://cdn1.booknode.com/book_cover/72/1984-72084-264-432.webp'
+            },
+            {
+                title: 'Le Petit Prince',
+                author: 'Antoine de Saint-Exupéry',
+                year: 1943,
+                cover: 'https://images-eu.ssl-images-amazon.com/images/I/41Qhq5E90aL._AC_UL900_SR615,900_.jpg'
+            }
+        ];
+
+        // === CONNEXION ===
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+            
+            if (username === 'admin' && password === 'admin123') {
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('dashboard-page').style.display = 'block';
+                initDashboard();
+                updateDashboardStats();
+                displayBooks();
+                displayAuthors();
+                displayFavorites();
+                displayEmprunts();
+            } else {
+                errorMessage.textContent = 'Nom d\'utilisateur ou mot de passe incorrect';
+                errorMessage.style.display = 'block';
+            }
+        });
+
+        // === INITIALISATION DU DASHBOARD ===
+        function initDashboard() {
+            // Navigation
+            const navLinks = document.querySelectorAll('.nav-link:not(.logout-btn)');
+            const pages = document.querySelectorAll('.page');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    
+                    pages.forEach(page => page.classList.remove('active'));
+                    const pageId = link.getAttribute('data-page');
+                    document.getElementById(pageId).classList.add('active');
+                    
+                    if (pageId === 'dashboard') {
+                        loadDashboardData();
+                    } else if (pageId === 'collection') {
+                        displayBooks();
+                    } else if (pageId === 'auteurs') {
+                        displayAuthors();
+                    } else if (pageId === 'favoris') {
+                        displayFavorites();
+                    } else if (pageId === 'emprunts') {
+                        displayEmprunts();
+                    }
+                });
+            });
+
+            // Déconnexion
+            document.querySelector('.logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+                    document.getElementById('dashboard-page').style.display = 'none';
+                    document.getElementById('login-page').style.display = 'flex';
+                    document.getElementById('login-form').reset();
+                    document.getElementById('error-message').style.display = 'none';
+                }
+            });
+
+            // Notifications
+            document.querySelector('.notification-btn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('notifications-dropdown').classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.notifications')) {
+                    document.getElementById('notifications-dropdown').classList.remove('active');
+                }
+            });
+
+            // Recherche globale
+            document.getElementById('global-search').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                if (searchTerm.trim() !== '') {
+                    // Aller à la page collection avec la recherche
+                    const collectionLink = document.querySelector('[data-page="collection"]');
+                    if (collectionLink && !collectionLink.classList.contains('active')) {
+                        collectionLink.click();
+                        setTimeout(() => {
+                            document.getElementById('collection-search').value = searchTerm;
+                            filterBooks();
+                        }, 100);
+                    } else if (document.getElementById('collection').classList.contains('active')) {
+                        document.getElementById('collection-search').value = searchTerm;
+                        filterBooks();
+                    }
+                }
+            });
+
+            // Recherche collection
+            document.getElementById('collection-search').addEventListener('input', filterBooks);
+            document.getElementById('status-filter').addEventListener('change', filterBooks);
+            document.getElementById('genre-filter').addEventListener('change', filterBooks);
+
+            // Recherche auteurs
+            document.getElementById('authors-search').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const filtered = authors.filter(author => 
+                    author.name.toLowerCase().includes(searchTerm) ||
+                    author.nationality.toLowerCase().includes(searchTerm)
+                );
+                displayAuthors(filtered);
+            });
+
+            // Boutons d'ajout
+            document.getElementById('add-book-btn').addEventListener('click', () => {
+                document.getElementById('add-book-modal').style.display = 'block';
+            });
+
+            // Fermer les modals
+            document.querySelectorAll('.modal-close').forEach(close => {
+                close.addEventListener('click', () => {
+                    close.closest('.modal').style.display = 'none';
+                });
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+
+            // Formulaire ajouter livre
+            document.getElementById('add-book-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const newBook = {
+                    id: books.length + 1,
+                    title: document.getElementById('book-title').value,
+                    author: document.getElementById('book-author').value,
+                    genre: document.getElementById('book-genre-modal').value,
+                    year: parseInt(document.getElementById('book-year').value),
+                    status: document.getElementById('book-status-modal').value,
+                    favorite: false,
+                    cover: document.getElementById('book-cover').value || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
+                };
+                
+                books.push(newBook);
+                document.getElementById('add-book-modal').style.display = 'none';
+                this.reset();
+                displayBooks();
+                updateDashboardStats();
+                
+                // Mettre à jour les notifications
+                updateNotificationBadge();
+                alert('Livre ajouté avec succès !');
+            });
+
+            // Formulaire ajouter auteur
+            document.getElementById('add-author-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('author-name').value;
+                const newAuthor = {
+                    id: authors.length + 1,
+                    name: name,
+                    nationality: document.getElementById('author-nationality').value,
+                    birthYear: parseInt(document.getElementById('author-birth').value),
+                    initial: name.charAt(0).toUpperCase()
+                };
+                
+                authors.push(newAuthor);
+                document.getElementById('add-author-modal').style.display = 'none';
+                this.reset();
+                displayAuthors();
+                updateDashboardStats();
+                alert('Auteur ajouté avec succès !');
+            });
+
+            // Formulaire contact
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Merci pour votre message ! Nous vous répondrons bientôt.');
+                this.reset();
+            });
+
+            // Aperçu du message contact
+            const messageInput = document.getElementById('message');
+            if (messageInput) {
+                messageInput.addEventListener('input', function() {
+                    const preview = document.getElementById('preview-content');
+                    const previewContainer = document.getElementById('message-preview');
+                    if (this.value.trim() !== '') {
+                        preview.textContent = this.value;
+                        previewContainer.style.display = 'block';
+                    } else {
+                        previewContainer.style.display = 'none';
+                    }
+                });
+            }
+
+            // Actualiser les suggestions
+            document.getElementById('refresh-suggestions').addEventListener('click', loadSuggestions);
+
+            // Charger les données initiales
+            loadDashboardData();
+        }
+
+        // === METTRE À JOUR LES STATISTIQUES ===
+        function updateDashboardStats() {
+            // Total livres
+            document.getElementById('total-books').textContent = books.length;
+            
+            // Total auteurs
+            document.getElementById('total-authors').textContent = authors.length;
+            
+            // Livres disponibles
+            const availableBooks = books.filter(book => book.status === 'available').length;
+            document.getElementById('available-books').textContent = availableBooks;
+            
+            // Livres empruntés
+            const borrowedBooks = books.filter(book => book.status === 'borrowed').length;
+            document.getElementById('borrowed-books').textContent = borrowedBooks;
+            
+            // Compter par genre
+            const genreCounts = {
+                'fantaisie': books.filter(b => b.genre === 'fantaisie').length,
+                'science-fiction': books.filter(b => b.genre === 'science-fiction').length,
+                'roman-historique': books.filter(b => b.genre === 'roman-historique').length,
+                'policier': books.filter(b => b.genre === 'policier').length,
+                'biographie': books.filter(b => b.genre === 'biographie').length,
+                'poesie': books.filter(b => b.genre === 'poesie').length
+            };
+            
+            // Mettre à jour les comptes de genre
+            document.getElementById('fantasy-count').textContent = genreCounts['fantaisie'] + ' livres';
+            document.getElementById('scifi-count').textContent = genreCounts['science-fiction'] + ' livres';
+            document.getElementById('historical-count').textContent = genreCounts['roman-historique'] + ' livres';
+            document.getElementById('crime-count').textContent = genreCounts['policier'] + ' livres';
+            document.getElementById('biography-count').textContent = genreCounts['biographie'] + ' livres';
+            document.getElementById('poetry-count').textContent = genreCounts['poesie'] + ' livres';
+            
+            // Mettre à jour le graphique
+            updateGenreChart();
+        }
+
+        // === METTRE À JOUR LE BADGE DE NOTIFICATION ===
+        function updateNotificationBadge() {
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                const currentCount = parseInt(badge.textContent);
+                badge.textContent = currentCount + 1;
+            }
+        }
+
+        // === AFFICHER LES LIVRES ===
+        function displayBooks(filteredBooks = books) {
+            const grid = document.getElementById('collection-grid');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            if (filteredBooks.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-light);"><i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i><p>Aucun livre trouvé.</p></div>';
+                return;
+            }
+
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+            filteredBooks.forEach(book => {
+                const isFavorite = favorites.includes(book.id);
+                const card = document.createElement('div');
+                card.className = 'collection-book-card';
+                
+                card.innerHTML = `
+                    <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-book-id="${book.id}">
+                        <i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i>
+                    </button>
+                    <button class="delete-btn" data-book-id="${book.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <div class="collection-book-cover" style="background-image: url('${book.cover}')" data-book-id="${book.id}"></div>
+                    <div class="collection-book-title">${book.title}</div>
+                    <div class="collection-book-info">
+                        <i class="fas fa-user-edit"></i>
+                        <span>${book.author}</span>
+                    </div>
+                    <div class="collection-book-info">
+                        <i class="fas fa-tag"></i>
+                        <span>${getGenreName(book.genre)}</span>
+                    </div>
+                    <div class="collection-book-info">
+                        <i class="fas fa-calendar"></i>
+                        <span>${book.year}</span>
+                    </div>
+                    <div class="collection-book-status status-${book.status}">
+                        ${book.status === 'available' ? '🟢 Disponible' : 
+                          book.status === 'borrowed' ? '🟡 Emprunté' : 
+                          '🔴 Perdu'}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Événement pour changer la couverture
+            grid.querySelectorAll('.collection-book-cover').forEach(cover => {
+                cover.addEventListener('click', function() {
+                    const bookId = parseInt(this.getAttribute('data-book-id'));
+                    const book = books.find(b => b.id === bookId);
+                    if (book) {
+                        const newCover = prompt('Entrez la nouvelle URL de la couverture:', book.cover);
+                        if (newCover && newCover.trim() !== '') {
+                            book.cover = newCover.trim();
+                            displayBooks();
+                            displayFavorites();
+                            alert('Couverture mise à jour !');
+                        }
+                    }
+                });
+            });
+
+            // Événement pour favoris
+            grid.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const bookId = parseInt(this.getAttribute('data-book-id'));
+                    toggleFavorite(bookId);
+                });
+            });
+
+            // Événement pour supprimer
+            grid.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const bookId = parseInt(this.getAttribute('data-book-id'));
+                    if (confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')) {
+                        books = books.filter(book => book.id !== bookId);
+                        // Supprimer aussi des emprunts si nécessaire
+                        emprunts = emprunts.filter(e => e.bookId !== bookId);
+                        displayBooks();
+                        updateDashboardStats();
+                        displayFavorites();
+                        displayEmprunts();
+                        alert('Livre supprimé !');
+                    }
+                });
+            });
+        }
+
+        // === AFFICHER LES AUTEURS ===
+        function displayAuthors(filteredAuthors = authors) {
+            const grid = document.getElementById('authors-grid');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            if (filteredAuthors.length === 0) {
+                // Afficher uniquement la carte d'ajout
+                addAddAuthorCard(grid);
+                return;
+            }
+
+            filteredAuthors.forEach(author => {
+                const authorBooks = books.filter(b => b.author === author.name).length;
+                const card = document.createElement('div');
+                card.className = 'author-card';
+                
+                card.innerHTML = `
+                    <button class="author-delete-btn" data-author-id="${author.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <div class="author-header">
+                        <div class="author-avatar">${author.initial}</div>
+                        <div>
+                            <div class="author-name">${author.name}</div>
+                            <div class="author-info">${author.nationality}</div>
+                        </div>
+                    </div>
+                    <div class="author-info"><strong>Année de naissance:</strong> ${author.birthYear}</div>
+                    <div class="author-info"><strong>Livres dans la bibliothèque:</strong> ${authorBooks}</div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Ajouter la carte "Ajouter un auteur" à la fin de la grille
+            addAddAuthorCard(grid);
+
+            // Événement pour supprimer
+            grid.querySelectorAll('.author-delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const authorId = parseInt(this.getAttribute('data-author-id'));
+                    const author = authors.find(a => a.id === authorId);
+                    
+                    if (author) {
+                        // Vérifier si l'auteur a des livres
+                        const authorBooks = books.filter(b => b.author === author.name);
+                        if (authorBooks.length > 0) {
+                            if (!confirm(`Cet auteur a ${authorBooks.length} livre(s) dans la bibliothèque. Supprimer l'auteur supprimera aussi ses livres. Continuer ?`)) {
+                                return;
+                            }
+                            // Supprimer les livres de l'auteur
+                            books = books.filter(b => b.author !== author.name);
+                        }
+                        
+                        authors = authors.filter(a => a.id !== authorId);
+                        displayAuthors();
+                        displayBooks();
+                        updateDashboardStats();
+                        displayFavorites();
+                        alert('Auteur supprimé !');
+                    }
+                });
+            });
+        }
+
+        // === AJOUTER LA CARTE "AJOUTER UN AUTEUR" ===
+        function addAddAuthorCard(grid) {
+            const addCard = document.createElement('div');
+            addCard.className = 'add-author-grid-item';
+            
+            addCard.innerHTML = `
+                <div class="add-author-card" id="add-author-card">
+                    <div class="add-author-content">
+                        <div class="add-author-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <h3>Enregistrer un nouvel auteur</h3>
+                        <p>Cliquez ici pour ajouter un auteur</p>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(addCard);
+            
+            // Événement pour ouvrir le modal
+            addCard.querySelector('.add-author-card').addEventListener('click', () => {
+                document.getElementById('add-author-modal').style.display = 'block';
+            });
+        }
+
+        // === BASculer FAVORIS ===
+        function toggleFavorite(bookId) {
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const book = books.find(b => b.id === bookId);
+            
+            if (favorites.includes(bookId)) {
+                favorites = favorites.filter(id => id !== bookId);
+                if (book) book.favorite = false;
+            } else {
+                favorites.push(bookId);
+                if (book) book.favorite = true;
+            }
+            
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            displayBooks();
+            displayFavorites();
+            updateFavoritesCount();
+        }
+
+        // === METTRE À JOUR LE COMPTE DE FAVORIS ===
+        function updateFavoritesCount() {
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            document.getElementById('favorites-count').textContent = `${favorites.length} livres favoris`;
+        }
+
+        // === AFFICHER LES FAVORIS ===
+        function displayFavorites() {
+            const grid = document.getElementById('favorites-grid');
+            if (!grid) return;
+
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const favoriteBooks = books.filter(book => favorites.includes(book.id));
+
+            grid.innerHTML = '';
+
+            if (favoriteBooks.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-light);"><i class="fas fa-heart" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i><p>Aucun livre favori pour le moment.</p></div>';
+                return;
+            }
+
+            updateFavoritesCount();
+
+            favoriteBooks.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'collection-book-card';
+                
+                card.innerHTML = `
+                    <button class="favorite-btn active" data-book-id="${book.id}">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="delete-btn" data-book-id="${book.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <div class="collection-book-cover" style="background-image: url('${book.cover}')" data-book-id="${book.id}"></div>
+                    <div class="collection-book-title">${book.title}</div>
+                    <div class="collection-book-info">
+                        <i class="fas fa-user-edit"></i>
+                        <span>${book.author}</span>
+                    </div>
+                    <div class="collection-book-info">
+                        <i class="fas fa-tag"></i>
+                        <span>${getGenreName(book.genre)}</span>
+                    </div>
+                    <div class="collection-book-info">
+                        <i class="fas fa-calendar"></i>
+                        <span>${book.year}</span>
+                    </div>
+                    <div class="collection-book-status status-${book.status}">
+                        ${book.status === 'available' ? '🟢 Disponible' : 
+                          book.status === 'borrowed' ? '🟡 Emprunté' : 
+                          '🔴 Perdu'}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Événement pour favoris
+            grid.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const bookId = parseInt(this.getAttribute('data-book-id'));
+                    toggleFavorite(bookId);
+                });
+            });
+
+            // Événement pour supprimer
+            grid.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const bookId = parseInt(this.getAttribute('data-book-id'));
+                    if (confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')) {
+                        books = books.filter(book => book.id !== bookId);
+                        emprunts = emprunts.filter(e => e.bookId !== bookId);
+                        displayBooks();
+                        displayFavorites();
+                        updateDashboardStats();
+                        displayEmprunts();
+                        alert('Livre supprimé !');
+                    }
+                });
+            });
+        }
+
+        // === FILTRER LES LIVRES ===
+        function filterBooks() {
+            const searchTerm = document.getElementById('collection-search').value.toLowerCase();
+            const status = document.getElementById('status-filter').value;
+            const genre = document.getElementById('genre-filter').value;
+
+            let filtered = books;
+
+            if (searchTerm) {
+                filtered = filtered.filter(book => 
+                    book.title.toLowerCase().includes(searchTerm) ||
+                    book.author.toLowerCase().includes(searchTerm) ||
+                    book.genre.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (status !== 'all') {
+                filtered = filtered.filter(book => book.status === status);
+            }
+
+            if (genre !== 'all') {
+                filtered = filtered.filter(book => book.genre === genre);
+            }
+
+            displayBooks(filtered);
+        }
+
+        // === AFFICHER LES EMPRUNTS ===
+        function displayEmprunts() {
+            const tbody = document.getElementById('emprunts-body');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            if (emprunts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-light);"><i class="fas fa-exchange-alt" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i><p>Aucun emprunt enregistré.</p></td></tr>';
+                return;
+            }
+
+            emprunts.forEach(emprunt => {
+                const book = books.find(b => b.id === emprunt.bookId);
+                if (!book) return;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${emprunt.borrower}</td>
+                    <td>${formatDate(emprunt.dateEmprunt)}</td>
+                    <td>${formatDate(emprunt.dateRetour)}</td>
+                    <td><span class="status-badge status-${emprunt.status}">${getStatusName(emprunt.status)}</span></td>
+                    <td>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;" data-emprunt-id="${emprunt.id}">Retourner</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Bouton retourner
+            tbody.querySelectorAll('.btn-primary').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const empruntId = parseInt(this.getAttribute('data-emprunt-id'));
+                    const emprunt = emprunts.find(e => e.id === empruntId);
+                    if (emprunt) {
+                        const book = books.find(b => b.id === emprunt.bookId);
+                        if (book) {
+                            book.status = 'available';
+                            emprunts = emprunts.filter(e => e.id !== empruntId);
+                            displayEmprunts();
+                            displayBooks();
+                            updateDashboardStats();
+                            alert('Livre retourné avec succès !');
+                        }
+                    }
+                });
+            });
+        }
+
+        // === CHARGER LES DONNÉES DU DASHBOARD ===
+        function loadDashboardData() {
+            loadSuggestions();
+            updateGenreChart();
+        }
+
+        // === CHARGER LES SUGGESTIONS ===
+        function loadSuggestions() {
+            const container = document.getElementById('suggestions-list');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const randomSuggestions = [...suggestions]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3);
+            
+            randomSuggestions.forEach(book => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerHTML = `
+                    <div class="suggestion-cover" style="background-image: url('${book.cover}')"></div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-title">${book.title}</div>
+                        <div class="suggestion-author">${book.author}</div>
+                        <div class="suggestion-year">${book.year}</div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // === METTRE À JOUR LE GRAPHIQUE DES GENRES ===
+        function updateGenreChart() {
+            const canvas = document.getElementById('genreChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            
+            // Compter les livres par genre
+            const genreData = {
+                'Fantaisie': books.filter(b => b.genre === 'fantaisie').length,
+                'Science-Fiction': books.filter(b => b.genre === 'science-fiction').length,
+                'Roman Historique': books.filter(b => b.genre === 'roman-historique').length,
+                'Policier': books.filter(b => b.genre === 'policier').length,
+                'Biographie': books.filter(b => b.genre === 'biographie').length,
+                'Poésie': books.filter(b => b.genre === 'poesie').length,
+                'Fiction': books.filter(b => b.genre === 'fiction').length
+            };
+            
+            const genres = Object.keys(genreData).filter(g => genreData[g] > 0);
+            const counts = genres.map(g => genreData[g]);
+            const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6'];
+            
+            const maxCount = Math.max(...counts, 1);
+            const barWidth = Math.min(60, (canvas.width - 100) / genres.length);
+            const barMaxHeight = canvas.height - 60;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            genres.forEach((genre, index) => {
+                const barHeight = (counts[index] / maxCount) * barMaxHeight;
+                const x = 40 + index * (barWidth + 15);
+                const y = canvas.height - 30 - barHeight;
+                
+                // Barre avec dégradé
+                const gradient = ctx.createLinearGradient(x, y, x, canvas.height - 30);
+                gradient.addColorStop(0, colors[index % colors.length]);
+                gradient.addColorStop(1, colors[index % colors.length] + '80');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, y, barWidth, barHeight);
+                
+                // Nombre
+                ctx.fillStyle = '#1f2937';
+                ctx.font = 'bold 14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(counts[index].toString(), x + barWidth/2, y - 8);
+                
+                // Genre
+                ctx.font = '12px Arial';
+                const genreText = genre.length > 10 ? genre.substring(0, 10) + '...' : genre;
+                ctx.fillText(genreText, x + barWidth/2, canvas.height - 10);
+            });
+        }
+
+        // === FONCTIONS UTILITAIRES ===
+        function getGenreName(genreKey) {
+            const genres = {
+                'fantaisie': 'Fantaisie',
+                'science-fiction': 'Science-Fiction',
+                'roman-historique': 'Roman Historique',
+                'policier': 'Policier/Thriller',
+                'biographie': 'Biographie',
+                'poesie': 'Poésie',
+                'fiction': 'Fiction'
+            };
+            return genres[genreKey] || genreKey;
+        }
+
+        function getStatusName(status) {
+            const statusNames = {
+                'en-cours': 'En cours',
+                'retourne': 'Retourné',
+                'retard': 'En retard'
+            };
+            return statusNames[status] || status;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        // === REDIMENSIONNER LES GRAPHIQUES ===
+        window.addEventListener('resize', function() {
+            if (document.getElementById('dashboard').classList.contains('active')) {
+                updateGenreChart();
+            }
+        });
+
+        // === INITIALISATION ===
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Site Bibliotheca chargé');
+            console.log('🔐 Identifiants : admin / admin123');
+        });
+    </script>
+</body>
+</html>

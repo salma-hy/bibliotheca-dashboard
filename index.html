@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bibliotheca - Administration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Solution 1 : Version spécifique -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         /* === STYLES GÉNÉRAUX === */
         * {
@@ -104,7 +103,8 @@
             font-weight: 500;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 0.875rem 1rem;
             background: #0f172a;
@@ -115,7 +115,8 @@
             transition: all 0.3s;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
@@ -1942,7 +1943,7 @@
         </main>
     </div>
 
-    <!-- Modal Ajouter Livre -->
+    <!-- Modal Ajouter Livre - MODIFIÉ AVEC SELECT D'AUTEURS -->
     <div class="modal" id="add-book-modal">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
@@ -1952,13 +1953,23 @@
                     <label for="book-title">Titre</label>
                     <input type="text" id="book-title" required>
                 </div>
+                
                 <div class="form-group">
                     <label for="book-author">Auteur</label>
-                    <input type="text" id="book-author" required>
+                    <select id="book-author" required>
+                        <option value="">Sélectionner un auteur</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                    <div id="new-author-fields" style="display: none; margin-top: 1rem; padding: 1rem; background: var(--bg); border-radius: 8px;">
+                        <input type="text" id="new-author-name" placeholder="Nom complet du nouvel auteur" style="width: 100%; margin-bottom: 0.5rem;">
+                        <input type="text" id="new-author-nationality" placeholder="Nationalité" style="width: 100%; margin-bottom: 0.5rem;">
+                        <input type="number" id="new-author-birth" placeholder="Année de naissance" style="width: 100%;">
+                    </div>
                 </div>
+                
                 <div class="form-group">
                     <label for="book-genre">Genre</label>
-                    <select id="book-genre-modal" required>
+                    <select id="book-genre" required>
                         <option value="fantaisie">Fantaisie</option>
                         <option value="science-fiction">Science-Fiction</option>
                         <option value="roman-historique">Roman Historique</option>
@@ -1982,7 +1993,7 @@
                 </div>
                 <div class="form-group">
                     <label for="book-status">Statut</label>
-                    <select id="book-status-modal" required>
+                    <select id="book-status" required>
                         <option value="available">Disponible</option>
                         <option value="borrowed">Emprunté</option>
                         <option value="lost">Perdu</option>
@@ -1997,7 +2008,7 @@
         </div>
     </div>
 
-    <!-- Modal Modifier Livre -->
+    <!-- Modal Modifier Livre - MODIFIÉ AVEC SELECT D'AUTEURS -->
     <div class="modal" id="edit-book-modal">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
@@ -2008,10 +2019,20 @@
                     <label for="edit-book-title">Titre</label>
                     <input type="text" id="edit-book-title" required>
                 </div>
+                
                 <div class="form-group">
                     <label for="edit-book-author">Auteur</label>
-                    <input type="text" id="edit-book-author" required>
+                    <select id="edit-book-author" required>
+                        <option value="">Sélectionner un auteur</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                    <div id="edit-new-author-fields" style="display: none; margin-top: 1rem; padding: 1rem; background: var(--bg); border-radius: 8px;">
+                        <input type="text" id="edit-new-author-name" placeholder="Nom complet du nouvel auteur" style="width: 100%; margin-bottom: 0.5rem;">
+                        <input type="text" id="edit-new-author-nationality" placeholder="Nationalité" style="width: 100%; margin-bottom: 0.5rem;">
+                        <input type="number" id="edit-new-author-birth" placeholder="Année de naissance" style="width: 100%;">
+                    </div>
                 </div>
+                
                 <div class="form-group">
                     <label for="edit-book-genre">Genre</label>
                     <select id="edit-book-genre" required>
@@ -2336,20 +2357,101 @@
                 loadAllData();
                 
                 initDashboard();
-                updateDashboardStats();
-                displayBooks();
-                displayAuthors();
-                displayFavorites();
-                displayEmprunts();
-                loadBookOptionsForEmprunt();
             } else {
                 errorMessage.textContent = 'Nom d\'utilisateur ou mot de passe incorrect';
                 errorMessage.style.display = 'block';
             }
         });
 
+        // === CHARGER LES AUTEURS DANS LE SELECT ===
+        function loadAuthorsIntoSelect() {
+            const select = document.getElementById('book-author');
+            const editSelect = document.getElementById('edit-book-author');
+            
+            if (select) {
+                select.innerHTML = '<option value="">Sélectionner un auteur</option>';
+                authors.forEach(author => {
+                    const option = document.createElement('option');
+                    option.value = author.name;
+                    option.textContent = author.name;
+                    select.appendChild(option);
+                });
+                
+                // Ajouter option pour créer un nouvel auteur
+                const newAuthorOption = document.createElement('option');
+                newAuthorOption.value = "new_author";
+                newAuthorOption.textContent = "+ Ajouter un nouvel auteur";
+                select.appendChild(newAuthorOption);
+            }
+            
+            if (editSelect) {
+                editSelect.innerHTML = '<option value="">Sélectionner un auteur</option>';
+                authors.forEach(author => {
+                    const option = document.createElement('option');
+                    option.value = author.name;
+                    option.textContent = author.name;
+                    editSelect.appendChild(option);
+                });
+                
+                const newAuthorOption = document.createElement('option');
+                newAuthorOption.value = "new_author";
+                newAuthorOption.textContent = "+ Ajouter un nouvel auteur";
+                editSelect.appendChild(newAuthorOption);
+            }
+        }
+
+        // === GÉRER LA SÉLECTION "AJOUTER UN NOUVEL AUTEUR" ===
+        function setupAuthorSelectHandlers() {
+            // Pour le modal Ajouter Livre
+            const authorSelect = document.getElementById('book-author');
+            const newAuthorFields = document.getElementById('new-author-fields');
+            
+            if (authorSelect && newAuthorFields) {
+                authorSelect.addEventListener('change', function() {
+                    if (this.value === "new_author") {
+                        newAuthorFields.style.display = 'block';
+                        // Réinitialiser les champs
+                        document.getElementById('new-author-name').value = '';
+                        document.getElementById('new-author-nationality').value = '';
+                        document.getElementById('new-author-birth').value = '';
+                    } else {
+                        newAuthorFields.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Pour le modal Modifier Livre
+            const editAuthorSelect = document.getElementById('edit-book-author');
+            const editNewAuthorFields = document.getElementById('edit-new-author-fields');
+            
+            if (editAuthorSelect && editNewAuthorFields) {
+                editAuthorSelect.addEventListener('change', function() {
+                    if (this.value === "new_author") {
+                        editNewAuthorFields.style.display = 'block';
+                        document.getElementById('edit-new-author-name').value = '';
+                        document.getElementById('edit-new-author-nationality').value = '';
+                        document.getElementById('edit-new-author-birth').value = '';
+                    } else {
+                        editNewAuthorFields.style.display = 'none';
+                    }
+                });
+            }
+        }
+
         // === INITIALISATION DU DASHBOARD ===
         function initDashboard() {
+            // Charger les auteurs dans les selects
+            loadAuthorsIntoSelect();
+            setupAuthorSelectHandlers();
+            
+            // Mettre à jour toutes les vues
+            updateDashboardStats();
+            displayBooks();
+            displayAuthors();
+            displayFavorites();
+            displayEmprunts();
+            loadBookOptionsForEmprunt();
+            
             // Navigation
             const navLinks = document.querySelectorAll('.nav-link:not(.logout-btn)');
             const pages = document.querySelectorAll('.page');
@@ -2438,6 +2540,8 @@
 
             // Boutons d'ajout
             document.getElementById('add-book-btn').addEventListener('click', () => {
+                // Recharger les auteurs avant d'afficher le modal
+                loadAuthorsIntoSelect();
                 document.getElementById('add-book-modal').style.display = 'block';
             });
 
@@ -2463,19 +2567,52 @@
                 }
             });
 
+            // === FORMULAIRES ===
+
             // Formulaire ajouter livre
             document.getElementById('add-book-form').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
+                let authorName = document.getElementById('book-author').value;
+                
+                // Si l'utilisateur a choisi d'ajouter un nouvel auteur
+                if (authorName === "new_author") {
+                    const newAuthorName = document.getElementById('new-author-name').value;
+                    const newAuthorNationality = document.getElementById('new-author-nationality').value;
+                    const newAuthorBirth = document.getElementById('new-author-birth').value;
+                    
+                    if (!newAuthorName || !newAuthorNationality || !newAuthorBirth) {
+                        alert('Veuillez remplir tous les champs du nouvel auteur');
+                        return;
+                    }
+                    
+                    // Créer le nouvel auteur
+                    const newAuthor = {
+                        id: Date.now(),
+                        name: newAuthorName,
+                        nationality: newAuthorNationality,
+                        birthYear: parseInt(newAuthorBirth),
+                        deathYear: null,
+                        bio: '',
+                        initial: newAuthorName.charAt(0).toUpperCase()
+                    };
+                    
+                    authors.push(newAuthor);
+                    authorName = newAuthorName;
+                    
+                    // Mettre à jour les selects d'auteurs
+                    loadAuthorsIntoSelect();
+                }
+                
                 const newBook = {
                     id: Date.now(),
                     title: document.getElementById('book-title').value,
-                    author: document.getElementById('book-author').value,
-                    genre: document.getElementById('book-genre-modal').value,
+                    author: authorName,
+                    genre: document.getElementById('book-genre').value,
                     year: parseInt(document.getElementById('book-year').value),
                     isbn: document.getElementById('book-isbn').value || '',
                     description: document.getElementById('book-description').value || '',
-                    status: document.getElementById('book-status-modal').value,
+                    status: document.getElementById('book-status').value,
                     favorite: false,
                     cover: document.getElementById('book-cover').value || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
                 };
@@ -2484,6 +2621,11 @@
                 saveAllData();
                 document.getElementById('add-book-modal').style.display = 'none';
                 this.reset();
+                
+                // Réinitialiser les champs nouvel auteur
+                const newAuthorFields = document.getElementById('new-author-fields');
+                if (newAuthorFields) newAuthorFields.style.display = 'none';
+                
                 displayBooks();
                 updateDashboardStats();
                 loadBookOptionsForEmprunt();
@@ -2500,10 +2642,39 @@
                 const bookIndex = books.findIndex(b => b.id === bookId);
                 
                 if (bookIndex !== -1) {
+                    let authorName = document.getElementById('edit-book-author').value;
+                    
+                    // Si nouvel auteur
+                    if (authorName === "new_author") {
+                        const newAuthorName = document.getElementById('edit-new-author-name').value;
+                        const newAuthorNationality = document.getElementById('edit-new-author-nationality').value;
+                        const newAuthorBirth = document.getElementById('edit-new-author-birth').value;
+                        
+                        if (!newAuthorName || !newAuthorNationality || !newAuthorBirth) {
+                            alert('Veuillez remplir tous les champs du nouvel auteur');
+                            return;
+                        }
+                        
+                        // Créer le nouvel auteur
+                        const newAuthor = {
+                            id: Date.now(),
+                            name: newAuthorName,
+                            nationality: newAuthorNationality,
+                            birthYear: parseInt(newAuthorBirth),
+                            deathYear: null,
+                            bio: '',
+                            initial: newAuthorName.charAt(0).toUpperCase()
+                        };
+                        
+                        authors.push(newAuthor);
+                        authorName = newAuthorName;
+                        loadAuthorsIntoSelect();
+                    }
+                    
                     books[bookIndex] = {
                         ...books[bookIndex],
                         title: document.getElementById('edit-book-title').value,
-                        author: document.getElementById('edit-book-author').value,
+                        author: authorName,
                         genre: document.getElementById('edit-book-genre').value,
                         year: parseInt(document.getElementById('edit-book-year').value),
                         isbn: document.getElementById('edit-book-isbn').value,
@@ -2543,6 +2714,10 @@
                 this.reset();
                 displayAuthors();
                 updateDashboardStats();
+                
+                // METTRE À JOUR LES SELECTS D'AUTEURS DANS LES MODALS
+                loadAuthorsIntoSelect();
+                
                 alert('Auteur ajouté avec succès !');
             });
 
@@ -2570,6 +2745,10 @@
                     displayAuthors();
                     displayBooks();
                     updateDashboardStats();
+                    
+                    // METTRE À JOUR LES SELECTS D'AUTEURS
+                    loadAuthorsIntoSelect();
+                    
                     alert('Auteur mis à jour avec succès !');
                 }
             });
@@ -2845,7 +3024,28 @@
 
             document.getElementById('edit-book-id').value = book.id;
             document.getElementById('edit-book-title').value = book.title;
-            document.getElementById('edit-book-author').value = book.author;
+            
+            // Charger les auteurs dans le select
+            loadAuthorsIntoSelect();
+            
+            // Sélectionner l'auteur actuel
+            setTimeout(() => {
+                const authorSelect = document.getElementById('edit-book-author');
+                if (authorSelect) {
+                    authorSelect.value = book.author;
+                    
+                    // Si l'auteur n'existe pas dans la liste, ajouter une option
+                    const existingOption = Array.from(authorSelect.options).find(opt => opt.value === book.author);
+                    if (!existingOption && book.author) {
+                        const option = document.createElement('option');
+                        option.value = book.author;
+                        option.textContent = book.author;
+                        authorSelect.insertBefore(option, authorSelect.lastChild);
+                        authorSelect.value = book.author;
+                    }
+                }
+            }, 100);
+            
             document.getElementById('edit-book-genre').value = book.genre;
             document.getElementById('edit-book-year').value = book.year;
             document.getElementById('edit-book-isbn').value = book.isbn || '';
@@ -3451,6 +3651,7 @@
             console.log('💾 Persistance localStorage activée');
             console.log('📊 Chart.js intégré');
             console.log('🔍 CRUD complet avec tri et fiches détaillées');
+            console.log('👥 Synchronisation auteurs/livres activée');
         });
     </script>
 </body>

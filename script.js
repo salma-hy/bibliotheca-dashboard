@@ -162,26 +162,44 @@ function initializeDefaultData() {
 }
 
 // === CONNEXION ===
-document.getElementById('login-form').addEventListener('submit', function(e) {
-    e.preventDefault();
+function setupLogin() {
+    const loginForm = document.getElementById('login-form');
+    if (!loginForm) return;
     
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const errorMessage = document.getElementById('error-message');
-    
-    if (username === 'admin' && password === 'admin123') {
-        document.getElementById('login-page').style.display = 'none';
-        document.getElementById('dashboard-page').style.display = 'block';
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
         
-        // Charger les données depuis localStorage
-        loadAllData();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorMessage = document.getElementById('error-message');
         
-        initDashboard();
-    } else {
-        errorMessage.textContent = 'Nom d\'utilisateur ou mot de passe incorrect';
-        errorMessage.style.display = 'block';
-    }
-});
+        console.log('Tentative de connexion avec:', username, password);
+        
+        if (username === 'admin' && password === 'admin123') {
+            console.log('Connexion réussie!');
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('dashboard-page').style.display = 'block';
+            
+            // Charger les données depuis localStorage
+            loadAllData();
+            
+            // Initialiser le dashboard
+            setTimeout(() => {
+                initDashboard();
+                updateDashboardStats();
+                displayBooks();
+                displayAuthors();
+                displayFavorites();
+                displayEmprunts();
+                loadBookOptionsForEmprunt();
+            }, 100);
+        } else {
+            console.log('Échec de connexion');
+            errorMessage.textContent = 'Nom d\'utilisateur ou mot de passe incorrect';
+            errorMessage.style.display = 'block';
+        }
+    });
+}
 
 // === CHARGER LES AUTEURS DANS LE SELECT ===
 function loadAuthorsIntoSelect() {

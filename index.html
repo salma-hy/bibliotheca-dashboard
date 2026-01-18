@@ -17,7 +17,8 @@
                 <h1 class="login-title">Bibliotheca</h1>
                 <p class="login-subtitle">Accédez à votre espace administrateur</p>
                 
-                <form id="login-form">
+                <!-- REMPLACEZ LE FORM PAR UN DIV -->
+                <div id="login-form-container">
                     <div class="form-group">
                         <label for="username">Nom d'utilisateur</label>
                         <input type="text" id="username" name="username" required placeholder="admin">
@@ -30,8 +31,10 @@
                     
                     <div class="error-message" id="error-message">Identifiants incorrects</div>
                     
-                    <button type="submit" class="login-btn">Se connecter</button>
-                </form>
+                    <button type="button" id="login-btn" class="login-btn">
+                        Se connecter
+                    </button>
+                </div>
                 
                 <div class="login-info">
                     <p><strong>Identifiants de test :</strong></p>

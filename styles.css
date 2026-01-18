@@ -94,10 +94,32 @@ button {
     font-size: 1rem;
 }
 
-.login-info {
+.login-form {
+    margin-top: 2rem;
+}
+
+.login-footer {
     margin-top: 2rem;
     color: #cbd5e1;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.remember-me input {
+    width: auto;
+}
+
+.login-error {
+    color: var(--danger);
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    display: none;
 }
 
 /* === FORMULAIRE GÉNÉRAL === */
@@ -1426,6 +1448,72 @@ button {
     font-weight: 600;
 }
 
+/* Styles pour la fiche détaillée du livre */
+.book-detail-header {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.book-detail-cover {
+    flex-shrink: 0;
+}
+
+.book-detail-cover img {
+    width: 200px;
+    height: 300px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.book-detail-info {
+    flex: 1;
+}
+
+.book-detail-author {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.last-emprunt {
+    background: var(--bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-top: 1.5rem;
+}
+
+.last-emprunt h3 {
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+}
+
+.book-detail-description {
+    margin-bottom: 2rem;
+}
+
+.book-detail-description h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.book-detail-description p {
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.book-detail-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.book-detail-actions .btn {
+    flex: 1;
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
     .charts-suggestions-container {
@@ -1475,6 +1563,14 @@ button {
         width: 100%;
         margin-top: 1rem;
     }
+    .book-detail-header {
+        flex-direction: column;
+    }
+    .book-detail-cover img {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1488,4 +1584,11 @@ button {
     .user-profile .user-info {
         display: none;
     }
+}
+
+/* Animation shake pour erreur de connexion */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
